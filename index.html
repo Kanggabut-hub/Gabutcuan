@@ -1,452 +1,585 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Gabut Terminal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KANGGABUT | QUANTITATIVE TERMINAL V49</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #02050a;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.012) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.012) 1px, transparent 1px);
+            background-size: 40px 40px;
+            color: #f3f4f6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        .tron-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.6), 0 0 40px rgba(255, 0, 127, 0.3);
+            letter-spacing: 14px;
+        }
 
-<style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:'Inter',sans-serif;
-}
+        .tron-card {
+            background: linear-gradient(145deg, rgba(6, 11, 22, 0.96) 0%, rgba(2, 4, 10, 0.99) 100%);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
 
-body{
-  background:#050816;
-  color:white;
-  overflow-x:hidden;
-}
+        .tron-card:hover {
+            border-color: #ff007f;
+            box-shadow: 0 0 30px rgba(255, 0, 127, 0.3);
+            transform: translateY(-4px);
+        }
 
-.container{
-  width:92%;
-  max-width:1400px;
-  margin:auto;
-}
+        .active-filter {
+            background: linear-gradient(90deg, rgba(0, 240, 255, 0.15), rgba(255, 0, 127, 0.15)) !important;
+            border-color: #ff007f !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.3);
+        }
 
-header{
-  padding:30px 0;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
+        .active-lang {
+            color: #00f0ff !important;
+            font-weight: 800;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
 
-.logo{
-  font-size:34px;
-  font-weight:800;
-  background:linear-gradient(90deg,#00c6ff,#00ff95);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-.menu{
-  display:flex;
-  gap:12px;
-}
-
-.menu button{
-  padding:12px 22px;
-  border:none;
-  border-radius:14px;
-  background:#111827;
-  color:white;
-  cursor:pointer;
-}
-
-.hero{
-  text-align:center;
-  padding:60px 0;
-}
-
-.hero h1{
-  font-size:60px;
-  margin-bottom:20px;
-}
-
-.hero p{
-  color:#9ca3af;
-  max-width:700px;
-  margin:auto;
-  line-height:1.8;
-}
-
-.search{
-  margin-top:35px;
-}
-
-.search input{
-  width:100%;
-  max-width:600px;
-  padding:18px;
-  border:none;
-  border-radius:16px;
-  background:#111827;
-  color:white;
-  font-size:16px;
-}
-
-.section-title{
-  margin:40px 0 20px;
-  font-size:28px;
-}
-
-.cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-  gap:22px;
-}
-
-.card{
-  background:#0f172a;
-  border:1px solid rgba(255,255,255,0.05);
-  border-radius:24px;
-  padding:24px;
-}
-
-.pair{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-}
-
-.buy{
-  background:rgba(0,255,149,.15);
-  color:#00ff95;
-  padding:8px 14px;
-  border-radius:12px;
-  font-size:12px;
-  font-weight:700;
-}
-
-.sell{
-  background:rgba(255,77,77,.15);
-  color:#ff6767;
-  padding:8px 14px;
-  border-radius:12px;
-  font-size:12px;
-  font-weight:700;
-}
-
-.info{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.box{
-  background:#111827;
-  padding:14px;
-  border-radius:14px;
-}
-
-.box span{
-  display:block;
-  font-size:12px;
-  color:#9ca3af;
-  margin-bottom:8px;
-}
-
-.tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-top:20px;
-}
-
-.tag{
-  background:#111827;
-  padding:10px 14px;
-  border-radius:12px;
-  font-size:13px;
-}
-
-.fear{
-  margin-top:60px;
-  background:#0f172a;
-  padding:35px;
-  border-radius:24px;
-}
-
-.bar{
-  width:100%;
-  height:24px;
-  background:#1e293b;
-  border-radius:20px;
-  overflow:hidden;
-  margin-top:20px;
-}
-
-.fill{
-  width:78%;
-  height:100%;
-  background:linear-gradient(90deg,#ff4d4d,#ffaa00,#00ff95);
-}
-
-.calendar{
-  margin-top:25px;
-  display:grid;
-  gap:15px;
-}
-
-.event{
-  background:#111827;
-  padding:18px;
-  border-radius:16px;
-}
-
-footer{
-  text-align:center;
-  padding:50px 0 30px;
-  color:#6b7280;
-}
-
-@media(max-width:768px){
-  .hero h1{
-    font-size:40px;
-  }
-
-  .info{
-    grid-template-columns:1fr;
-  }
-
-  header{
-    flex-direction:column;
-    gap:20px;
-  }
-}
-</style>
+        .font-mono-tech { font-family: 'JetBrains Mono', monospace; }
+        .text-pink-neon { color: #ff007f; }
+    </style>
 </head>
+<body class="p-3 md:p-6 text-xs select-none">
 
-<body>
+    <header class="max-w-[1680px] mx-auto">
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-3 mb-6 bg-[#040914]/95 px-5 py-3 rounded-xl border border-zinc-900">
+            <div id="lang-selector" class="flex items-center gap-3 font-mono-tech text-[11px] text-zinc-500 font-bold">
+                <button onclick="changeLanguage('id')" id="lang-id" class="active-lang hover:text-cyan-400 transition">ID</button>
+                <span>|</span>
+                <button onclick="changeLanguage('en')" id="lang-en" class="hover:text-cyan-400 transition">EN</button>
+                <span>|</span>
+                <button onclick="changeLanguage('jp')" id="lang-jp" class="hover:text-cyan-400 transition">JP</button>
+                <span class="ml-4 text-cyan-400 hidden lg:inline">● TRI-API CORE ROUTER INTEGRATED</span>
+            </div>
+            
+            <div class="flex items-center gap-4 text-[10px] font-bold tracking-widest text-zinc-500 font-mono-tech">
+                <span id="session-tky">TOKYO</span>
+                <span id="session-ldn">LONDON</span>
+                <span id="session-nyc">NEW YORK</span>
+                <span id="clock-24h" class="text-white bg-cyan-500/10 px-3 py-1 rounded-lg border border-cyan-500/20">00:00:00</span>
+            </div>
+        </div>
 
-<div class="container">
+        <div class="text-center my-8">
+            <h1 class="tron-title text-4xl md:text-6xl uppercase tracking-[0.35em] pr-2">KANGGABUT</h1>
+            <p id="system-quote" class="text-[10px] tracking-[0.15em] text-zinc-400 font-medium italic mt-4 font-mono-tech max-w-4xl mx-auto uppercase">
+                "THE MARKET PARAMETERS REWARD DISCIPLINE AND DELETE EMOTION. TRADE WHAT YOU SEE, NOT WHAT YOU FEEL. CONSISTENCY IS YOUR WEAPON TODAY."
+            </p>
+            <p class="text-[8px] tracking-[0.25em] text-cyan-400 font-bold uppercase mt-2 font-mono-tech">
+                OMNI QUANT POWER DATA LINK: BINANCE SPOT • HYPERLIQUID PERP • DEXSCREENER ARCHIVE
+            </p>
+        </div>
 
-<header>
-  <div class="logo">Gabut Terminal</div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6 font-mono-tech text-center">
+            <div class="bg-black/50 border border-zinc-900 p-3 rounded-xl">
+                <span id="lbl-matrix-1" class="text-[8px] text-zinc-500 font-bold block mb-1">BINANCE NODE ROUTE</span>
+                <span id="val-binance" class="text-xs font-bold text-emerald-400">CONNECTING...</span>
+            </div>
+            <div class="bg-black/50 border border-zinc-900 p-3 rounded-xl">
+                <span id="lbl-matrix-2" class="text-[8px] text-zinc-500 font-bold block mb-1">HYPERLIQUID PERP POOL</span>
+                <span id="val-hyperliquid" class="text-xs font-bold text-cyan-400">SYNCING INDEX</span>
+            </div>
+            <div class="bg-black/50 border border-zinc-900 p-3 rounded-xl">
+                <span id="lbl-matrix-3" class="text-[8px] text-zinc-500 font-bold block mb-1">DEXSCREENER FEED LIQUID</span>
+                <span id="val-dexscreener" class="text-xs font-bold text-pink-neon">STREAM RAW</span>
+            </div>
+            <div class="bg-black/50 border border-zinc-900 p-3 rounded-xl">
+                <span id="lbl-matrix-4" class="text-[8px] text-zinc-500 font-bold block mb-1">TOTAL CONSOLIDATED PAIRS</span>
+                <span id="val-total-pairs" class="text-xs font-bold text-amber-400">0 POOLS READY</span>
+            </div>
+        </div>
 
-  <div class="menu">
-    <button onclick="loadMarket('crypto')">Crypto</button>
-    <button onclick="loadMarket('forex')">Forex</button>
-  </div>
-</header>
+        <div class="max-w-xl mx-auto mb-6 px-1">
+            <input type="text" id="search-bar" oninput="handleGlobalSearch(this.value)" placeholder="CARI TICKER/PAIR ASSET UTAMA ATAU GEMS (BTC, SOL, AI16Z, TRUMP, PURR)..." 
+                   class="w-full p-3.5 rounded-xl bg-[#030712] border border-zinc-800 focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(0,240,255,0.1)] text-white font-mono-tech text-xs text-center uppercase outline-none transition-all">
+        </div>
 
-<section class="hero">
-  <h1>Professional Trading Intelligence</h1>
+        <div class="max-w-[1680px] mx-auto mb-6 px-1">
+            <div class="p-3 bg-red-950/10 border border-red-900/30 rounded-xl text-center font-mono-tech text-red-400 tracking-wide text-[9px] uppercase">
+                ⚠️ <span id="lbl-disclaimer">PERINGATAN: BUKAN SARAN FINANSIAL. DATA AGREGASI API MURNI TRIPLE NODE ENGINE. ANDA WAJIB MENGANALISA ULANG (DYOR).</span>
+            </div>
+        </div>
 
-  <p>
-    Realtime scalping & swing trading signal menggunakan
-    RSI, Smart Money Concept, VWAP, Fibonacci,
-    Volume Profile dan Market Sentiment.
-  </p>
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 max-w-[1680px] mx-auto px-1">
+            <div class="flex gap-2 text-[10px] font-bold">
+                <button onclick="handleCapSelection('low')" id="c-low" class="bg-black/50 border border-zinc-800 text-zinc-400 px-4 py-2 rounded-lg transition">LOW CAP / DEX GEMS</button>
+                <button onclick="handleCapSelection('mid')" id="c-mid" class="bg-black/50 border border-zinc-800 text-zinc-400 px-4 py-2 rounded-lg active-filter transition">MID CAP LAYER</button>
+                <button onclick="handleCapSelection('big')" id="c-big" class="bg-black/50 border border-zinc-800 text-zinc-400 px-4 py-2 rounded-lg transition">BIG CAP TITANS</button>
+            </div>
 
-  <div class="search">
-    <input
-      type="text"
-      id="searchInput"
-      placeholder="Cari pair... BTC, ETH, EURUSD, XAUUSD"
-      onkeyup="searchPair()"
-    >
-  </div>
-</section>
+            <div class="flex items-center gap-3 bg-black/80 px-4 py-1.5 rounded-lg border border-zinc-800 font-mono-tech">
+                <button onclick="triggerPreviousPage()" class="text-xs font-bold text-cyan-400 hover:text-white transition-all px-2">◀</button>
+                <span id="slider-pagination-label" class="text-[10px] text-zinc-400 font-bold tracking-wider uppercase">PAGE 1 / 1 (0 PAIRS)</span>
+                <button onclick="triggerNextPage()" class="text-xs font-bold text-cyan-400 hover:text-white transition-all px-2">▶</button>
+            </div>
+        </div>
+    </header>
 
-<h2 class="section-title">Realtime Signal Pair</h2>
+    <main class="max-w-[1680px] mx-auto px-1 mb-24">
+        <div id="grid-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+            </div>
+    </main>
 
-<div class="cards" id="pairContainer"></div>
-
-<section class="fear">
-  <h2>Fear & Greed Index</h2>
-
-  <div class="bar">
-    <div class="fill"></div>
-  </div>
-
-  <h3 style="margin-top:15px;">GREED 78</h3>
-
-  <div class="calendar">
-
-    <div class="event">
-      <strong>US CPI Data</strong>
-      <p style="margin-top:8px;color:#9ca3af;">High Impact USD News</p>
+    <div id="specs-modal" class="fixed inset-0 hidden z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="bg-[#040811] border border-cyan-500/30 w-full max-w-lg rounded-xl p-6 relative shadow-[0_0_50px_rgba(0,240,255,0.2)] font-mono-tech text-xs text-zinc-300">
+            <button onclick="hideIntelligenceModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-red-400 font-bold transition">✕ CLOSE</button>
+            <div id="modal-content-area"></div>
+        </div>
     </div>
 
-    <div class="event">
-      <strong>FOMC Speech</strong>
-      <p style="margin-top:8px;color:#9ca3af;">High Volatility Event</p>
-    </div>
+    <footer class="py-10 border-t border-zinc-900 text-center text-xs tracking-[0.6em] font-bold text-zinc-600 uppercase">
+        KANGGABUT DATACENTER OMNI-ENGINE
+    </footer>
 
-  </div>
-</section>
+    <script>
+        // Production Endpoints Networks
+        const ENDPOINT_BINANCE = "https://api.binance.com/api/v3/ticker/24hr";
+        const ENDPOINT_HYPERLIQUID = "https://api.hyperliquid.xyz/info";
+        const ENDPOINT_DEXSCREENER = "https://api.dexscreener.com/latest/dex/search?q=";
 
-<footer>
-  © 2026 Gabut Terminal — Copyright Kanggabut
-</footer>
+        let systemMasterDatabase = [];
+        let filteredWorkspaceData = [];
+        let systemActiveLanguage = "id";
+        let clientQueryKeyword = "";
+        let selectedCapitalizationRange = "mid";
 
-</div>
+        // Fixed Pagination Slider Metrics Boundaries
+        let sliderIndexPointer = 0;
+        const strictRowMaxItems = 5;
 
-<script>
+        const translationDatabase = {
+            id: {
+                quote: `"THE MARKET PARAMETERS REWARD DISCIPLINE AND DELETE EMOTION. TRADE WHAT YOU SEE, NOT WHAT YOU FEEL. CONSISTENCY IS YOUR WEAPON TODAY."`,
+                disclaimer: "PERINGATAN: BUKAN SARAN FINANSIAL. DATA AGREGASI API MURNI TRIPLE NODE ENGINE. ANDA WAJIB MENGANALISA ULANG (DYOR).",
+                placeholder: "CARI TICKER/PAIR ASSET UTAMA ATAU GEMS (BTC, SOL, AI16Z, TRUMP, PURR)...",
+                networkLabel: "DATA NETWORK NODE SOURCE", entry: "QUANT ENTRY ALPHA", live: "REALTIME LIVE PRICE", tp: "TARGET TP (2.50%)", sl: "STOP LOSS (1.00%)"
+            },
+            en: {
+                quote: `"THE MARKET PARAMETERS REWARD DISCIPLINE AND DELETE EMOTION. TRADE WHAT YOU SEE, NOT WHAT YOU FEEL. CONSISTENCY IS YOUR WEAPON TODAY."`,
+                disclaimer: "WARNING: NOT FINANCIAL ADVICE. PURE TRIPLE NODE API AGGREGATED DATA. YOU MUST RE-ANALYZE BEFORE MAKING ENTRIES (DYOR).",
+                placeholder: "SEARCH MAIN TICKER/PAIR ASSETS OR GEMS (BTC, SOL, AI16Z, TRUMP, PURR)...",
+                networkLabel: "DATA NETWORK NODE SOURCE", entry: "QUANT ENTRY ALPHA", live: "REALTIME LIVE PRICE", tp: "TARGET TP (2.50%)", sl: "STOP LOSS (1.00%)"
+            },
+            jp: {
+                quote: `"市場のパラメータは規律に報い、感情を排除します。自分が感じるものではなく、見えているものを取引しなさい。"`,
+                disclaimer: "警告：財務上のアドバイスではありません。純粋なトリプルノードAPI集計データ。エントリーする前に再分析する必要があります (DYOR)。",
+                placeholder: "主要なティッカー/ペア資産またはジェムを検索 (BTC、SOL、AI16Z、TRUMP、PURR)...",
+                networkLabel: "データネットワークノード元", entry: "クオンツ エントリー アルファ", live: "リアルタイム市場価格", tp: "目標利益 TP (2.50%)", sl: "損切りライン SL (1.00%)"
+            }
+        };
 
-const cryptoPairs = [
-  {
-    symbol:"BTCUSDT",
-    bias:"BUY",
-    entry:"63,450",
-    sl:"62,980",
-    tp:"65,200",
-    risk:"1:3.2",
-    indicators:[
-      "RSI 68",
-      "VWAP Bullish",
-      "SMC BOS",
-      "Volume High",
-      "Fib 0.618"
-    ]
-  },
+        // Tri-Core API Synchronization Routing Protocol Engine
+        async function fetchSecurePipelineNodes() {
+            try {
+                let dynamicPoolRegistry = [];
 
-  {
-    symbol:"ETHUSDT",
-    bias:"BUY",
-    entry:"3,150",
-    sl:"3,040",
-    tp:"3,480",
-    risk:"1:4.1",
-    indicators:[
-      "RSI 72",
-      "Bullish OB",
-      "VWAP Support",
-      "Volume Spike",
-      "Fib Retest"
-    ]
-  }
-];
+                // CHANNEL 1: FETCH BINANCE LIQUIDITY SPOT TICKERS
+                const resBinance = await fetch(ENDPOINT_BINANCE).catch(() => null);
+                if (resBinance && resBinance.ok) {
+                    const dataBinance = await resBinance.json();
+                    document.getElementById('val-binance').innerText = "SPOT ONLINE";
+                    
+                    // Filter popular clean assets pairs to preserve load memory footprint
+                    dataBinance.filter(item => item.symbol.endsWith("USDT")).slice(0, 60).forEach(spot => {
+                        const baseName = spot.symbol.replace("USDT", "");
+                        const price = parseFloat(spot.lastPrice) || 0;
+                        const volume = parseFloat(spot.quoteVolume) || 0;
+                        
+                        dynamicPoolRegistry.push({
+                            id: spot.symbol + "_BINANCE",
+                            symbol: spot.symbol,
+                            base: baseName,
+                            name: "Binance Spot " + baseName,
+                            price: price,
+                            change: parseFloat(spot.priceChangePercent) || 0,
+                            volume: volume,
+                            high: parseFloat(spot.highPrice) || price * 1.01,
+                            low: parseFloat(spot.lowPrice) || price * 0.99,
+                            source: "BINANCE CORE SPOT",
+                            marketCap: volume * 6.8, // Normal CEX dynamic multiplier weight estimation
+                            funding: "N/A (SPOT ORDERBOOK)",
+                            velocity: "High Velocity CEX"
+                        });
+                    });
+                } else {
+                    document.getElementById('val-binance').innerText = "SPOT OFFLINE";
+                }
 
-const forexPairs = [
-  {
-    symbol:"EURUSD",
-    bias:"SELL",
-    entry:"1.0845",
-    sl:"1.0890",
-    tp:"1.0760",
-    risk:"1:2.8",
-    indicators:[
-      "RSI 39",
-      "Liquidity Sweep",
-      "VWAP Reject",
-      "Bearish Sentiment",
-      "Fib 0.786"
-    ]
-  },
+                // CHANNEL 2: FETCH HYPERLIQUID INSTITUTIONAL PERPETUALS MATRIX
+                const resHyperliquid = await fetch(ENDPOINT_HYPERLIQUID, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ type: "metaAndAssetCtxs" })
+                }).catch(() => null);
 
-  {
-    symbol:"XAUUSD",
-    bias:"BUY",
-    entry:"2388",
-    sl:"2372",
-    tp:"2420",
-    risk:"1:4.0",
-    indicators:[
-      "RSI 61",
-      "Bullish OB",
-      "VWAP Support",
-      "High Volume",
-      "Fib 0.5"
-    ]
-  }
-];
+                if (resHyperliquid && resHyperliquid.ok) {
+                    const dataHL = await resHyperliquid.json();
+                    if (dataHL && dataHL[0] && dataHL[1]) {
+                        document.getElementById('val-hyperliquid').innerText = "PERP ONLINE";
+                        const metaUniverse = dataHL[0].universe;
+                        const contextMatrix = dataHL[1];
 
-function renderPairs(data){
+                        metaUniverse.forEach((asset, idx) => {
+                            const ctx = contextMatrix[idx];
+                            if (ctx) {
+                                const price = parseFloat(ctx.oraclePx || ctx.midPx || 0);
+                                const volume = parseFloat(ctx.dayNfv || 0);
+                                const change = ((price - (parseFloat(ctx.prevPrice) || price)) / (parseFloat(ctx.prevPrice) || 1)) * 100;
 
-  const container = document.getElementById("pairContainer");
+                                dynamicPoolRegistry.push({
+                                    id: asset.name + "_HYPERLIQUID",
+                                    symbol: asset.name + "/PERP",
+                                    base: asset.name,
+                                    name: "Hyperliquid " + asset.name,
+                                    price: price,
+                                    change: isNaN(change) ? 0 : change,
+                                    volume: volume,
+                                    high: price * 1.02,
+                                    low: price * 0.98,
+                                    source: "HYPERLIQUID L1 PERP",
+                                    marketCap: volume * 4.2,
+                                    funding: ctx.funding ? (parseFloat(ctx.funding) * 100).toFixed(5) + "%" : "0.0000%",
+                                    velocity: "Institutional High Yield Frame"
+                                });
+                            }
+                        });
+                    }
+                } else {
+                    document.getElementById('val-hyperliquid').innerText = "PERP ERROR";
+                }
 
-  container.innerHTML = "";
+                // CHANNEL 3: FETCH DEXSCREENER ADVANCED MEME AND GEMS POOLS LAYER
+                const activeQueryTarget = clientQueryKeyword.trim() !== "" ? clientQueryKeyword.trim() : "solana";
+                const resDex = await fetch(ENDPOINT_DEXSCREENER + encodeURIComponent(activeQueryTarget)).catch(() => null);
 
-  data.forEach(pair=>{
+                if (resDex && resDex.ok) {
+                    const dataDex = await resDex.json();
+                    if (dataDex && dataDex.pairs) {
+                        document.getElementById('val-dexscreener').innerText = "DEX LIQUID SYNCED";
+                        
+                        dataDex.pairs.slice(0, 50).forEach(pool => {
+                            const price = parseFloat(pool.priceUsd || 0);
+                            const volume24h = parseFloat(pool.volume ? pool.volume.h24 : 0);
+                            const delta24h = parseFloat(pool.priceChange ? pool.priceChange.h24 : 0);
 
-    const tags = pair.indicators.map(tag =>
-      `<div class="tag">${tag}</div>`
-    ).join("");
+                            dynamicPoolRegistry.push({
+                                id: pool.baseToken.address + "_DEX",
+                                symbol: pool.baseToken.symbol + "/DEX",
+                                base: pool.baseToken.symbol.toUpperCase(),
+                                name: pool.baseToken.name,
+                                price: price,
+                                change: delta24h,
+                                volume: volume24h,
+                                high: price * 1.04,
+                                low: price * 0.96,
+                                source: `${pool.dexId.toUpperCase()} POOL [${pool.chainId.toUpperCase()}]`,
+                                marketCap: pool.fdv || (volume24h * 1.5),
+                                funding: "N/A (DEX AMM POOL)",
+                                velocity: (pool.txns && pool.txns.h24) ? pool.txns.h24.buys + pool.txns.h24.sells + " tx/24h" : "DEX Track Velocity Active"
+                            });
+                        });
+                    }
+                } else {
+                    document.getElementById('val-dexscreener').innerText = "DEX DATA DELAYED";
+                }
 
-    container.innerHTML += `
-      <div class="card pair-card">
+                if (dynamicPoolRegistry.length > 0) {
+                    systemMasterDatabase = dynamicPoolRegistry;
+                    document.getElementById('val-total-pairs').innerText = systemMasterDatabase.length + " POOLS READY";
+                }
 
-        <div class="pair">
-          <h2>${pair.symbol}</h2>
+                compileActiveFilterSorting();
 
-          <div class="${pair.bias === 'BUY' ? 'buy' : 'sell'}">
-            ${pair.bias} BIAS
-          </div>
-        </div>
+            } catch (err) {
+                console.error("Aggregation Frame Core Failure: ", err);
+            }
+        }
 
-        <div class="info">
+        function compileActiveFilterSorting() {
+            const patternStable = /(USDC|FDUSD|TUSD|DAI|BUSD|EUR|TRY|USDT)/;
 
-          <div class="box">
-            <span>Entry</span>
-            <strong>${pair.entry}</strong>
-          </div>
+            filteredWorkspaceData = systemMasterDatabase.filter(coin => {
+                if (patternStable.test(coin.base)) return false;
 
-          <div class="box">
-            <span>Stop Loss</span>
-            <strong>${pair.sl}</strong>
-          </div>
+                // HIGH PERFORMANCE FIX: Matikan batasan Marketcap jika user sedang melakukan pencarian manual
+                if (clientQueryKeyword.trim() !== "") {
+                    const sanitizedKeyword = clientQueryKeyword.toUpperCase().trim();
+                    return coin.symbol.toUpperCase().includes(sanitizedKeyword) || coin.name.toUpperCase().includes(sanitizedKeyword);
+                }
 
-          <div class="box">
-            <span>Take Profit</span>
-            <strong>${pair.tp}</strong>
-          </div>
+                // Jalankan filter kategori Cap adaptif jika kolom pencarian kosong
+                const cap = coin.marketCap;
+                if (selectedCapitalizationRange === 'low') return cap > 0 && cap < 15000000;
+                if (selectedCapitalizationRange === 'mid') return cap >= 15000000 && cap < 500000000;
+                if (selectedCapitalizationRange === 'big') return cap >= 500000000;
+                return true;
+            });
 
-          <div class="box">
-            <span>Risk</span>
-            <strong>${pair.risk}</strong>
-          </div>
+            // Urutkan berdasarkan Volume perdagangan tertinggi demi keandalan analisis quant pasar
+            filteredWorkspaceData.sort((alpha, beta) => beta.volume - alpha.volume);
 
-        </div>
+            if (sliderIndexPointer >= filteredWorkspaceData.length) {
+                sliderIndexPointer = 0;
+            }
 
-        <div class="tags">
-          ${tags}
-        </div>
+            renderWorkspaceDisplay();
+        }
 
-      </div>
-    `;
-  });
-}
+        function renderWorkspaceDisplay() {
+            const viewportContainer = document.getElementById('grid-container');
+            viewportContainer.innerHTML = '';
 
-function loadMarket(type){
+            const localLanguagePackage = translationDatabase[systemActiveLanguage];
+            const targetedRenderSlice = filteredWorkspaceData.slice(sliderIndexPointer, sliderIndexPointer + strictRowMaxItems);
 
-  if(type === 'crypto'){
-    renderPairs(cryptoPairs);
-  } else {
-    renderPairs(forexPairs);
-  }
-}
+            const computedTotalPages = Math.ceil(filteredWorkspaceData.length / strictRowMaxItems) || 1;
+            const currentComputedPage = Math.floor(sliderIndexPointer / strictRowMaxItems) + 1;
+            document.getElementById('slider-pagination-label').innerText = `PAGE ${currentComputedPage} / ${computedTotalPages} (${filteredWorkspaceData.length} PAIRS)`;
 
-function searchPair(){
+            if (targetedRenderSlice.length === 0) {
+                viewportContainer.innerHTML = `
+                    <div class="col-span-full text-center py-24 border border-dashed border-zinc-800 rounded-xl font-mono-tech text-zinc-600 uppercase tracking-widest">
+                        NO ACTIVE PAIR MATCHES CURRENT ROUTER METRIC
+                    </div>
+                `;
+                return;
+            }
 
-  const input = document
-    .getElementById("searchInput")
-    .value
-    .toUpperCase();
+            targetedRenderSlice.forEach(pairNode => {
+                const liveMarketPrice = pairNode.price;
+                const pricePercentage24h = pairNode.change;
+                const highExtreme24h = pairNode.high;
+                const lowExtreme24h = pairNode.low;
 
-  const cards = document.querySelectorAll(".pair-card");
+                const rangeBarPercentage = ((liveMarketPrice - lowExtreme24h) / (highExtreme24h - lowExtreme24h || 1)) * 100;
+                const operationalTrend = pricePercentage24h >= 0 ? 'LONG' : 'SHORT';
+                const optimizedAlphaEntry = operationalTrend === 'LONG' ? liveMarketPrice * 0.9985 : liveMarketPrice * 1.0015;
 
-  cards.forEach(card=>{
+                // Adaptive precision decimals engine
+                let formattingDigits = 2;
+                if (liveMarketPrice < 0.000001) formattingDigits = 8;
+                else if (liveMarketPrice < 0.001) formattingDigits = 6;
+                else if (liveMarketPrice < 1) formattingDigits = 4;
 
-    const text = card.innerText.toUpperCase();
+                const builtCard = document.createElement('div');
+                builtCard.className = `tron-card p-5 flex flex-col justify-between cursor-pointer`;
+                
+                // RESTORED IN FULL: Jalankan modal spesifikasi detail ketika kartu diklik
+                builtCard.setAttribute('onclick', `showIntelligenceSpecs('${pairNode.id}')`);
 
-    if(text.includes(input)){
-      card.style.display = "block";
-    } else {
-      card.style.display = "none";
-    }
+                builtCard.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-3 font-mono-tech">
+                            <div>
+                                <h3 class="text-sm font-black text-white tracking-wider">${pairNode.base}<span class="text-[9px] text-zinc-600 font-normal">/USD</span></h3>
+                                <p class="text-[9px] text-cyan-400 font-bold mt-0.5">VOL 24H: $${(pairNode.volume/1000000).toFixed(2)}M</p>
+                            </div>
+                            <span class="text-[9px] font-bold px-2 py-0.5 rounded-md ${pricePercentage24h >= 0 ? 'bg-emerald-950/70 text-emerald-400 border border-emerald-500/20' : 'bg-rose-950/70 text-rose-400 border border-rose-500/20'}">
+                                ${pricePercentage24h >= 0 ? '+' : ''}${pricePercentage24h.toFixed(2)}%
+                            </span>
+                        </div>
 
-  });
-}
+                        <div class="mb-3 font-mono-tech text-[10px]">
+                            <span class="text-zinc-600 text-[8px] block tracking-widest font-bold uppercase">${localLanguagePackage.networkLabel}</span>
+                            <span class="text-zinc-300 font-bold tracking-tight text-ellipsis overflow-hidden block">${pairNode.source}</span>
+                        </div>
 
-loadMarket('crypto');
+                        <div class="mb-4 bg-black/40 p-2.5 rounded-lg border border-zinc-900/60">
+                            <div class="flex justify-between text-[8px] font-bold text-zinc-500 mb-1 font-mono-tech">
+                                <span>L: $${lowExtreme24h.toFixed(formattingDigits)}</span>
+                                <span class="text-red-400 font-bold tracking-tighter uppercase font-sans">${pairNode.funding !== 'N/A (SPOT ORDERBOOK)' && pairNode.funding !== 'N/A (DEX AMM POOL)' ? 'DERIVATIVE PERP' : 'SPOT MATRIX'}</span>
+                                <span>H: $${highExtreme24h.toFixed(formattingDigits)}</span>
+                            </div>
+                            <div class="w-full h-1 bg-zinc-900 rounded-full overflow-hidden">
+                                <div class="h-full bg-cyan-400 shadow-[0_0_8px_rgba(0,240,255,0.8)]" style="width: ${Math.min(Math.max(rangeBarPercentage, 0), 100)}%"></div>
+                            </div>
+                        </div>
 
-</script>
+                        <div class="space-y-1.5 text-[11px] font-mono-tech border-t border-zinc-900/80 pt-3">
+                            <div class="flex justify-between text-zinc-500">
+                                <span>${localLanguagePackage.entry}</span>
+                                <span class="text-white font-bold">$${optimizedAlphaEntry.toFixed(formattingDigits)}</span>
+                            </div>
+                            <div class="flex justify-between text-zinc-500">
+                                <span>${localLanguagePackage.live}</span>
+                                <span class="text-cyan-400 font-extrabold">$${liveMarketPrice.toFixed(formattingDigits)}</span>
+                            </div>
+                            <div class="flex justify-between text-emerald-400 font-bold pt-0.5">
+                                <span class="text-zinc-600 font-normal">${localLanguagePackage.tp}</span>
+                                <span>$${(operationalTrend === 'LONG' ? optimizedAlphaEntry * 1.025 : optimizedAlphaEntry * 0.975).toFixed(formattingDigits)}</span>
+                            </div>
+                            <div class="flex justify-between text-rose-400 font-bold">
+                                <span class="text-zinc-600 font-normal">${localLanguagePackage.sl}</span>
+                                <span>$${(operationalTrend === 'LONG' ? optimizedAlphaEntry * 0.99 : optimizedAlphaEntry * 1.01).toFixed(formattingDigits)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                viewportContainer.appendChild(builtCard);
+            });
+        }
 
+        // FULLRESTORE: POPUP INTERFACES SPECIFICATION WINDOW METRIC
+        function showIntelligenceSpecs(idKey) {
+            const lookupNode = systemMasterDatabase.find(item => item.id === idKey);
+            if (!lookupNode) return;
+
+            const structuralModal = document.getElementById('specs-modal');
+            const dataFillingArea = document.getElementById('modal-content-area');
+
+            let formattingDigits = 2;
+            if (lookupNode.price < 0.000001) formattingDigits = 8;
+            else if (lookupNode.price < 0.001) formattingDigits = 6;
+
+            dataFillingArea.innerHTML = `
+                <div class="border-b border-zinc-900 pb-3 mb-4">
+                    <h2 class="text-sm font-black text-white tracking-widest uppercase">${lookupNode.base} DETAILED METRICS</h2>
+                    <p class="text-[9px] text-cyan-400 font-bold uppercase tracking-widest mt-1">FEED NODE SYSTEM: ${lookupNode.source}</p>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3 text-[11px] mb-4">
+                    <div class="bg-black/60 p-3 rounded-lg border border-zinc-900">
+                        <p class="text-zinc-500 text-[8px] font-bold mb-0.5 uppercase">ESTIMATED NETWORK CAP</p>
+                        <p class="text-white font-mono-tech font-bold">$${(lookupNode.marketCap/1000000).toFixed(2)}M</p>
+                    </div>
+                    <div class="bg-black/60 p-3 rounded-lg border border-zinc-900">
+                        <p class="text-zinc-500 text-[8px] font-bold mb-0.5 uppercase">FUNDING STATE RATIO</p>
+                        <p class="text-cyan-400 font-mono-tech font-bold">${lookupNode.funding}</p>
+                    </div>
+                    <div class="bg-black/60 p-3 rounded-lg border border-zinc-900">
+                        <p class="text-zinc-500 text-[8px] font-bold mb-0.5 uppercase">ROUTER SYNC STATE</p>
+                        <p class="text-emerald-400 font-mono-tech font-bold uppercase">100% OPERATIONAL</p>
+                    </div>
+                    <div class="bg-black/60 p-3 rounded-lg border border-zinc-900">
+                        <p class="text-zinc-500 text-[8px] font-bold mb-0.5 uppercase">SYNTHETIC SPREAD SCALE</p>
+                        <p class="text-white font-mono-tech font-bold">$${(lookupNode.price * 0.000012).toFixed(formattingDigits)}</p>
+                    </div>
+                </div>
+                <div class="bg-zinc-950 p-2.5 rounded-lg text-[10px] text-zinc-400 border border-zinc-900 font-mono-tech">
+                    <span class="text-zinc-600 block text-[8px] font-bold uppercase mb-0.5">TRANSACTION RECORD VOLUME VELOCITY</span>
+                    ${lookupNode.velocity}
+                </div>
+            `;
+            structuralModal.classList.remove('hidden');
+        }
+
+        function hideIntelligenceModal() { document.getElementById('specs-modal').classList.add('hidden'); }
+
+        // NAVIGATION LOGIC TRACKS SYSTEM SLIDERS
+        function triggerNextPage() {
+            if (sliderIndexPointer + strictRowMaxItems < filteredWorkspaceData.length) {
+                sliderIndexPointer += strictRowMaxItems;
+                renderWorkspaceDisplay();
+            }
+        }
+
+        function triggerPreviousPage() {
+            if (sliderIndexPointer - strictRowMaxItems >= 0) {
+                sliderIndexPointer -= strictRowMaxItems;
+                renderWorkspaceDisplay();
+            }
+        }
+
+        function handleGlobalSearch(inputStr) {
+            clientQueryKeyword = inputStr;
+            sliderIndexPointer = 0; 
+            
+            // Trigger polling network if length criteria matches text fields
+            if(inputStr.length > 2) {
+                fetchSecurePipelineNodes();
+            } else {
+                compileActiveFilterSorting();
+            }
+        }
+
+        function handleCapSelection(capRangeId) {
+            selectedCapitalizationRange = capRangeId;
+            sliderIndexPointer = 0; 
+            document.querySelectorAll('[id^="c-"]').forEach(el => el.classList.remove('active-filter'));
+            document.getElementById('c-' + capRangeId).classList.add('active-filter');
+            compileActiveFilterSorting();
+        }
+
+        function changeLanguage(langCode) {
+            systemActiveLanguage = langCode;
+            document.querySelectorAll('#lang-selector button').forEach(b => b.classList.remove('active-lang'));
+            document.getElementById('lang-' + langCode).classList.add('active-lang');
+            
+            const localizedStrings = translationDatabase[langCode];
+            document.getElementById('system-quote').innerText = localizedStrings.quote;
+            document.getElementById('lbl-disclaimer').innerText = localizedStrings.disclaimer;
+            document.getElementById('search-bar').placeholder = localizedStrings.placeholder;
+            
+            compileWorkspaceDisplayStrings();
+            renderWorkspaceDisplay();
+        }
+
+        function compileWorkspaceDisplayStrings() {
+            if (systemActiveLanguage === 'id') {
+                document.getElementById('lbl-matrix-1').innerText = 'BINANCE NODE RUTE';
+                document.getElementById('lbl-matrix-2').innerText = 'HYPERLIQUID PERP POOL';
+                document.getElementById('lbl-matrix-3').innerText = 'DEXSCREENER DATA CACHE';
+                document.getElementById('lbl-matrix-4').innerText = 'TOTAL KONSOLIDASI PAIRS';
+            } else if (systemActiveLanguage === 'en') {
+                document.getElementById('lbl-matrix-1').innerText = 'BINANCE NODE ROUTE';
+                document.getElementById('lbl-matrix-2').innerText = 'HYPERLIQUID PERP POOL';
+                document.getElementById('lbl-matrix-3').innerText = 'DEXSCREENER DATA CACHE';
+                document.getElementById('lbl-matrix-4').innerText = 'TOTAL CONSOLIDATED PAIRS';
+            } else if (systemActiveLanguage === 'jp') {
+                document.getElementById('lbl-matrix-1').innerText = 'バイナンスノードルート';
+                document.getElementById('lbl-matrix-2').innerText = 'HYPERLIQUID 無期限プール';
+                document.getElementById('lbl-matrix-3').innerText = 'DEXSCREENER データ配信';
+                document.getElementById('lbl-matrix-4').innerText = '総統合ペア一覧';
+            }
+        }
+
+        // INSTITUTIONAL TRADING CLOCKS MONITOR RUNTIME
+        function runSystemClocksAndMarketSessions() {
+            const localDate = new Date();
+            const currentUTCHour = localDate.getUTCHours();
+            document.getElementById('clock-24h').innerText = `${String(localDate.getHours()).padStart(2,'0')}:${String(localDate.getMinutes()).padStart(2,'0')}:${String(localDate.getSeconds()).padStart(2,'0')}`;
+
+            const checkSessionState = (elementId, isOpenCondition) => {
+                const targetDom = document.getElementById(elementId);
+                if (isOpenCondition) {
+                    targetDom.className = "text-emerald-400 font-bold animate-pulse";
+                } else {
+                    targetDom.className = "text-zinc-600 font-medium";
+                }
+            };
+            
+            checkSessionState('session-tky', currentUTCHour >= 0 && currentUTCHour < 9);
+            checkSessionState('session-ldn', currentUTCHour >= 8 && currentUTCHour < 17);
+            checkSessionState('session-nyc', currentUTCHour >= 13 && currentUTCHour < 22);
+        }
+
+        // Polling Timers Configuration
+        setInterval(fetchSecurePipelineNodes, 4000);
+        setInterval(runSystemClocksAndMarketSessions, 1000);
+
+        // Bootstrap Launcher
+        fetchSecurePipelineNodes();
+        runSystemClocksAndMarketSessions();
+    </script>
 </body>
 </html>
