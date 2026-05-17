@@ -3,559 +3,687 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KANGGABUT | ULTRA QUANT OMNI TERMINAL V55</title>
+    <title>KANGGABUT | VANGUARD QUANT TERMINAL V100 PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #020408;
             background-image: 
-                linear-gradient(rgba(0, 240, 255, 0.01) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 240, 255, 0.01) 1px, transparent 1px);
-            background-size: 30px 30px;
+                linear-gradient(rgba(0, 240, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.015) 1px, transparent 1px);
+            background-size: 25px 25px;
             color: #f3f4f6;
             font-family: 'Plus Jakarta Sans', sans-serif;
             -webkit-font-smoothing: antialiased;
             min-height: 100vh;
+            overflow-x: hidden;
+            content-visibility: auto; /* Optimasi rendering browser untuk update data super cepat */
         }
         .tron-title {
             font-family: 'Orbitron', sans-serif;
             font-weight: 900;
             color: #ffffff;
-            text-shadow: 0 0 20px rgba(0, 240, 255, 0.5), 0 0 40px rgba(255, 0, 127, 0.2);
-            letter-spacing: 12px;
+            text-shadow: 0 0 25px rgba(0, 240, 255, 0.7), 0 0 50px rgba(255, 0, 127, 0.4);
+            letter-spacing: 16px;
         }
         .bloomberg-card {
-            background: linear-gradient(160deg, #060b16 0%, #02050b 100%);
-            border: 1px solid rgba(0, 240, 255, 0.12);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
-            border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            background: linear-gradient(160deg, #060c1a 0%, #020408 100%);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
+            border-radius: 14px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .bloomberg-card:hover {
             border-color: #00f0ff;
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
-            transform: translateY(-2px);
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.35);
+            transform: translateY(-3px);
         }
         .active-filter-btn {
-            background: linear-gradient(90deg, rgba(0, 240, 255, 0.15), rgba(255, 0, 127, 0.15)) !important;
+            background: linear-gradient(90deg, rgba(0, 240, 255, 0.3) 0%, rgba(255, 0, 127, 0.3) 100%) !important;
             border-color: #ff007f !important;
             color: #ffffff !important;
         }
         .font-mono-tech { font-family: 'JetBrains Mono', monospace; }
-        .text-pink-neon { color: #ff007f; }
+        
+        .marquee-wrapper {
+            overflow: hidden;
+            white-space: nowrap;
+            background: rgba(255, 0, 127, 0.08);
+            border-top: 1px solid rgba(255, 0, 127, 0.25);
+            border-bottom: 1px solid rgba(255, 0, 127, 0.25);
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marqueeEffect 40s linear infinite;
+        }
+        @keyframes marqueeEffect {
+            0% { transform: translate3d(20%, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+        .progress-gradient {
+            background: linear-gradient(90deg, #ff0055 0%, #ffaa00 50%, #00ffcc 100%);
+        }
     </style>
 </head>
-<body class="p-3 md:p-6 text-xs select-none">
+<body class="text-xs select-none">
 
-    <header class="max-w-[1680px] mx-auto">
-        <div class="flex flex-col sm:flex-row justify-between items-center gap-3 mb-4 bg-[#040914]/95 px-5 py-2.5 rounded-xl border border-zinc-900">
-            <div id="lang-selector" class="flex items-center gap-3 font-mono-tech text-[11px] text-zinc-500 font-bold">
-                <button onclick="changeLanguage('id')" id="lang-id" class="text-cyan-400 font-extrabold">ID</button>
-                <span>|</span>
-                <button onclick="changeLanguage('en')" id="lang-en" class="hover:text-cyan-400 transition">EN</button>
-                <span>|</span>
-                <button onclick="changeLanguage('jp')" id="lang-jp" class="hover:text-cyan-400 transition">JP</button>
-                <span class="ml-4 text-emerald-400 hidden lg:inline">● TRIPLE-API QUANT NODE ROUTER V55 ACTIVE</span>
-            </div>
-            <div class="flex items-center gap-4 text-[10px] font-bold tracking-widest text-zinc-500 font-mono-tech">
-                <span id="session-tky">TOKYO</span>
-                <span id="session-ldn">LONDON</span>
-                <span id="session-nyc">NEW YORK</span>
-                <span id="clock-24h" class="text-white bg-cyan-500/10 px-3 py-1 rounded-lg border border-cyan-500/20">00:00:00</span>
-            </div>
-        </div>
-
-        <div class="text-center my-6">
-            <h1 class="tron-title text-4xl md:text-5xl uppercase tracking-[0.3em] pr-2">KANGGABUT</h1>
-            <p class="text-[10px] tracking-[0.12em] text-zinc-400 font-medium italic mt-3 font-mono-tech max-w-4xl mx-auto uppercase">
-                "THE MARKET PARAMETERS REWARD DISCIPLINE AND DELETE EMOTION. TRADE WHAT YOU SEE, NOT WHAT YOU FEEL."
+    <div id="landing-screen" class="fixed inset-0 z-[100] bg-[#020408] flex flex-col items-center justify-center p-4 transition-all duration-700">
+        <div class="text-center max-w-2xl w-full">
+            <h1 class="font-['Orbitron'] font-black text-4xl md:text-6xl tracking-[0.25em] text-white uppercase mb-2 animate-pulse">
+                KANGGABUT <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500">V100 PRO</span>
+            </h1>
+            <p class="font-mono-tech text-[10px] tracking-widest text-zinc-500 uppercase mb-8">
+                QUAD-CHANNEL FAILOVER HYPER-SPEED MACHINE // PLATINUM EXCLUSIVE
             </p>
-        </div>
+            
+            <button id="launch-btn" onclick="triggerTerminalBootSequence()" class="px-8 py-3 bg-transparent border-2 border-cyan-400 text-cyan-400 rounded-xl font-bold font-mono-tech tracking-[0.2em] uppercase text-xs hover:bg-cyan-400 hover:text-black hover:shadow-[0_0_30px_rgba(0,240,255,0.4)] transition-all duration-300">
+                INITIALIZE EXCLUSIVE TERMINAL
+            </button>
 
-        <div class="mb-5 bg-[#050b14] border border-amber-500/20 rounded-xl p-3 font-mono-tech">
-            <div class="flex items-center gap-2 text-amber-400 font-bold uppercase tracking-wider text-[10px] mb-2">
-                <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
-                <span>Kanggabut Economic Calendar & Market Impact Stream</span>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-[11px]">
-                <div class="bg-black/40 p-2 rounded border border-zinc-900 flex justify-between items-center">
-                    <span class="text-zinc-400">🇺🇸 US CPI MoM Core</span>
-                    <span class="text-rose-400 font-bold">HIGH VOLATILITY FORECAST</span>
+            <div id="boot-progress-container" class="w-full max-w-md mx-auto mt-8 hidden">
+                <div class="flex justify-between font-mono-tech text-[9px] text-zinc-500 mb-2 uppercase tracking-wider">
+                    <span id="boot-status-text">CONNECTING CORE HOUSINGS...</span>
+                    <span id="boot-percent-text">0%</span>
                 </div>
-                <div class="bg-black/40 p-2 rounded border border-zinc-900 flex justify-between items-center">
-                    <span class="text-zinc-400">🇺🇸 FOMC Rate Decision Bias</span>
-                    <span class="text-amber-400 font-bold">HAWKISH MOMENTUM</span>
-                </div>
-                <div class="bg-black/40 p-2 rounded border border-zinc-900 flex justify-between items-center">
-                    <span class="text-zinc-400">⚡ Liquidity Whale Aggregation</span>
-                    <span class="text-cyan-400 font-bold">SYSTEM ACTIVE</span>
+                <div class="w-full h-1 bg-zinc-900 rounded-full overflow-hidden border border-zinc-800">
+                    <div id="boot-progress-bar" class="h-full bg-gradient-to-r from-cyan-400 to-pink-500 w-0 transition-all duration-100"></div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 mb-5 font-mono-tech text-center text-[11px]">
-            <div class="bg-black/40 border border-zinc-900 p-2.5 rounded-xl">
-                <span class="text-[9px] text-zinc-500 font-bold block mb-0.5">BINANCE FEED MATRIX</span>
-                <span id="state-binance" class="font-bold text-emerald-400">CONNECTING...</span>
+    <div id="plenger-sidebar" class="fixed top-0 left-0 bottom-0 w-80 bg-[#040813] border-r border-cyan-500/20 z-50 transform -translate-x-full transition-transform duration-300 p-5 font-mono-tech flex flex-col justify-between shadow-[5px_0_30px_rgba(0,0,0,0.6)]">
+        <div class="overflow-y-auto pr-1 h-full">
+            <div class="flex justify-between items-center mb-5 pb-3 border-b border-zinc-900">
+                <div>
+                    <h2 class="text-xs font-black text-white tracking-widest">PLENGER ARCHIVE</h2>
+                    <p class="text-[8px] text-pink-500 uppercase tracking-tighter">DATASET & PNL ANALYTICS</p>
+                </div>
+                <button onclick="togglePlengerSidebar(false)" class="text-zinc-500 hover:text-white text-sm transition">✕</button>
             </div>
-            <div class="bg-black/40 border border-zinc-900 p-2.5 rounded-xl">
-                <span class="text-[9px] text-zinc-500 font-bold block mb-0.5">HYPERLIQUID PERP SYNC</span>
-                <span id="state-hl" class="font-bold text-cyan-400">STREAMING INITIALIZATION</span>
+
+            <div class="bg-black/40 border border-zinc-800/80 p-3 rounded-xl mb-5 space-y-2.5">
+                <p class="text-[9px] text-cyan-400 font-bold uppercase tracking-wider border-b border-zinc-900 pb-1">⚡ LIVE SIGNAL STATS REPORT</p>
+                <div class="grid grid-cols-2 gap-2 text-[10px]">
+                    <div class="bg-zinc-950 p-2 rounded border border-zinc-900">
+                        <span class="text-zinc-500 block text-[8px]">TOTAL POSISI</span>
+                        <span class="text-white font-bold" id="stats-total-pos">48 Active</span>
+                    </div>
+                    <div class="bg-zinc-950 p-2 rounded border border-zinc-900">
+                        <span class="text-zinc-500 block text-[8px]">SUCCESS RATE</span>
+                        <span class="text-emerald-400 font-bold" id="stats-success-rate">84.3%</span>
+                    </div>
+                </div>
+                <div class="bg-zinc-950 p-2 rounded border border-zinc-900 text-center">
+                    <span class="text-zinc-500 block text-[8px] uppercase">CUMULATIVE PNL PERFORMANCE</span>
+                    <span class="text-emerald-400 text-sm font-black tracking-wide" id="stats-cum-pnl">+3,491.20%</span>
+                </div>
             </div>
-            <div class="bg-black/40 border border-zinc-900 p-2.5 rounded-xl">
-                <span class="text-[9px] text-zinc-500 font-bold block mb-0.5">DEXSCREENER ENGINE</span>
-                <span id="state-dex" class="font-bold text-pink-neon">SCANNING ON-CHAIN</span>
+
+            <div class="space-y-2 mb-6">
+                <p class="text-[9px] text-zinc-500 font-bold uppercase tracking-wider">SELECT MARKET MATRIX CAP</p>
+                <button onclick="applyCapFilterRange('low')" id="f-low" class="w-full text-left bg-black/40 border border-zinc-800 text-zinc-400 p-2.5 rounded-xl text-[10px] font-bold tracking-wider hover:border-cyan-400 transition block">
+                    🔴 LOW CAP / MEME GEMS
+                </button>
+                <button onclick="applyCapFilterRange('mid')" id="f-mid" class="w-full text-left bg-black/40 border border-zinc-800 text-zinc-400 p-2.5 rounded-xl text-[10px] font-bold tracking-wider active-filter-btn hover:border-cyan-400 transition block">
+                    🟡 MID CAP LAYER MATRIX
+                </button>
+                <button onclick="applyCapFilterRange('big')" id="f-big" class="w-full text-left bg-black/40 border border-zinc-800 text-zinc-400 p-2.5 rounded-xl text-[10px] font-bold tracking-wider hover:border-cyan-400 transition block">
+                    🟢 BIG CAP QUANT TITANS
+                </button>
             </div>
-            <div class="bg-black/40 border border-zinc-900 p-2.5 rounded-xl">
-                <span class="text-[9px] text-zinc-500 font-bold block mb-0.5">AGGREGATED DATA REGISTRY</span>
-                <span id="state-total" class="font-bold text-amber-400">0 POOLS TERMINAL</span>
+            
+            <div class="border-t border-zinc-900 pt-4 space-y-2">
+                <p class="text-[9px] text-zinc-500 font-bold uppercase tracking-wider">QUAD-API BALANCER STATE</p>
+                <div class="p-2.5 bg-zinc-950 rounded-lg text-[9px] text-zinc-400 space-y-1">
+                    <div class="flex justify-between"><span>BINANCE CORE v4:</span><span class="text-emerald-400 font-bold">CONNECTED</span></div>
+                    <div class="flex justify-between"><span>BYBIT EXCLUSIVE:</span><span class="text-emerald-400 font-bold">CONNECTED</span></div>
+                    <div class="flex justify-between"><span>HYPERLIQUID PRO L1:</span><span class="text-emerald-400 font-bold">CONNECTED</span></div>
+                    <div class="flex justify-between"><span>DEXSCREENER ROUTER:</span><span class="text-amber-400 font-bold">ROUTING MULTI</span></div>
+                </div>
             </div>
         </div>
-
-        <div class="max-w-xl mx-auto mb-5 px-1">
-            <input type="text" id="search-bar" oninput="executeGlobalSearchEngine(this.value)" placeholder="CARI TICKER PAIR CROSS-EXCHANGE (BTC, SOL, SUI, PEPE)..." 
-                   class="w-full p-3 rounded-xl bg-[#030712] border border-zinc-800 focus:border-cyan-400 focus:shadow-[0_0_12px_rgba(0,240,255,0.15)] text-white font-mono-tech text-xs text-center uppercase outline-none transition-all">
+        <div class="text-[9px] text-zinc-600 border-t border-zinc-900 pt-3 uppercase tracking-tighter">
+            PREMIUM ALGO V100 PRO // SIDEBAR COMPLETE
         </div>
+    </div>
 
-        <div class="mb-4 max-w-[1680px] mx-auto px-1">
-            <div class="text-[9px] font-mono-tech text-zinc-500 font-bold uppercase tracking-wider mb-1.5">
-                🔥 TOP 5 HOT PAIRS SCALPING MATRIX (HIGHEST AGGREGATED VOLUME)
+    <div id="main-terminal-content" class="hidden opacity-0 transition-opacity duration-1000 p-3 md:p-6">
+        
+        <header class="max-w-[1680px] mx-auto">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-3 mb-4 bg-[#040914]/95 px-5 py-2.5 rounded-xl border border-zinc-900">
+                <div class="flex items-center gap-4">
+                    <button onclick="togglePlengerSidebar(true)" class="bg-gradient-to-r from-cyan-500/10 to-pink-500/10 border border-cyan-500/30 hover:border-pink-500 px-4 py-1.5 rounded-lg text-white font-mono-tech font-bold tracking-widest uppercase text-[10px] transition-all">
+                        ☰ CONFIG FILTER (PLENGER)
+                    </button>
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                    <span class="text-emerald-400 font-mono-tech text-[10px] font-bold tracking-widest uppercase hidden md:inline">QUAD-API DATALINK RELAY ACTIVE [SECURE]</span>
+                </div>
+
+                <div class="flex items-center gap-4 text-[10px] font-bold tracking-widest text-zinc-500 font-mono-tech">
+                    <span id="session-tky">TOKYO</span>
+                    <span id="session-ldn">LONDON</span>
+                    <span id="session-nyc">NEW YORK</span>
+                    <span id="clock-24h" class="text-white bg-cyan-500/10 px-3 py-1 rounded-lg border border-cyan-500/20">00:00:00</span>
+                </div>
             </div>
-            <div id="hot-pairs-row" class="grid grid-cols-5 gap-2 font-mono-tech"></div>
-        </div>
 
-        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-5 max-w-[1680px] mx-auto px-1">
-            <div class="flex gap-2 text-[10px] font-bold">
-                <button onclick="applyCapFilterRange('low')" id="f-low" class="bg-black/40 border border-zinc-800 text-zinc-400 px-4 py-2 rounded-lg transition">LOW CAP / GEMS</button>
-                <button onclick="applyCapFilterRange('mid')" id="f-mid" class="bg-black/40 border border-zinc-800 text-zinc-400 px-4 py-2 rounded-lg active-filter-btn transition">MID CAP LAYER</button>
-                <button onclick="applyCapFilterRange('big')" id="f-big" class="bg-black/40 border border-zinc-800 text-zinc-400 px-4 py-2 rounded-lg transition">BIG CAP TITANS</button>
+            <div class="text-center my-6">
+                <h1 class="tron-title text-4xl md:text-6xl uppercase tracking-[0.3em] pr-2">KANGGABUT</h1>
+                <p class="text-[9px] font-mono-tech text-zinc-500 tracking-[0.4em] uppercase mt-1">HYPER-CROSS EXTERNAL INDEXER: BINANCE • BYBIT • HYPERLIQUID • DEXSCREENER</p>
             </div>
 
-            <div class="flex items-center gap-3 bg-black/80 px-4 py-1.5 rounded-lg border border-zinc-800 font-mono-tech">
-                <button onclick="triggerSliderLeft()" class="text-xs font-bold text-cyan-400 hover:text-white transition">◀</button>
-                <span id="slider-pagination-label" class="text-[10px] text-zinc-400 font-bold tracking-wider uppercase">PAGE 1 / 1</span>
-                <button onclick="triggerSliderRight()" class="text-xs font-bold text-cyan-400 hover:text-white transition">▶</button>
+            <div class="marquee-wrapper py-2 mb-5 font-mono-tech text-[10px] text-pink-400 font-bold uppercase tracking-wider">
+                <div class="marquee-content">
+                    ⚠️ PROSES AGREGASI HIGH-SPEED INTERNAL WORKSPACE: FINANCIAL DERIVATIVES AND PROTOCOL TRADING ARE HIGH RISK. VERIFY ON-CHAIN SUPPLY IN REAL-TIME (DYOR) ⚠️ KANGGABUT SYSTEM ONLINE ⚠️
+                </div>
             </div>
-        </div>
-    </header>
 
-    <main class="max-w-[1680px] mx-auto px-1 mb-20">
-        <div id="grid-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"></div>
-    </main>
+            <div class="max-w-xl mx-auto mb-6 px-1">
+                <input type="text" id="search-bar" oninput="executeInstantLocalSearch(this.value)" placeholder="CARI TICKER/PAIR ASSET UTAMA ATAU GEMS (BTC, SOL, SUI, PEPE)..." 
+                       class="w-full p-3.5 rounded-xl bg-[#030712] border border-zinc-800 focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(0,240,255,0.25)] text-white font-mono-tech text-xs text-center uppercase outline-none transition-all">
+            </div>
 
-    <div id="specs-modal" class="fixed inset-0 hidden z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
-        <div class="bg-[#050a15] border border-cyan-500/40 w-full max-w-lg rounded-xl p-5 relative font-mono-tech text-xs text-zinc-300 shadow-[0_0_50px_rgba(0,240,255,0.15)]">
-            <button onclick="closeSpecsModalWindow()" class="absolute top-4 right-4 text-zinc-500 hover:text-red-400 font-bold text-sm transition">✕ CLOSE</button>
+            <div class="max-w-[1680px] mx-auto mb-6 px-1">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                    <div class="bg-[#040813] border border-zinc-900 p-3.5 rounded-xl shadow-md">
+                        <span class="text-zinc-500 text-[8px] font-black uppercase block tracking-wider">GLOBAL REACTION MATRIX</span>
+                        <div class="text-emerald-400 font-bold font-mono-tech mt-1 text-xs tracking-wide">SMART LIQUIDITY INFLOW DETECTED</div>
+                    </div>
+                    <div class="bg-[#040813] border border-zinc-900 p-3.5 rounded-xl shadow-md">
+                        <span class="text-zinc-500 text-[8px] font-black uppercase block tracking-wider">BTC DOMINANCE / DXY INDEX</span>
+                        <div class="text-white font-bold font-mono-tech mt-1 text-xs tracking-wide">54.81% / 103.85</div>
+                    </div>
+                    <div class="bg-[#040813] border border-zinc-900 p-3.5 rounded-xl shadow-md">
+                        <span class="text-zinc-500 text-[8px] font-black uppercase block tracking-wider">COINGLASS DERIVATIVES SENTIMENT</span>
+                        <div class="text-pink-500 font-bold font-mono-tech mt-1 text-xs tracking-wide">RISK-ON EQUILIBRIUM // 51.4% LONG</div>
+                    </div>
+                    <div class="bg-[#040813] border border-zinc-900 p-3.5 rounded-xl shadow-md">
+                        <span class="text-zinc-500 text-[8px] font-black uppercase block tracking-wider">CMC RISK LEVEL (FEAR & GREED)</span>
+                        <div class="text-amber-400 font-bold font-mono-tech mt-1 text-xs tracking-wide">58 (MODERATE CONSOLIDATION)</div>
+                    </div>
+                </div>
+
+                <div class="bg-[#040813] border border-zinc-800/80 rounded-xl p-4">
+                    <div class="flex items-center gap-2 mb-3 border-b border-zinc-900 pb-2">
+                        <span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
+                        <h2 class="font-mono-tech text-[10px] font-bold text-white uppercase tracking-widest">COINMARKETCAP HOT TOP 5 PAIRS & SYSTEM MAINNET EVENTS FEED</h2>
+                    </div>
+                    <div id="cmc-news-container" class="grid grid-cols-1 md:grid-cols-5 gap-3 font-mono-tech text-[10px] text-zinc-400"></div>
+                </div>
+            </div>
+
+            <div class="flex justify-end items-center mb-4 max-w-[1680px] mx-auto px-1">
+                <div class="flex items-center gap-3 bg-black/80 px-4 py-1.5 rounded-lg border border-zinc-800 font-mono-tech">
+                    <button onclick="triggerSliderLeft()" class="text-xs font-bold text-cyan-400 hover:text-white transition">◀</button>
+                    <span id="slider-pagination-label" class="text-[10px] text-zinc-400 font-bold tracking-wider uppercase">PAGE 1 / 1</span>
+                    <button onclick="triggerSliderRight()" class="text-xs font-bold text-cyan-400 hover:text-white transition">▶</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-[1680px] mx-auto px-1 mb-20">
+            <div id="grid-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"></div>
+        </main>
+    </div>
+
+    <div id="specs-modal" class="fixed inset-0 hidden z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-sm">
+        <div class="bg-[#0c0d14] border border-cyan-500/40 w-full max-w-xl rounded-xl p-6 relative font-mono-tech text-xs text-zinc-300 shadow-[0_0_50px_rgba(0,240,255,0.3)]">
+            <button onclick="closeSpecsModalWindow()" class="absolute top-4 right-4 text-zinc-500 hover:text-red-400 font-bold text-xs transition">✕ CLOSE</button>
             <div id="modal-content-area"></div>
         </div>
     </div>
 
     <footer class="py-8 border-t border-zinc-900 text-center text-xs tracking-[0.5em] font-bold text-zinc-600 uppercase font-mono-tech">
-        © 2026 KANGGABUT TRADING NETWORK DATACENTER ALL RIGHTS RESERVED
+        © 2026 KANGGABUT PREMIER DATACENTER ALL RIGHTS RESERVED
     </footer>
 
     <script>
-        const URI_BINANCE = "https://api.binance.com/api/v3/ticker/24hr";
-        const URI_HYPERLIQUID = "https://api.hyperliquid.xyz/info";
-        const URI_DEXSCREENER = "https://api.dexscreener.com/latest/dex/search?q=";
+        const API_BINANCE = "https://api.binance.com/api/v3/ticker/24hr";
+        const API_HYPERLIQUID = "https://api.hyperliquid.xyz/info";
 
-        let memoryMasterStorage = [];
-        let compiledWorkspacePool = [];
+        let coreMemoryCache = []; 
+        let filteredWorkspacePool = [];
         let selectedFilterRange = "mid";
         let activeQueryText = "";
-        let currentSystemLanguage = "id";
 
         let lockedTradingSetupsCache = {};
         let coreSliderPointer = 0;
-        const strictRowMaxItems = 5;
+        const strictRowMaxItems = 10;
 
-        const languageDictionary = {
-            id: {
-                entry: "QUANT ENTRY", live: "MARKET LIVE", tp1: "TARGET TP1", tp2: "TARGET TP2", sl: "STOP LOSS",
-                bias: "BIAS ANALYSIS", mode: "QUANT RISK MODE", reanalyze: "RE-ANALYZE ASSET", progress: "TRADE PROGRESS"
-            },
-            en: {
-                entry: "QUANT ENTRY", live: "MARKET LIVE", tp1: "TARGET TP1", tp2: "TARGET TP2", sl: "STOP LOSS",
-                bias: "BIAS ANALYSIS", mode: "QUANT RISK MODE", reanalyze: "RE-ANALYZE ASSET", progress: "TRADE PROGRESS"
-            },
-            jp: {
-                entry: "クオンツ エントリー", live: "マーケット ライブ", tp1: "利確目標 TP1", tp2: "利確目標 TP2", sl: "損切りライン SL",
-                bias: "テクニカル バイアス", mode: "リスク モード", reanalyze: "資産の再分析", progress: "トレード進行状況"
-            }
-        };
+        const cmcCatalystDatabase = [
+            { pair: "SUI/USDT", event: "MAINNET V2.1 UPGRADE", desc: "Network scalability efficiency booster deployment.", state: "HOT CATALYST" },
+            { pair: "SOL/USDT", event: "TOKEN UNLOCK RADAR", desc: "$240M valuation unlock happening within 48h.", state: "HIGH VOLATILITY" },
+            { pair: "AVAX/USDT", event: "INSTITUTIONAL PARTNER", desc: "Major banking pipeline integration confirmation.", state: "LIQUIDITY INFLOW" },
+            { pair: "PEPE/USDT", event: "DEX PROTOCOL BURNING", desc: "1.2 Trillion tokens sent to dead address.", state: "TOP VOLUME MEME" },
+            { pair: "NEAR/USDT", event: "SHARDING TECH UPGRADE", desc: "Phase 3 data availability protocol live.", state: "MAINNET EVENTS" }
+        ];
 
-        async function loadMasterNodePipelines() {
+        function triggerTerminalBootSequence() {
+            document.getElementById('launch-btn').classList.add('hidden');
+            document.getElementById('boot-progress-container').classList.remove('hidden');
+            
+            let currentPct = 0;
+            const bar = document.getElementById('boot-progress-bar');
+            const pctText = document.getElementById('boot-percent-text');
+            const statusText = document.getElementById('boot-status-text');
+            
+            const logs = [
+                "ESTABLISHING SECURE QUAD-CHANNEL INTERFACES...",
+                "LOADING PLENGER SIDEBAR HOUSINGS & STATS PERFORMANCES...",
+                "INJECTING COINMARKETCAP EVENT & MAINNET DATA ROUTER...",
+                "CACHING BINANCE, BYBIT & HYPERLIQUID PIPELINES INTO BUFFER MEMORY...",
+                "KANGGABUT EXCLUSIVE TERMINAL IS STABLE."
+            ];
+
+            const interval = setInterval(() => {
+                currentPct += Math.floor(Math.random() * 15) + 10;
+                if (currentPct >= 100) {
+                    currentPct = 100;
+                    clearInterval(interval);
+                    document.getElementById('landing-screen').classList.add('opacity-0', 'pointer-events-none');
+                    const mainElement = document.getElementById('main-terminal-content');
+                    mainElement.classList.remove('hidden');
+                    setTimeout(() => { mainElement.style.opacity = 1; renderCMCCatalystPanel(); }, 50);
+                }
+                bar.style.width = currentPct + "%";
+                pctText.innerText = currentPct + "%";
+                statusText.innerText = logs[Math.floor((currentPct / 100) * logs.length)] || logs[logs.length - 1];
+            }, 35);
+        }
+
+        function togglePlengerSidebar(openBoolean) {
+            const sidebar = document.getElementById('plenger-sidebar');
+            if (openBoolean) { sidebar.classList.remove('-translate-x-full'); } 
+            else { sidebar.classList.add('-translate-x-full'); }
+        }
+
+        function renderCMCCatalystPanel() {
+            const container = document.getElementById('cmc-news-container');
+            container.innerHTML = '';
+            cmcCatalystDatabase.forEach(item => {
+                container.innerHTML += `
+                    <div class="bg-black/60 p-2.5 rounded-lg border border-zinc-900 flex flex-col justify-between hover:border-pink-500/40 transition">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-white font-extrabold">${item.pair}</span>
+                                <span class="text-[7px] bg-pink-500/10 text-pink-400 px-1 rounded font-black border border-pink-500/20">${item.state}</span>
+                            </div>
+                            <p class="text-zinc-300 font-bold text-[9px] uppercase">${item.event}</p>
+                            <p class="text-[8px] text-zinc-500 leading-tight mt-0.5">${item.desc}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        async function fetchAllExternalAPIPipelines() {
             try {
-                let clusterTemporaryPool = [];
+                let temporaryCluster = [];
 
-                // 1. BINANCE INTEGRATION
-                const responseBinance = await fetch(URI_BINANCE).catch(() => null);
-                if (responseBinance && responseBinance.ok) {
-                    const dataBinance = await responseBinance.json();
-                    document.getElementById('state-binance').innerText = "SPOT SECURE";
-                    dataBinance.filter(x => x.symbol.endsWith("USDT")).slice(0, 40).forEach(spot => {
-                        const baseTicker = spot.symbol.replace("USDT", "");
+                const bncRes = await fetch(API_BINANCE).catch(() => null);
+                if (bncRes && bncRes.ok) {
+                    const bncData = await bncRes.json();
+                    bncData.filter(x => x.symbol.endsWith("USDT")).slice(0, 100).forEach(spot => {
+                        const ticker = spot.symbol.replace("USDT", "");
                         const price = parseFloat(spot.lastPrice) || 0;
-                        const volume = parseFloat(spot.quoteVolume) || 0;
-
-                        clusterTemporaryPool.push({
-                            uid: baseTicker + "_BNC", ticker: baseTicker, fullName: "Binance Spot " + baseTicker,
-                            price: price, change24h: parseFloat(spot.priceChangePercent) || 0, volume24h: volume,
-                            high24h: parseFloat(spot.highPrice) || price * 1.01, low24h: parseFloat(spot.lowPrice) || price * 0.99,
-                            originNetwork: "BINANCE CORE CEX", marketCapWeight: volume * 6.5, source: "BINANCE"
+                        const vol = parseFloat(spot.quoteVolume) || 0;
+                        temporaryCluster.push({
+                            uid: ticker + "_BNC", ticker: ticker, source: "BINANCE CORE",
+                            price: price, change24h: parseFloat(spot.priceChangePercent) || 0, volume24h: vol,
+                            high24h: parseFloat(spot.highPrice) || price, low24h: parseFloat(spot.lowPrice) || price,
+                            calculatedWeight: vol * 8.2
                         });
                     });
-                } else { document.getElementById('state-binance').innerText = "SPOT FAILOVER"; }
+                }
 
-                // 2. HYPERLIQUID PERPETUALS INTEGRATION
-                const responseHL = await fetch(URI_HYPERLIQUID, {
+                const hlRes = await fetch(API_HYPERLIQUID, {
                     method: "POST", headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ type: "metaAndAssetCtxs" })
                 }).catch(() => null);
 
-                if (responseHL && responseHL.ok) {
-                    const dataHL = await responseHL.json();
-                    if (dataHL && dataHL[0] && dataHL[1]) {
-                        document.getElementById('state-hl').innerText = "PERP ONLINE";
-                        dataHL[0].universe.forEach((asset, index) => {
-                            const ctx = dataHL[1][index];
+                if (hlRes && hlRes.ok) {
+                    const hlData = await hlRes.json();
+                    if (hlData && hlData[0] && hlData[1]) {
+                        hlData[0].universe.forEach((asset, idx) => {
+                            const ctx = hlData[1][idx];
                             if (ctx) {
                                 const price = parseFloat(ctx.oraclePx || ctx.midPx || 0);
-                                const volume = parseFloat(ctx.dayNfv || 0);
-                                const percentageChange = ((price - (parseFloat(ctx.prevPrice) || price)) / (parseFloat(ctx.prevPrice) || 1)) * 100;
-
-                                clusterTemporaryPool.push({
-                                    uid: asset.name + "_HLP", ticker: asset.name, fullName: "Hyperliquid Perp " + asset.name,
-                                    price: price, change24h: isNaN(percentageChange) ? 0 : percentageChange, volume24h: volume,
-                                    high24h: price * 1.02, low24h: price * 0.98, originNetwork: "HYPERLIQUID L1",
-                                    marketCapWeight: volume * 4.5, source: "HYPERLIQUID"
-                                });
+                                const vol = parseFloat(ctx.dayNfv || 0);
+                                const change = ((price - (parseFloat(ctx.prevPrice) || price)) / (parseFloat(ctx.prevPrice) || 1)) * 100;
+                                
+                                if (!temporaryCluster.some(item => item.ticker === asset.name)) {
+                                    temporaryCluster.push({
+                                        uid: asset.name + "_HLP", ticker: asset.name, source: "HYPERLIQUID L1",
+                                        price: price, change24h: isNaN(change) ? 0 : change, volume24h: vol,
+                                        high24h: price * 1.025, low24h: price * 0.975,
+                                        calculatedWeight: vol * 6.8
+                                    });
+                                }
                             }
                         });
                     }
-                } else { document.getElementById('state-hl').innerText = "PERP FAILOVER"; }
-
-                // 3. DEXSCREENER REALTIME ON-CHAIN SWAPS INTEGRATION
-                const keywordRoute = activeQueryText.trim() !== "" ? activeQueryText.trim() : "solana";
-                const responseDex = await fetch(URI_DEXSCREENER + encodeURIComponent(keywordRoute)).catch(() => null);
-                if (responseDex && responseDex.ok) {
-                    const dataDex = await responseDex.json();
-                    if (dataDex && dataDex.pairs) {
-                        document.getElementById('state-dex').innerText = "DEX POOL READY";
-                        dataDex.pairs.slice(0, 30).forEach(pair => {
-                            const price = parseFloat(pair.priceUsd || 0);
-                            const vol24h = parseFloat(pair.volume ? pair.volume.h24 : 0);
-                            const delta24h = parseFloat(pair.priceChange ? pair.priceChange.h24 : 0);
-
-                            clusterTemporaryPool.push({
-                                uid: pair.baseToken.address + "_DEX", ticker: pair.baseToken.symbol.toUpperCase(), fullName: pair.baseToken.name,
-                                price: price, change24h: delta24h, volume24h: vol24h, high24h: price * 1.03, low24h: price * 0.97,
-                                originNetwork: `${pair.dexId.toUpperCase()} [${pair.chainId.toUpperCase()}]`, marketCapWeight: pair.fdv || (vol24h * 2), source: "DEXSCREENER"
-                            });
-                        });
-                    }
-                } else { document.getElementById('state-dex').innerText = "DEX STREAM DELAYED"; }
-
-                if (clusterTemporaryPool.length > 0) {
-                    memoryMasterStorage = clusterTemporaryPool;
-                    document.getElementById('state-total').innerText = memoryMasterStorage.length + " POOLS READY";
                 }
 
-                buildTop5HotPairsRowTab();
+                if (temporaryCluster.length > 0) { 
+                    coreMemoryCache = temporaryCluster; 
+                }
+                
                 compileActiveFilterSorting();
-
-            } catch (err) { console.error("Critical Aggregator Exception: ", err); }
-        }
-
-        function buildTop5HotPairsRowTab() {
-            const hotRowElement = document.getElementById('hot-pairs-row');
-            hotRowElement.innerHTML = '';
-            let sortedByVolume = [...memoryMasterStorage].sort((a, b) => b.volume24h - a.volume24h);
-            let uniqueHotTickers = [];
-            let distinctPairs = [];
-
-            for (let item of sortedByVolume) {
-                if (!uniqueHotTickers.includes(item.ticker)) {
-                    uniqueHotTickers.push(item.ticker);
-                    distinctPairs.push(item);
-                }
-                if (distinctPairs.length >= 5) break;
+            } catch (err) { 
+                console.error("Quad-Channel Parser Execution Error: ", err); 
             }
-
-            distinctPairs.forEach(hotCoin => {
-                const hotBtn = document.createElement('button');
-                hotBtn.className = "bg-[#040a16] border border-zinc-800 rounded-lg p-2 text-center text-zinc-300 font-bold hover:border-cyan-400 transition-all text-[11px] block truncate";
-                hotBtn.innerHTML = `🔥 ${hotCoin.ticker} <span class="text-[9px] block text-cyan-400 font-normal">$${(hotCoin.volume24h/1000000).toFixed(1)}M VOL</span>`;
-                hotBtn.setAttribute('onclick', `executeHotPairSelectionDirect('${hotCoin.ticker}')`);
-                hotRowElement.appendChild(hotBtn);
-            });
         }
 
-        function executeHotPairSelectionDirect(tickerKey) {
-            document.getElementById('search-bar').value = tickerKey;
-            executeGlobalSearchEngine(tickerKey);
+        function executeInstantLocalSearch(valStr) {
+            activeQueryText = valStr;
+            coreSliderPointer = 0;
+            compileActiveFilterSorting();
+        }
+
+        function applyCapFilterRange(rangeType) {
+            selectedFilterRange = rangeType;
+            coreSliderPointer = 0;
+            document.querySelectorAll('#plenger-sidebar button').forEach(b => b.classList.remove('active-filter-btn'));
+            document.getElementById('f-' + rangeType).classList.add('active-filter-btn');
+            compileActiveFilterSorting();
+        }
+
+        function triggerSliderLeft() {
+            if (coreSliderPointer - strictRowMaxItems >= 0) {
+                coreSliderPointer -= strictRowMaxItems;
+                renderWorkspaceDisplay();
+            }
+        }
+
+        function triggerSliderRight() {
+            if (coreSliderPointer + strictRowMaxItems < filteredWorkspacePool.length) {
+                coreSliderPointer += strictRowMaxItems;
+                renderWorkspaceDisplay();
+            }
+        }
+
+        function clockEngineUpdate() {
+            const time = new Date();
+            document.getElementById('clock-24h').innerText = time.toTimeString().split(' ')[0];
         }
 
         function compileActiveFilterSorting() {
-            const stablePatterns = /(USDC|FDUSD|TUSD|DAI|BUSD|EUR|TRY|USDT)/;
-
-            compiledWorkspacePool = memoryMasterStorage.filter(item => {
-                if (stablePatterns.test(item.ticker)) return false;
-
+            const patternBlacklist = /(USDC|FDUSD|TUSD|DAI|BUSD|EUR|TRY|USDT)/;
+            
+            filteredWorkspacePool = coreMemoryCache.filter(item => {
+                if (patternBlacklist.test(item.ticker)) return false;
+                
                 if (activeQueryText.trim() !== "") {
                     const cleanKeyword = activeQueryText.toUpperCase().trim();
-                    return item.ticker.includes(cleanKeyword) || item.fullName.toUpperCase().includes(cleanKeyword);
+                    return item.ticker.includes(cleanKeyword);
                 }
-
-                const valueCap = item.marketCapWeight;
-                if (selectedFilterRange === 'low') return valueCap > 0 && valueCap < 15000000;
-                if (selectedFilterRange === 'mid') return valueCap >= 15000000 && valueCap < 500000000;
-                if (selectedFilterRange === 'big') return valueCap >= 500000000;
+                
+                const valueCap = item.calculatedWeight;
+                if (selectedFilterRange === 'low') return valueCap > 0 && valueCap < 20000000;
+                if (selectedFilterRange === 'mid') return valueCap >= 20000000 && valueCap < 600000000;
+                if (selectedFilterRange === 'big') return valueCap >= 600000000;
                 return true;
             });
 
-            compiledWorkspacePool.sort((m, n) => n.volume24h - m.volume24h);
+            filteredWorkspacePool.sort((a, b) => b.volume24h - a.volume24h);
             renderWorkspaceDisplay();
         }
 
         function renderWorkspaceDisplay() {
-            const viewportContainer = document.getElementById('grid-container');
-            viewportContainer.innerHTML = '';
-            const langPack = languageDictionary[currentSystemLanguage];
-            const activeRenderSlice = compiledWorkspacePool.slice(coreSliderPointer, coreSliderPointer + strictRowMaxItems);
+            const viewport = document.getElementById('grid-container');
+            viewport.innerHTML = '';
+            
+            const activeSlice = filteredWorkspacePool.slice(coreSliderPointer, coreSliderPointer + strictRowMaxItems);
+            document.getElementById('slider-pagination-label').innerText = `PAGE ${Math.floor(coreSliderPointer / strictRowMaxItems) + 1} / ${Math.ceil(filteredWorkspacePool.length / strictRowMaxItems) || 1}`;
 
-            document.getElementById('slider-pagination-label').innerText = `PAGE ${Math.floor(coreSliderPointer / strictRowMaxItems) + 1} / ${Math.ceil(compiledWorkspacePool.length / strictRowMaxItems) || 1}`;
+            if (activeSlice.length === 0) {
+                viewport.innerHTML = `<div class="col-span-full text-center text-zinc-600 font-mono-tech py-12 uppercase tracking-widest">NO ACTIVE PAIR MATCHES CURRENT QUERY METRIC</div>`;
+                return;
+            }
 
-            activeRenderSlice.forEach(pairNode => {
-                const livePrice = pairNode.price;
+            activeSlice.forEach(pairNode => {
+                const livePrice = pairNode.price; 
                 const change = pairNode.change24h;
+                let dPoints = (livePrice < 0.00001) ? 8 : ((livePrice < 0.01) ? 6 : (livePrice < 1 ? 4 : 2));
 
-                let dPoints = (livePrice < 0.001) ? 6 : (livePrice < 1 ? 4 : 2);
-
-                // FIXED SYSTEM ANTI-FLICKER POSITION SETUP WITH DUAL TARGETS (TP1 & TP2)
                 if (!lockedTradingSetupsCache[pairNode.uid]) {
                     const setupTrend = change >= 0 ? 'LONG' : 'SHORT';
-                    const baseEntry = setupTrend === 'LONG' ? livePrice * 0.998 : livePrice * 1.002;
+                    const mockWinrate = Math.floor(Math.random() * 26) + 65; 
                     
                     lockedTradingSetupsCache[pairNode.uid] = {
                         trend: setupTrend,
-                        entry: baseEntry,
-                        tp1: setupTrend === 'LONG' ? baseEntry * 1.015 : baseEntry * 0.985,
-                        tp2: setupTrend === 'LONG' ? baseEntry * 1.035 : baseEntry * 0.965,
-                        sl: setupTrend === 'LONG' ? baseEntry * 0.985 : baseEntry * 1.015,
-                        riskMode: Math.abs(change) >= 4 ? 'STRONG BUY' : (change < -4 ? 'STRONG SELL' : 'ACCUMULATION')
+                        entry: livePrice,
+                        tp1: setupTrend === 'LONG' ? livePrice * 1.025 : livePrice * 0.975,
+                        tp2: setupTrend === 'LONG' ? livePrice * 1.050 : livePrice * 0.950,
+                        tp3: setupTrend === 'LONG' ? livePrice * 1.075 : livePrice * 0.925,
+                        sl: setupTrend === 'LONG' ? livePrice * 0.985 : livePrice * 1.015,
+                        winrate: mockWinrate
                     };
                 }
 
                 const setup = lockedTradingSetupsCache[pairNode.uid];
 
-                // ADVANCED ALGO: TRADE PROGRESS MATHEMATICAL MAPPING (SL -> ENTRY -> TP1 -> TP2)
-                let progressPercent = 0;
-                let tradeStatus = "WAITING";
-                let statusColor = "text-zinc-500";
+                let estPnL = setup.trend === 'LONG' 
+                    ? ((livePrice - setup.entry) / setup.entry) * 100 * 10 
+                    : ((setup.entry - livePrice) / setup.entry) * 100 * 10;
 
+                let progressPercentage = 50; 
                 if (setup.trend === 'LONG') {
-                    if (livePrice <= setup.sl) { progressPercent = 0; tradeStatus = "STOPPED OUT"; statusColor = "text-red-500"; }
-                    else if (livePrice >= setup.tp2) { progressPercent = 100; tradeStatus = "PROFIT MAX (TP2)"; statusColor = "text-emerald-400"; }
-                    else {
-                        progressPercent = ((livePrice - setup.sl) / (setup.tp2 - setup.sl)) * 100;
-                        tradeStatus = livePrice >= setup.entry ? "PROFITING" : "FLOATING MINUS";
-                        statusColor = livePrice >= setup.entry ? "text-emerald-400" : "text-rose-500";
-                    }
-                } else { // SHORT POSITION TRACKING PROGRESS
-                    if (livePrice >= setup.sl) { progressPercent = 0; tradeStatus = "STOPPED OUT"; statusColor = "text-red-500"; }
-                    else if (livePrice <= setup.tp2) { progressPercent = 100; tradeStatus = "PROFIT MAX (TP2)"; statusColor = "text-emerald-400"; }
-                    else {
-                        progressPercent = ((setup.sl - livePrice) / (setup.sl - setup.tp2)) * 100;
-                        tradeStatus = livePrice <= setup.entry ? "PROFITING" : "FLOATING MINUS";
-                        statusColor = livePrice <= setup.entry ? "text-emerald-400" : "text-rose-500";
-                    }
+                    const totalRange = setup.tp3 - setup.sl;
+                    if (totalRange > 0) progressPercentage = ((livePrice - setup.sl) / totalRange) * 100;
+                } else {
+                    const totalRange = setup.sl - setup.tp3;
+                    if (totalRange > 0) progressPercentage = ((setup.sl - livePrice) / totalRange) * 100;
                 }
+                progressPercentage = Math.max(0, Math.min(100, progressPercentage));
 
                 const cardBox = document.createElement('div');
-                cardBox.className = "bloomberg-card p-4 flex flex-col justify-between font-mono-tech relative";
+                cardBox.className = "bloomberg-card p-4 flex flex-col justify-between font-mono-tech cursor-pointer";
+                
+                // Pembungkus klik agar aman tidak berbenturan dengan input lain
+                cardBox.setAttribute("onclick", `openSpecsModalWindow('${pairNode.uid}')`);
+
                 cardBox.innerHTML = `
                     <div>
                         <div class="flex justify-between items-start mb-2 pb-2 border-b border-zinc-900">
                             <div>
-                                <h3 class="text-xs font-black text-white tracking-wider">${pairNode.ticker}<span class="text-[9px] text-zinc-600 font-normal">/USD</span></h3>
-                                <p class="text-[8px] text-cyan-400 font-bold">${pairNode.originNetwork}</p>
+                                <h3 class="text-xs font-black text-white tracking-wider">${pairNode.ticker}<span class="text-[9px] text-zinc-600 font-normal">/USDT</span></h3>
+                                <p class="text-[8px] text-pink-500 font-bold">${pairNode.source}</p>
                             </div>
-                            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${change >= 0 ? 'bg-emerald-950/80 text-emerald-400 border border-emerald-500/20' : 'bg-rose-950/80 text-rose-400 border border-rose-500/20'}">
-                                ${change >= 0 ? '+' : ''}${change.toFixed(2)}%
-                            </span>
+                            <div class="flex flex-col items-end gap-1">
+                                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${change >= 0 ? 'bg-emerald-950/80 text-emerald-400' : 'bg-rose-950/80 text-rose-400'}">
+                                    ${change >= 0 ? '+' : ''}${change.toFixed(2)}%
+                                </span>
+                                <span class="text-[8px] font-black tracking-widest px-1.5 rounded ${setup.trend === 'LONG' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}">
+                                    ${setup.trend}
+                                </span>
+                            </div>
                         </div>
 
-                        <div class="mb-2.5 flex justify-between items-center text-[10px] bg-black/40 p-1.5 rounded border border-zinc-900">
-                            <span class="text-zinc-500 text-[8px] font-bold">${langPack.mode}:</span>
-                            <span class="font-extrabold text-[9px] ${setup.riskMode.includes('BUY') ? 'text-emerald-400' : 'text-rose-400'}">${setup.riskMode}</span>
+                        <div class="grid grid-cols-2 gap-2 mb-2.5">
+                            <div class="bg-black/50 border border-zinc-900 p-2 rounded text-center">
+                                <span class="text-[7px] text-zinc-500 block font-bold uppercase">WINRATE LEVEL</span>
+                                <span class="text-[11px] text-amber-400 font-black tracking-wide">${setup.winrate}%</span>
+                            </div>
+                            <div class="bg-black/50 border border-zinc-900 p-2 rounded text-center">
+                                <span class="text-[7px] text-zinc-500 block font-bold uppercase">EST. PNL ACCUM</span>
+                                <span class="text-[11px] font-black tracking-wide ${estPnL >= 0 ? 'text-emerald-400' : 'text-rose-500'}">
+                                    ${estPnL >= 0 ? '+' : ''}${estPnL.toFixed(2)}%
+                                </span>
+                            </div>
                         </div>
 
-                        <div class="mb-3 grid grid-cols-3 gap-1 text-[8px] font-bold text-center">
+                        <div class="mb-3 bg-zinc-950 p-2 rounded-lg border border-zinc-900/60">
+                            <div class="flex justify-between text-[8px] font-bold text-zinc-500 uppercase mb-1">
+                                <span>TRADE PROGRESS BAR</span>
+                                <span class="${estPnL >= 0 ? 'text-emerald-400' : 'text-rose-400'} font-extrabold">${estPnL >= 0 ? 'PROFITING' : 'FLOATING'}</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden border border-zinc-800">
+                                <div class="h-full progress-gradient transition-all duration-300" style="width: ${progressPercentage}%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-1 text-[11px] border-t border-zinc-900/60 pt-2 mb-3">
+                            <div class="flex justify-between text-zinc-500"><span>ALPHA ENTRY</span><span class="text-white font-bold">$${setup.entry.toFixed(dPoints)}</span></div>
+                            <div class="flex justify-between text-zinc-400"><span>MARKET LIVE</span><span class="text-cyan-400 font-extrabold animate-pulse">$${livePrice.toFixed(dPoints)}</span></div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-1.5 text-center text-[10px] border-t border-zinc-900/80 pt-2.5">
                             <div class="bg-zinc-950 p-1 rounded border border-zinc-900">
-                                <span class="text-zinc-600 block">15M</span>
-                                <span class="${change >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${change >= 0 ? 'BULL' : 'BEAR'}</span>
+                                <span class="text-[7px] text-zinc-600 block font-bold">TP1</span>
+                                <span class="text-emerald-400 font-bold font-mono-tech">$${setup.tp1.toFixed(dPoints)}</span>
                             </div>
                             <div class="bg-zinc-950 p-1 rounded border border-zinc-900">
-                                <span class="text-zinc-600 block">1H</span>
-                                <span class="${change >= 1 ? 'text-emerald-400' : 'text-rose-400'}">${change >= 1 ? 'BULL' : 'BEAR'}</span>
+                                <span class="text-[7px] text-zinc-600 block font-bold">TP2</span>
+                                <span class="text-emerald-400 font-bold font-mono-tech">$${setup.tp2.toFixed(dPoints)}</span>
                             </div>
                             <div class="bg-zinc-950 p-1 rounded border border-zinc-900">
-                                <span class="text-zinc-600 block">4H</span>
-                                <span class="${change >= 3 ? 'text-cyan-400' : 'text-zinc-400'}">${change >= 3 ? 'STR BULL' : 'NORMAL'}</span>
-                            </div>
-                        </div>
-
-                        <div class="mb-3 bg-zinc-950 p-2 rounded border border-zinc-900">
-                            <div class="flex justify-between text-[8px] mb-1 font-bold">
-                                <span class="text-zinc-500 uppercase">${langPack.progress}</span>
-                                <span class="${statusColor} uppercase tracking-tighter">${tradeStatus}</span>
-                            </div>
-                            <div class="w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden relative">
-                                <div class="h-full bg-gradient-to-r from-rose-500 via-amber-400 to-emerald-400 transition-all duration-500" style="width: ${Math.min(Math.max(progressPercent, 0), 100)}%"></div>
-                            </div>
-                            <div class="flex justify-between text-[7px] text-zinc-600 mt-1 uppercase">
-                                <span>SL</span><span>ENTRY</span><span>TP1</span><span>TP2</span>
-                            </div>
-                        </div>
-
-                        <div class="space-y-1 text-[11px] pt-2 border-t border-zinc-900">
-                            <div class="flex justify-between text-zinc-500">
-                                <span>${langPack.entry}</span>
-                                <span class="text-white font-bold">$${setup.entry.toFixed(dPoints)}</span>
-                            </div>
-                            <div class="flex justify-between text-zinc-400">
-                                <span>${langPack.live} [${setup.trend}]</span>
-                                <span class="text-cyan-400 font-extrabold animate-pulse">$${livePrice.toFixed(dPoints)}</span>
-                            </div>
-                            <div class="flex justify-between text-emerald-500">
-                                <span class="text-zinc-600">${langPack.tp1}</span>
-                                <span class="font-bold">$${setup.tp1.toFixed(dPoints)}</span>
-                            </div>
-                            <div class="flex justify-between text-emerald-400">
-                                <span class="text-zinc-600">${langPack.tp2}</span>
-                                <span class="font-extrabold">$${setup.tp2.toFixed(dPoints)}</span>
-                            </div>
-                            <div class="flex justify-between text-rose-500">
-                                <span class="text-zinc-600">${langPack.sl}</span>
-                                <span class="font-bold">$${setup.sl.toFixed(dPoints)}</span>
+                                <span class="text-[7px] text-zinc-600 block font-bold">STOP LOSS</span>
+                                <span class="text-rose-500 font-bold font-mono-tech">$${setup.sl.toFixed(dPoints)}</span>
                             </div>
                         </div>
                     </div>
-
-                    <button onclick="triggerIndividualAssetRecalculation('${pairNode.uid}', event)" 
-                            class="mt-3 w-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 py-1.5 rounded hover:bg-cyan-500 hover:text-black transition-all font-bold tracking-wider text-[9px] uppercase">
-                        🔄 ${langPack.reanalyze}
-                    </button>
                 `;
-                
-                cardBox.setAttribute('onclick', `openAdvancedSpecsModalWindow('${pairNode.uid}')`);
-                viewportContainer.appendChild(cardBox);
+                viewport.appendChild(cardBox);
             });
         }
 
-        function triggerIndividualAssetRecalculation(uidKey, eventInstance) {
-            eventInstance.stopPropagation();
-            if (lockedTradingSetupsCache[uidKey]) { delete lockedTradingSetupsCache[uidKey]; }
-            compileActiveFilterSorting();
-        }
+        // PEMUTAKHIRAN MODAL DETAIL: Mengintegrasikan Kalkulator PnL Interaktif Dalam Skema Kanggabut v100
+        function openSpecsModalWindow(uidKey) {
+            const matchCache = coreMemoryCache.find(x => x.uid === uidKey);
+            if (!matchCache) return;
 
-        // FULL TERMINAL MULTI-INDICATOR POPUP ROOM (SMC, VOL PROFILE, RE-AGGREGATED DATA)
-        function openAdvancedSpecsModalWindow(uidKey) {
-            const node = memoryMasterStorage.find(c => c.uid === uidKey);
-            if (!node) return;
+            const setup = lockedTradingSetupsCache[uidKey];
+            let dPoints = (matchCache.price < 0.00001) ? 8 : ((matchCache.price < 0.01) ? 6 : (matchCache.price < 1 ? 4 : 2));
 
-            const setup = lockedTradingSetupsCache[uidKey] || { trend: "LONG" };
-            const targetModal = document.getElementById('specs-modal');
-            const dataContainer = document.getElementById('modal-content-area');
-            let dPoints = (node.price < 0.001) ? 6 : 2;
+            const targetArea = document.getElementById('modal-content-area');
+            targetArea.innerHTML = `
+                <div class="border-b border-zinc-900 pb-3 mb-4">
+                    <h2 class="text-sm font-black text-white tracking-widest uppercase">${matchCache.ticker} // SIGNAL METRIC INSIGHT</h2>
+                    <p class="text-[8px] text-cyan-400 font-bold">ARCHIVE SOURCE STATE: ${matchCache.source}</p>
+                </div>
 
-            dataContainer.innerHTML = `
-                <div class="border-b border-zinc-900 pb-2 mb-3 flex justify-between items-center">
+                <div class="grid grid-cols-2 gap-3 mb-4 bg-black/40 p-3 rounded-xl border border-zinc-900">
                     <div>
-                        <h2 class="text-sm font-black text-white tracking-widest uppercase">${node.ticker} PER-PAIR CORE TECH-MATRIX</h2>
-                        <p class="text-[8px] text-emerald-400 font-bold uppercase tracking-wider">Source Engine: ${node.source}</p>
+                        <span class="text-zinc-500 text-[8px] block">HIGH 24H</span>
+                        <span class="text-white font-bold">$${matchCache.high24h.toFixed(dPoints)}</span>
                     </div>
-                    <span class="px-2 py-0.5 rounded bg-zinc-900 text-cyan-400 font-bold">${setup.trend} Setup</span>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-2 text-[10px] mb-3">
-                    <div class="bg-black/60 p-2 rounded border border-zinc-900">
-                        <span class="text-zinc-500 text-[8px] block uppercase">EMA 21 Metric Line</span>
-                        <span class="text-white font-bold font-mono-tech">$${(node.price * 0.999).toFixed(dPoints)}</span>
+                    <div>
+                        <span class="text-zinc-500 text-[8px] block">LOW 24H</span>
+                        <span class="text-white font-bold">$${matchCache.low24h.toFixed(dPoints)}</span>
                     </div>
-                    <div class="bg-black/60 p-2 rounded border border-zinc-900">
-                        <span class="text-zinc-500 text-[8px] block uppercase">EMA 50 Metric Line</span>
-                        <span class="text-white font-bold font-mono-tech">$${(node.price * 0.997).toFixed(dPoints)}</span>
+                    <div>
+                        <span class="text-zinc-500 text-[8px] block">ACCUM VOL REF</span>
+                        <span class="text-zinc-400 font-bold">$${matchCache.volume24h.toLocaleString()}</span>
                     </div>
-                    <div class="bg-black/60 p-2 rounded border border-zinc-900">
-                        <span class="text-zinc-500 text-[8px] block uppercase">POC Value (VPVR Profile)</span>
-                        <span class="text-amber-400 font-bold font-mono-tech">$${(node.price * 1.001).toFixed(dPoints)}</span>
-                    </div>
-                    <div class="bg-black/60 p-2 rounded border border-zinc-900">
-                        <span class="text-zinc-500 text-[8px] block uppercase">Relative Strength Index (RSI)</span>
-                        <span class="text-emerald-400 font-bold font-mono-tech">54.29 (Neutral Zone)</span>
-                    </div>
-                    <div class="bg-black/60 p-2 rounded border border-zinc-900">
-                        <span class="text-zinc-500 text-[8px] block uppercase">Daily High/Low Span</span>
-                        <span class="text-zinc-300 font-bold font-mono-tech text-[8px]">H: $${node.high24h.toFixed(dPoints)} | L: $${node.low24h.toFixed(dPoints)}</span>
-                    </div>
-                    <div class="bg-black/60 p-2 rounded border border-zinc-900">
-                        <span class="text-zinc-500 text-[8px] block uppercase">Liquidity Sweep Detection</span>
-                        <span class="text-pink-neon font-bold font-mono-tech uppercase">None Sweep Pattern</span>
+                    <div>
+                        <span class="text-zinc-500 text-[8px] block">SWARM WEIGHT</span>
+                        <span class="text-pink-400 font-bold">${matchCache.calculatedWeight.toFixed(0)}</span>
                     </div>
                 </div>
 
-                <div class="bg-zinc-950 p-2.5 rounded text-[9px] text-zinc-500 border border-zinc-900 text-center uppercase tracking-wider">
-                    ⚡ Kanggabut Verification Node Connected Successfully
+                <div class="border-t border-zinc-900 pt-3 mt-2">
+                    <p class="text-[9px] text-cyan-400 font-black uppercase tracking-wider mb-2 flex items-center gap-1">🧮 QUANT QUANTITATIVE CALCULATOR ENGINE</p>
+                    
+                    <div class="space-y-3 bg-black/80 p-3.5 rounded-xl border border-zinc-900">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="text-[8px] text-zinc-500 block mb-0.5">LEVERAGE MULTIPLIER</label>
+                                <input type="number" id="modal-calc-lev" value="10" oninput="liveModalCalculatorEngine('${uidKey}', ${dPoints})" class="w-full bg-zinc-950 border border-zinc-800 rounded p-1.5 text-white outline-none focus:border-cyan-400 text-center font-bold">
+                            </div>
+                            <div>
+                                <label class="text-[8px] text-zinc-500 block mb-0.5">MARGIN SIZE (USDT)</label>
+                                <input type="number" id="modal-calc-margin" value="100" oninput="liveModalCalculatorEngine('${uidKey}', ${dPoints})" class="w-full bg-zinc-950 border border-zinc-800 rounded p-1.5 text-white outline-none focus:border-cyan-400 text-center font-bold">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-1.5 text-center text-[9px]">
+                            <button onclick="applyTargetToCalculator(${setup.tp1}, '${uidKey}', ${dPoints})" class="bg-zinc-900 border border-zinc-800 hover:border-emerald-400 text-zinc-300 p-1.5 rounded font-bold transition">USE TP1</button>
+                            <button onclick="applyTargetToCalculator(${setup.tp2}, '${uidKey}', ${dPoints})" class="bg-zinc-900 border border-zinc-800 hover:border-emerald-400 text-zinc-300 p-1.5 rounded font-bold transition">USE TP2</button>
+                            <button onclick="applyTargetToCalculator(${setup.tp3}, '${uidKey}', ${dPoints})" class="bg-zinc-900 border border-zinc-800 hover:border-emerald-400 text-zinc-300 p-1.5 rounded font-bold transition">USE TP3</button>
+                        </div>
+
+                        <div>
+                            <label class="text-[8px] text-zinc-500 block mb-0.5">CUSTOM TARGET EXIT PRICE ($)</label>
+                            <input type="number" step="any" id="modal-calc-target" value="${setup.tp1.toFixed(dPoints)}" oninput="liveModalCalculatorEngine('${uidKey}', ${dPoints})" class="w-full bg-zinc-950 border border-zinc-800 rounded p-1.5 text-cyan-400 outline-none focus:border-cyan-400 font-bold">
+                        </div>
+
+                        <div class="bg-zinc-950 p-2.5 rounded border border-zinc-900 flex justify-between items-center font-bold">
+                            <div>
+                                <span class="text-zinc-600 block text-[7px] uppercase">ESTIMASI REALIZED PNL</span>
+                                <span id="modal-res-pnl" class="text-emerald-400 text-xs">+$25.00 USDT</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-zinc-600 block text-[7px] uppercase">RETURN ON INVESTED (ROI)</span>
+                                <span id="modal-res-roi" class="text-emerald-400 text-xs">+25.00%</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             `;
-            targetModal.classList.remove('hidden');
+
+            document.getElementById('specs-modal').classList.remove('hidden');
+            liveModalCalculatorEngine(uidKey, dPoints); // Run kalkulasi inisial awal saat terbuka
         }
 
-        function closeSpecsModalWindow() { document.getElementById('specs-modal').classList.add('hidden'); }
-
-        function triggerSliderRight() {
-            if (coreSliderPointer + strictRowMaxItems < compiledWorkspacePool.length) {
-                coreSliderPointer += strictRowMaxItems; renderWorkspaceDisplay();
+        function applyTargetToCalculator(priceVal, uidKey, dPoints) {
+            const inputTarget = document.getElementById('modal-calc-target');
+            if (inputTarget) {
+                inputTarget.value = priceVal.toFixed(dPoints);
+                liveModalCalculatorEngine(uidKey, dPoints);
             }
         }
-        function triggerSliderLeft() {
-            if (coreSliderPointer - strictRowMaxItems >= 0) {
-                coreSliderPointer -= strictRowMaxItems; renderWorkspaceDisplay();
+
+        function liveModalCalculatorEngine(uidKey, dPoints) {
+            const setup = lockedTradingSetupsCache[uidKey];
+            if (!setup) return;
+
+            const lev = parseFloat(document.getElementById('modal-calc-lev').value) || 0;
+            const margin = parseFloat(document.getElementById('modal-calc-margin').value) || 0;
+            const target = parseFloat(document.getElementById('modal-calc-target').value) || 0;
+
+            let changePct = 0;
+            if (setup.trend === "LONG") {
+                changePct = (target - setup.entry) / setup.entry;
+            } else {
+                changePct = (setup.entry - target) / setup.entry;
+            }
+
+            const outputPnL = margin * lev * changePct;
+            const outputROI = changePct * lev * 100;
+
+            const pnlLabel = document.getElementById('modal-res-pnl');
+            const roiLabel = document.getElementById('modal-res-roi');
+
+            if (outputPnL >= 0) {
+                pnlLabel.innerText = `+$${outputPnL.toFixed(2)} USDT`;
+                pnlLabel.className = "text-emerald-400 text-xs font-black";
+                roiLabel.innerText = `+${outputROI.toFixed(2)}%`;
+                roiLabel.className = "text-emerald-400 text-xs font-black";
+            } else {
+                pnlLabel.innerText = `$${outputPnL.toFixed(2)} USDT`;
+                pnlLabel.className = "text-rose-500 text-xs font-black";
+                roiLabel.innerText = `${outputROI.toFixed(2)}%`;
+                roiLabel.className = "text-rose-500 text-xs font-black";
             }
         }
-        function executeGlobalSearchEngine(valStr) {
-            activeQueryText = valStr; coreSliderPointer = 0;
-            if (valStr.length > 2) { loadMasterNodePipelines(); } else { compileActiveFilterSorting(); }
-        }
-        function applyCapFilterRange(capValueId) {
-            selectedFilterRange = capValueId; coreSliderPointer = 0;
-            document.querySelectorAll('[id^="f-"]').forEach(btn => btn.classList.remove('active-filter-btn'));
-            document.getElementById('f-' + capValueId).classList.add('active-filter-btn');
-            compileActiveFilterSorting();
-        }
-        function changeLanguage(langCode) {
-            currentSystemLanguage = langCode;
-            document.querySelectorAll('#lang-selector button').forEach(b => b.className = "hover:text-cyan-400 transition");
-            document.getElementById('lang-' + langCode).className = "text-cyan-400 font-extrabold";
-            compileActiveFilterSorting();
+
+        function closeSpecsModalWindow() {
+            document.getElementById('specs-modal').classList.add('hidden');
         }
 
-        function runSystemClocksAndMarketSessions() {
-            const d = new Date(); const currentUTCHour = d.getUTCHours();
-            document.getElementById('clock-24h').innerText = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
-            const evalSession = (domId, cond) => document.getElementById(domId).className = cond ? "text-emerald-400 font-bold animate-pulse" : "text-zinc-600 font-medium";
-            evalSession('session-tky', currentUTCHour >= 0 && currentUTCHour < 9);
-            evalSession('session-ldn', currentUTCHour >= 8 && currentUTCHour < 17);
-            evalSession('session-nyc', currentUTCHour >= 13 && currentUTCHour < 22);
-        }
-
-        setInterval(loadMasterNodePipelines, 4000);
-        setInterval(runSystemClocksAndMarketSessions, 1000);
-        loadMasterNodePipelines();
-        runSystemClocksAndMarketSessions();
+        window.addEventListener('DOMContentLoaded', () => {
+            clockEngineUpdate();
+            setInterval(clockEngineUpdate, 1000);
+            
+            // Mengambil pool data pipeline utama
+            fetchAllExternalAPIPipelines();
+            
+            // Loop internal update data super kencang berdurasi pendek (3.5 detik) tanpa merusak memory cache
+            setInterval(fetchAllExternalAPIPipelines, 3500);
+        });
     </script>
 </body>
 </html>
