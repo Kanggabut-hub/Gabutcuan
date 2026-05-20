@@ -307,15 +307,24 @@
             "bome": ["BOME", "BOMECOIN", "BOOK OF MEME"],
             "xvs": ["XVS", "VENUS"],
             "rave": ["RAVE", "RAVECOIN"],
-            "ai16z": ["AI16Z", "AI 16Z", "MARC ANDREESSEN"]
+            "ai16z": ["AI16Z", "AI 16Z", "MARC ANDREESSEN"],
+            "bsb": ["BSB"],
+            "bill": ["BILL"],
+            "naoris": ["NAORIS"],
+            "aria": ["ARIA"]
         };
         
+        // BUGFIX 1: Menambahkan aset-aset koin micro/on-chain baru yang diminta pengguna ke local database pool
         const extraOnChainDexPoolGems = [
             { ticker: "PIPPIN", source: "DEXSCREENER MULTICHAIN", price: 0.04312, change24h: 34.12, volume24h: 18450000, high24h: 0.0491, low24h: 0.0312, weight: 15400000 },
             { ticker: "BOME", source: "BINANCE CORE", price: 0.008451, change24h: -5.82, volume24h: 42100000, high24h: 0.00912, low24h: 0.00811, weight: 89000000 },
             { ticker: "XVS", source: "BINANCE CORE", price: 11.23, change24h: 2.15, volume24h: 8900000, high24h: 11.50, low24h: 10.95, weight: 120000000 },
             { ticker: "RAVE", source: "DEXSCREENER MULTICHAIN", price: 0.00189, change24h: 145.8, volume24h: 6200000, high24h: 0.0022, low24h: 0.00075, weight: 3400000 },
-            { ticker: "AI16Z", source: "DEXSCREENER MULTICHAIN", price: 0.2145, change24h: -12.4, volume24h: 29500000, high24h: 0.2510, low24h: 0.1980, weight: 67000000 }
+            { ticker: "AI16Z", source: "DEXSCREENER MULTICHAIN", price: 0.2145, change24h: -12.4, volume24h: 29500000, high24h: 0.2510, low24h: 0.1980, weight: 67000000 },
+            { ticker: "BSB", source: "BSC PANCAKESWAP", price: 0.000742, change24h: 18.52, volume24h: 1250000, high24h: 0.00081, low24h: 0.00062, weight: 1200000 },
+            { ticker: "BILL", source: "SOLANA RAYDIUM", price: 0.0124, change24h: -4.15, volume24h: 3400000, high24h: 0.0135, low24h: 0.0112, weight: 2800000 },
+            { ticker: "NAORIS", source: "DEXSCREENER MULTICHAIN", price: 0.0895, change24h: 42.10, volume24h: 5800000, high24h: 0.0950, low24h: 0.0620, weight: 4500000 },
+            { ticker: "ARIA", source: "SOLANA JUPITER", price: 0.00315, change24h: 112.4, volume24h: 2150000, high24h: 0.0036, low24h: 0.0014, weight: 1900000 }
         ];
 
         const cmcCatalystDatabase = [
@@ -539,7 +548,6 @@
             compileActiveFilterSorting();
         }
 
-        // FUNGSI BARU: Implementasi Filter Sinyal Menggunakan Skor Confluence Tertinggi
         function applySignalFilter(signalType) {
             signalRecommendationFilter = signalType;
             selectedFilterRange = "all"; // Tampilkan dari semua pool koin
@@ -555,12 +563,10 @@
         }
 
         function resetSidebarButtonStyles() {
-            // Reset tombol Sektor
             ['all', 'big', 'mid', 'low'].forEach(id => {
                 const b = document.getElementById('f-' + id);
                 if (b) b.className = "w-full text-left bg-gray-900/40 border border-gray-800 text-gray-400 p-2.5 rounded-none text-xs font-medium hover:border-gray-700 transition flex items-center justify-between";
             });
-            // Reset tombol Rekomendasi Sinyal
             document.getElementById('f-rec-long').className = "w-full text-left bg-emerald-950/30 border border-emerald-500/40 text-emerald-400 p-2.5 rounded-none text-xs font-bold hover:bg-emerald-950/50 transition flex items-center justify-between";
             document.getElementById('f-rec-short').className = "w-full text-left bg-rose-950/30 border border-rose-500/40 text-rose-400 p-2.5 rounded-none text-xs font-bold hover:bg-rose-950/50 transition flex items-center justify-between";
         }
@@ -580,22 +586,22 @@
         }
 
         function compileActiveFilterSorting() {
-            const patternBlacklist = /(USDC|FDUSD|TUSD|DAI|BUSD|EUR|TRY)/;
+            // BUGFIX 2: Memperketat regex dengan anchor (^ & $) agar nama koin berisi huruf seperti 'ARIA' atau 'NAORIS' tidak tereliminasi secara salah oleh kata 'DAI' atau 'TUSD'
+            const patternBlacklist = /^(USDC|FDUSD|TUSD|DAI|BUSD|EUR|TRY)$/;
             
-            // 1. Ambil & filter dasar data dari memory cache
             let pool = coreMemoryCache.filter(item => {
                 if (patternBlacklist.test(item.ticker)) return false;
                 
-                // Pencarian teks
+                // Pencarian teks otomatis bypass filter market cap untuk akurasi instan koin kecil
                 if (activeQueryText !== "") {
                     let matchedByAlias = false;
                     for (const [keyRoot, aliasList] of Object.entries(searchAliasDatabase)) {
                         if (keyRoot.includes(activeQueryText) || activeQueryText.includes(keyRoot)) {
-                            if (aliasList.includes(item.ticker)) matchedByAlias = true;
+                            if (aliasList.includes(item.ticker.toUpperCase())) matchedByAlias = true;
                         }
                         aliasList.forEach(alias => {
                             if (alias.toLowerCase().includes(activeQueryText)) {
-                                if (item.ticker.toLowerCase() === keyRoot || aliasList.includes(item.ticker)) matchedByAlias = true;
+                                if (item.ticker.toLowerCase() === keyRoot || aliasList.includes(item.ticker.toUpperCase())) matchedByAlias = true;
                             }
                         });
                     }
@@ -603,7 +609,7 @@
                     return matchedByTicker || matchedByAlias;
                 }
                 
-                // Filter berdasarkan Kapasitas Sektor Market
+                // Filter berdasarkan Kapasitas Sektor Market (Hanya jalan kalau kolom search kosong)
                 const valueCap = item.calculatedWeight;
                 if (selectedFilterRange === 'low') return valueCap < 15000000;
                 if (selectedFilterRange === 'mid') return valueCap >= 15000000 && valueCap < 500000000;
@@ -611,7 +617,6 @@
                 return true;
             });
 
-            // Pastikan setup trading terisi di cache agar Confluence Score & Trend konsisten saat pengurutan
             pool.forEach(pairNode => {
                 if (!lockedTradingSetupsCache[pairNode.uid]) {
                     const change = pairNode.change24h;
@@ -632,14 +637,12 @@
                 }
             });
 
-            // 2. Terapkan Filter Tambahan Rekomendasi Sinyal (LONG / SHORT Terkuat berdasarkan Confluence)
             if (signalRecommendationFilter !== "none") {
                 pool = pool.filter(item => {
                     const setup = lockedTradingSetupsCache[item.uid];
                     return setup && setup.trend === signalRecommendationFilter;
                 });
                 
-                // Urutkan dari Confluence terkuat (Terbesar ke Terkecil)
                 pool.sort((a, b) => {
                     return lockedTradingSetupsCache[b.uid].confluence - lockedTradingSetupsCache[a.uid].confluence;
                 });
@@ -649,7 +652,6 @@
             renderWorkspaceDisplay();
         }
 
-        // FIXED BUG: Proteksi Modulo agar kekuatan tidak drop ke 0% saat perkalian pas angka kelipatan 100
         function getOrComputeAdvancedIndicators(uid, price, change24h) {
             const now = Date.now();
             if (advancedIndicatorsCache[uid] && (now - advancedIndicatorsCache[uid].timestamp < 15000)) {
@@ -657,7 +659,7 @@
             }
 
             let mxwellStrength = Math.floor(Math.abs(change24h) * 2.5 + 40) % 100;
-            if(mxwellStrength < 10) mxwellStrength = 55; // Mengamankan batas kekuatan indikator
+            if(mxwellStrength < 10) mxwellStrength = 55; 
 
             const mxwellBias = change24h >= 0 ? "BULLISH" : "BEARISH";
             const mxwellReversal = Math.floor(Math.random() * 30) + (Math.abs(change24h) > 15 ? 60 : 10);
@@ -720,7 +722,6 @@
             
             const activeSlice = filteredWorkspacePool.slice(coreSliderPointer, coreSliderPointer + strictRowMaxItems);
             
-            // Proteksi Slider Label agar tidak menampilkan angka pecahan/kosong aneh
             const totalPages = Math.ceil(filteredWorkspacePool.length / strictRowMaxItems) || 1;
             const currentPage = Math.floor(coreSliderPointer / strictRowMaxItems) + 1;
             document.getElementById('slider-pagination-label').innerText = `HALAMAN ${currentPage} / ${totalPages}`;
@@ -744,7 +745,6 @@
                 const cardBox = document.createElement('div');
                 cardBox.className = "bloomberg-card p-4 flex flex-col justify-between font-mono-tech";
                 
-                // Penyesuaian UI & Penambahan Bahasa Indonesia agar dibaca dengan mudah oleh semua kelompok umur
                 cardBox.innerHTML = `
                     <div class="space-y-3">
                         <div onclick="openSpecsModalWindow('${pairNode.uid}'); playSound('beep');" class="cursor-pointer flex justify-between items-start border-b border-gray-800 pb-2">
@@ -854,7 +854,6 @@
                                     <span class="text-rose-400 font-bold">$${adv.keyLevels.resistance.toFixed(dPoints)}</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-gray-500">Support Terdekat:</span>
                                     <span class="text-emerald-400 font-bold">$${adv.keyLevels.support.toFixed(dPoints)}</span>
                                 </div>
                                 <div class="flex justify-between text-gray-400 border-t border-gray-900 pt-1 mt-1">
