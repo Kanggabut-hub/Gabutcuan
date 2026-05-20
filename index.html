@@ -3,32 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KANGGABUT | GUNDAM QUANT TERMINAL V100 PRO</title>
+    <title>KANGGABUT | VANGUARD QUANT TERMINAL V100 PRO - GUNDAM EDITION</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Base Themes Definition */
         body {
-            color: #e2e8f0;
-            font-family: 'Inter', sans-serif;
+            background-color: #030508;
+            color: #d1d5db;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             -webkit-font-smoothing: antialiased;
             min-height: 100vh;
-            transition: background-color 0.5s ease;
         }
+        .font-mono-tech { font-family: 'JetBrains Mono', monospace; }
         
-        /* Faction Skin Styles */
-        body.theme-eff { background-color: #0b1426; } /* Federation Deep Blue Space */
-        body.theme-zeon { background-color: #0f140f; } /* Zeon Military Dark Green */
-
-        .font-gundam-hud { font-family: 'Orbitron', sans-serif; }
-        .font-gundam-tech { font-family: 'Rajdhani', sans-serif; }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #070a12; }
-        .theme-eff ::-webkit-scrollbar-thumb { background: #1e293b; border: 2px solid #070a12; }
-        .theme-zeon ::-webkit-scrollbar-thumb { background: #1b2e1b; border: 2px solid #070a12; }
-        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+        /* Premium Subtle Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #05070a; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 0px; border: 1px solid #d4af37; }
+        ::-webkit-scrollbar-thumb:hover { background: #d4af37; }
 
         /* Marquee Text Animation */
         .marquee-wrapper { overflow: hidden; white-space: nowrap; }
@@ -38,232 +30,182 @@
             100% { transform: translate3d(-50%, 0, 0); }
         }
 
-        /* Gundam Armor Panel Style Card */
-        .gundam-card {
-            border: 1px solid #374151;
+        /* Sticky Search Container Backdrop Blur */
+        .sticky-search-panel {
+            background: rgba(3, 5, 8, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 2px solid #b49426;
+        }
+
+        /* Gundam Premium Rigid Armor Card Style */
+        .bloomberg-card {
+            background: #080d16;
+            border: 1px solid #1e293b;
             position: relative;
-            clip-path: polygon(0 0, 95% 0, 100% 10px, 100% 100%, 5% 100%, 0 95%);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            clip-path: polygon(0 0, 95% 0, 100% 12px, 100% 100%, 5% 100%, 0% calc(100% - 12px));
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .theme-eff .gundam-card { background: #111827; border-color: #2563eb; }
-        .theme-zeon .gundam-card { background: #141a14; border-color: #15803d; }
-
-        .theme-eff .gundam-card:hover {
-            border-color: #3b82f6;
-            background: #1e293b;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        .bloomberg-card:hover {
+            border-color: #d4af37;
+            background: #0c1424;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
             transform: translateY(-2px);
         }
-        .theme-zeon .gundam-card:hover {
-            border-color: #22c55e;
-            background: #1c261c;
-            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
-            transform: translateY(-2px);
+        .bloomberg-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: #d4af37;
+            opacity: 0.7;
         }
 
-        /* Neon Glow Accents */
-        .gundam-glow-green { text-shadow: 0 0 8px #10b981; }
-        .gundam-glow-blue { text-shadow: 0 0 8px #3b82f6; }
-        .gundam-glow-red { text-shadow: 0 0 8px #ef4444; }
-        .gundam-glow-pink { text-shadow: 0 0 8px #ec4899; }
+        /* Gold Foil Glow text */
+        .text-gundam-gold { color: #d4af37; text-shadow: 0 0 8px rgba(212, 175, 55, 0.4); }
+        .border-gundam-gold { border-color: #d4af37; }
+        .bg-gundam-gold { background-color: #d4af37; }
+        .text-psycho-cyan { color: #00f3ff; text-shadow: 0 0 8px rgba(0, 243, 255, 0.5); }
     </style>
 </head>
-<body class="text-sm theme-eff">
+<body class="text-xs">
 
-    <script>
-        let isMuted = false;
-        let audioCtx = null;
-        let currentFaction = 'eff';
-
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-        }
-
-        function playBeep(freq, duration, type = 'sine', vol = 0.1) {
-            if (isMuted) return;
-            initAudio();
-            try {
-                let osc = audioCtx.createOscillator();
-                let gain = audioCtx.createGain();
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + duration);
-            } catch(e) {}
-        }
-
-        // SFX Presets
-        const sfx = {
-            click: () => playBeep(880, 0.1, 'sine', 0.15),
-            hover: () => playBeep(currentFaction === 'eff' ? 1200 : 700, 0.04, 'triangle', 0.04),
-            boot: () => {
-                playBeep(440, 0.1, 'sine', 0.1);
-                setTimeout(() => playBeep(554, 0.1, 'sine', 0.1), 80);
-                setTimeout(() => playBeep(659, 0.1, 'sine', 0.1), 160);
-                setTimeout(() => playBeep(880, 0.3, 'sine', 0.25), 240); // Newtype Ping
-            },
-            modal: () => playBeep(600, 0.15, 'square', 0.08),
-            alarm: () => {
-                // Tactical Lock Warning Sirens
-                playBeep(523.25, 0.15, 'sawtooth', 0.15);
-                setTimeout(() => playBeep(698.46, 0.15, 'sawtooth', 0.15), 150);
-            },
-            factionSwitch: () => {
-                playBeep(220, 0.1, 'sawtooth', 0.1);
-                setTimeout(() => playBeep(330, 0.1, 'sine', 0.15), 100);
-                setTimeout(() => playBeep(660, 0.2, 'square', 0.1), 200);
-            }
-        };
-
-        function toggleMute() {
-            isMuted = !isMuted;
-            document.getElementById('mute-btn-text').innerText = isMuted ? "🔇 SOUND OFF" : "🔊 SOUND ON";
-            sfx.click();
-        }
-
-        // FITUR 5: Faction Skin Switcher System
-        function switchFactionSkin(faction) {
-            currentFaction = faction;
-            const bodyEl = document.body;
-            sfx.factionSwitch();
-            
-            if (faction === 'eff') {
-                bodyEl.classList.remove('theme-zeon');
-                bodyEl.classList.add('theme-eff');
-                document.getElementById('faction-title-badge').innerText = "E.F.F. EARTH FEDERATION FORCE";
-                document.getElementById('faction-title-badge').className = "text-blue-400 font-gundam-hud text-xs font-bold uppercase tracking-wider";
-            } else {
-                bodyEl.classList.remove('theme-eff');
-                bodyEl.classList.add('theme-zeon');
-                document.getElementById('faction-title-badge').innerText = "PRINCIPALITY OF ZEON MS COCKPIT";
-                document.getElementById('faction-title-badge').className = "text-red-400 font-gundam-hud text-xs font-bold uppercase tracking-wider gundam-glow-red";
-            }
-            compileActiveFilterSorting();
-        }
-    </script>
-
-    <div id="landing-screen" class="fixed inset-0 z-[100] bg-[#070a12] flex flex-col items-center justify-center p-6 transition-all duration-700 border-4 border-blue-600">
-        <div class="text-center max-w-md w-full">
-            <div class="w-20 h-20 bg-blue-600/10 border-2 border-blue-500 rounded-xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/20 animate-pulse">
-                <span class="text-blue-500 text-3xl font-bold font-gundam-hud">UC</span>
+    <div id="landing-screen" class="fixed inset-0 z-[100] bg-[#030508] flex flex-col items-center justify-center p-6 transition-all duration-700 border-4 border-[#1e293b]">
+        <div class="text-center max-w-md w-full relative">
+            <div class="absolute -top-12 left-1/2 -translate-x-1/2 text-[9px] font-mono-tech text-[#d4af37] tracking-widest opacity-60 animate-pulse">
+                [ UNIVERSAL CENTURY PROTOCOL SEED ]
             </div>
-            <h1 class="font-black text-3xl text-white tracking-wider mb-2 font-gundam-hud">
-                KANGGABUT <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-red-500 to-yellow-500">GUNDAM OS</span>
+            <div class="w-20 h-20 bg-gradient-to-br from-[#d4af37] to-[#8a6d1c] p-[1px] rounded-bl-3xl rounded-tr-3xl mx-auto mb-6 shadow-lg shadow-yellow-500/10 flex items-center justify-center">
+                <div class="w-full h-full bg-[#030508] rounded-bl-3xl rounded-tr-3xl flex items-center justify-center">
+                    <span class="text-[#d4af37] text-3xl font-extrabold font-mono-tech tracking-tighter">RX-0</span>
+                </div>
+            </div>
+            <h1 class="font-extrabold text-2xl text-white tracking-tight mb-1 uppercase">
+                KANGGABUT <span class="text-gundam-gold">V100 PRO</span>
             </h1>
-            <p class="text-xs font-gundam-tech text-gray-400 tracking-widest uppercase mb-8">
-                TACTICAL COCKPIT QUANT NETWORK // MULTI-AGE UX V100
+            <p class="text-[9px] font-mono-tech text-gray-400 tracking-widest uppercase mb-8">
+                Tactical Psycho-Frame Quant System
             </p>
             
-            <button id="launch-btn" onclick="sfx.boot(); triggerTerminalBootSequence();" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold transition-all shadow-md shadow-blue-600/30 tracking-widest text-xs uppercase font-gundam-hud border-b-4 border-blue-900 active:border-b-0">
-                ⚡ CONNECT TO MOBILE SUIT CORE ⚡
+            <button id="launch-btn" onclick="triggerTerminalBootSequence()" class="w-full py-3.5 bg-gradient-to-r from-[#b49426] to-[#d4af37] hover:from-[#d4af37] hover:to-[#ffe894] text-black rounded-none font-black transition-all shadow-md tracking-widest text-[10px] uppercase border border-black">
+                Initialize Psycho-Frame Link
             </button>
 
-            <div id="boot-progress-container" class="w-full mt-8 hidden">
-                <div class="flex justify-between font-gundam-tech text-sm text-gray-400 mb-2 uppercase tracking-wider">
-                    <span id="boot-status-text" class="truncate max-w-[85%]">Minovsky Drive Synchronizing...</span>
-                    <span id="boot-percent-text" class="font-bold text-yellow-500 font-gundam-hud">0%</span>
+            <div id="boot-progress-container" class="w-full mt-8 hidden border border-gray-800 p-4 bg-[#060a12]">
+                <div class="flex justify-between font-mono-tech text-[9px] text-gray-400 mb-2 uppercase tracking-wider">
+                    <span id="boot-status-text" class="truncate max-w-[85%] text-psycho-cyan">Awakening Minovsky Drive...</span>
+                    <span id="boot-percent-text" class="font-bold text-[#d4af37]">0%</span>
                 </div>
-                <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden p-[2px] border border-gray-700">
-                    <div id="boot-progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-emerald-400 w-0 transition-all duration-100 rounded-full"></div>
+                <div class="w-full h-[3px] bg-gray-900 overflow-hidden border border-gray-700">
+                    <div id="boot-progress-bar" class="h-full bg-gradient-to-r from-[#d4af37] to-[#00f3ff] w-0 transition-all duration-100"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="plenger-sidebar" class="fixed top-0 left-0 bottom-0 w-80 bg-gray-900 border-r-2 border-blue-600 z-50 transform -translate-x-full transition-transform duration-300 p-5 font-gundam-tech flex flex-col justify-between shadow-2xl">
-        <div class="overflow-y-auto pr-1 h-full space-y-5">
-            <div class="flex justify-between items-center pb-3 border-b border-gray-700">
+    <div id="plenger-sidebar" class="fixed top-0 left-0 bottom-0 w-80 bg-[#060b13] border-r-2 border-[#d4af37] z-50 transform -translate-x-full transition-transform duration-300 p-5 font-mono-tech flex flex-col justify-between shadow-2xl">
+        <div class="overflow-y-auto pr-1 h-full">
+            <div class="flex justify-between items-center mb-6 pb-3 border-b border-gray-800">
                 <div>
-                    <h2 class="text-sm font-bold text-white tracking-wider font-gundam-hud">TACTICAL ARCHIVE</h2>
-                    <p class="text-xs text-blue-400 uppercase font-semibold">Universal Combat Data Registry</p>
+                    <h2 class="text-xs font-bold text-white tracking-wider uppercase flex items-center gap-1.5">
+                        <span class="inline-block w-2 h-2 bg-[#d4af37]"></span> PLENGER ARCHIVE
+                    </h2>
+                    <p class="text-[9px] text-psycho-cyan uppercase font-semibold">Anaheim Electronics Registry</p>
                 </div>
-                <button onclick="sfx.click(); togglePlengerSidebar(false)" class="text-gray-400 hover:text-white text-sm bg-gray-800 px-2 py-1 rounded">✕</button>
+                <button onclick="togglePlengerSidebar(false); playSound('click');" class="text-gray-400 hover:text-[#d4af37] text-xs p-1">✕</button>
             </div>
 
-            <div class="bg-black/40 border border-gray-700 p-3 rounded-lg space-y-2">
-                <p class="text-xs text-gray-400 font-bold uppercase tracking-wider font-gundam-hud">🎨 CHOOSE FACTION SKIN</p>
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="switchFactionSkin('eff')" class="py-1.5 bg-blue-950 hover:bg-blue-900 text-blue-300 border border-blue-700 font-bold text-xs rounded uppercase font-gundam-hud">E.F.F. Mode</button>
-                    <button onclick="switchFactionSkin('zeon')" class="py-1.5 bg-green-950 hover:bg-green-900 text-green-300 border border-green-700 font-bold text-xs rounded uppercase font-gundam-hud">Zeon Mode</button>
+            <div class="bg-[#0c1424] border border-gray-800 p-3 rounded-none mb-4 flex items-center gap-3">
+                <div class="w-8 h-8 bg-gray-900 border border-[#d4af37] flex items-center justify-center text-gundam-gold font-bold text-[10px]">
+                    NT-D
+                </div>
+                <div>
+                    <p class="text-white font-bold text-[10px] tracking-wide">COMMANDER PILOT</p>
+                    <p class="text-[8px] text-gray-400 font-mono-tech">PSYCHO-FRAME SYNC: 100%</p>
                 </div>
             </div>
 
-            <div class="bg-gray-950 border border-gray-800 p-4 rounded-lg space-y-3">
-                <p class="text-xs text-yellow-500 font-bold uppercase tracking-wider font-gundam-hud">⚡ CORE REACTOR METRICS</p>
-                <div class="grid grid-cols-2 gap-2 text-sm">
-                    <div class="bg-black/50 p-2 rounded border border-gray-800">
-                        <span class="text-gray-400 block text-xs uppercase font-bold">Active Targets</span>
-                        <span class="text-white font-bold font-gundam-hud" id="stats-total-pos">Analyzing...</span>
+            <div class="bg-gray-900/40 border border-gray-800 p-3.5 rounded-none mb-5 space-y-2.5">
+                <p class="text-[9px] text-[#d4af37] font-bold uppercase tracking-wider">⚡ MULTI-REACTION METRICS</p>
+                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                    <div class="bg-[#030508] p-2 border border-gray-800">
+                        <span class="text-gray-500 block text-[8px] uppercase font-bold">Total Pair Pool</span>
+                        <span class="text-white font-bold font-mono-tech" id="stats-total-pos">Calculating...</span>
                     </div>
-                    <div class="bg-black/50 p-2 rounded border border-gray-800">
-                        <span class="text-gray-400 block text-xs uppercase font-bold">Tactical Winrate</span>
-                        <span class="text-emerald-400 font-bold font-gundam-hud gundam-glow-green" id="stats-success-rate">81.45%</span>
+                    <div class="bg-[#030508] p-2 border border-gray-800">
+                        <span class="text-gray-500 block text-[8px] uppercase font-bold">Avg Winrate</span>
+                        <span class="text-emerald-400 font-bold font-mono-tech" id="stats-success-rate">81.45%</span>
                     </div>
                 </div>
-                <div class="bg-black/50 p-2 rounded border border-gray-800 text-center">
-                    <span class="text-gray-400 block text-xs uppercase font-bold">Fleet Operation ROI</span>
-                    <span class="text-emerald-400 text-lg font-bold tracking-tight font-gundam-hud gundam-glow-green" id="stats-cum-pnl">+4,102.82%</span>
+                <div class="bg-[#030508] p-2 border border-gray-800 text-center">
+                    <span class="text-gray-500 block text-[8px] uppercase font-bold">Cumulative Portfolio ROI</span>
+                    <span class="text-gundam-gold text-sm font-bold tracking-tight font-mono-tech" id="stats-cum-pnl">+4,102.82%</span>
                 </div>
             </div>
 
-            <div class="space-y-2">
-                <p class="text-xs text-gray-400 font-bold uppercase tracking-wider font-gundam-hud mb-1">Sector Target Filter</p>
-                <button onmouseenter="sfx.hover()" onclick="sfx.click(); applyCapFilterRange('all')" id="f-all" class="w-full text-left bg-blue-600/20 border border-blue-500 text-blue-300 p-2.5 rounded text-sm font-medium flex items-center justify-between">
-                    <span>🌐 All Sectors / Multiverse</span>
+            <div class="space-y-1.5 mb-5">
+                <p class="text-[9px] text-gray-400 font-bold uppercase tracking-wider mb-1">Combat Sector Universe Selection</p>
+                <button onclick="applyCapFilterRange('all'); playSound('click');" id="f-all" class="w-full text-left bg-[#d4af37]/10 border border-[#d4af37]/40 text-[#d4af37] p-2.5 rounded-none text-xs font-medium transition flex items-center justify-between">
+                    <span>🌐 All Sectors Profile</span>
                 </button>
-                <button onmouseenter="sfx.hover()" onclick="sfx.click(); applyCapFilterRange('big')" id="f-big" class="w-full text-left bg-black border border-gray-800 text-gray-300 p-2.5 rounded text-sm font-medium hover:border-blue-500 transition flex items-center justify-between">
-                    <span>🟢 High Cap / Federation Heavy Fleet</span>
+                <button onclick="applyCapFilterRange('big'); playSound('click');" id="f-big" class="w-full text-left bg-gray-900/40 border border-gray-800 text-gray-400 p-2.5 rounded-none text-xs font-medium hover:border-gray-700 transition flex items-center justify-between">
+                    <span>🟢 Tier-1 Heavy Armour Assets</span>
                 </button>
-                <button onmouseenter="sfx.hover()" onclick="sfx.click(); applyCapFilterRange('mid')" id="f-mid" class="w-full text-left bg-black border border-gray-800 text-gray-300 p-2.5 rounded text-sm font-medium hover:border-yellow-500 transition flex items-center justify-between">
-                    <span>🟡 Mid Cap / Mobile Suit Fleet</span>
+                <button onclick="applyCapFilterRange('mid'); playSound('click');" id="f-mid" class="w-full text-left bg-gray-900/40 border border-gray-800 text-gray-400 p-2.5 rounded-none text-xs font-medium hover:border-gray-700 transition flex items-center justify-between">
+                    <span>🟡 Mid-Tier Mobile Suit Fleet</span>
                 </button>
-                <button onmouseenter="sfx.hover()" onclick="sfx.click(); applyCapFilterRange('low')" id="f-low" class="w-full text-left bg-black border border-gray-800 text-gray-300 p-2.5 rounded text-sm font-medium hover:border-red-500 transition flex items-center justify-between">
-                    <span>🔴 Low Cap / Zeon Recon Drone Alpha</span>
+                <button onclick="applyCapFilterRange('low'); playSound('click');" id="f-low" class="w-full text-left bg-gray-900/40 border border-gray-800 text-gray-400 p-2.5 rounded-none text-xs font-medium hover:border-gray-700 transition flex items-center justify-between">
+                    <span>🔴 Low-Cap High Output Prototype Alpha</span>
                 </button>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-4 space-y-1.5">
+                <p class="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Quad-API Thruster Pipeline</p>
+                <div class="p-2.5 bg-gray-900/30 border border-gray-800 rounded-none text-[10px] space-y-1.5 font-mono-tech">
+                    <div class="flex justify-between items-center"><span>Binance Spot/Fut:</span><span class="text-gundam-gold font-bold">CONNECTED</span></div>
+                    <div class="flex justify-between items-center"><span>Hyperliquid L1 Perps:</span><span class="text-gundam-gold font-bold">ONLINE</span></div>
+                    <div class="flex justify-between items-center"><span>Dexscreener Multichain:</span><span class="text-psycho-cyan font-bold">STREAMING</span></div>
+                </div>
             </div>
         </div>
-        <div class="text-xs text-gray-500 border-t border-gray-800 pt-3 uppercase tracking-widest font-bold font-gundam-hud text-center">
-            SYSTEM OS CORE v1.02
+        <div class="text-[8px] text-gray-600 border-t border-gray-800 pt-3 uppercase tracking-widest font-bold">
+            ANAHEIM ELECTRONICS COGNITION v1.02
         </div>
     </div>
 
     <div id="main-terminal-content" class="hidden opacity-0 transition-opacity duration-1000">
         
-        <div class="sticky top-0 z-40 bg-gray-900/95 backdrop-blur border-b-2 border-blue-600 shadow-xl">
-            <div class="max-w-[1600px] mx-auto px-4 py-3">
+        <div class="sticky top-0 z-40 sticky-search-panel shadow-xl">
+            <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-2.5">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-3">
                     
                     <div class="flex items-center justify-between w-full md:w-auto gap-3">
-                        <button onmouseenter="sfx.hover()" onclick="sfx.click(); togglePlengerSidebar(true)" class="bg-blue-600 hover:bg-blue-700 border border-blue-500 text-white px-4 py-2 rounded font-bold transition text-xs font-gundam-hud flex items-center gap-1.5 shadow-md shadow-blue-500/20">
-                            <span>☰</span> <span>TACTICAL ENGINE MENU</span>
+                        <button onclick="togglePlengerSidebar(true); playSound('click');" class="bg-gray-900 hover:bg-[#0c1424] border border-gray-700 text-white px-3 py-1.5 rounded-none font-bold transition text-[11px] flex items-center gap-1.5">
+                            <span class="text-[#d4af37]">☰</span> <span class="hidden sm:inline">TACTICAL OPTIONS</span>
                         </button>
-                        
-                        <div class="flex items-center gap-1.5 bg-black px-2.5 py-1.5 rounded border border-gray-800">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span id="faction-title-badge" class="text-blue-400 font-gundam-hud text-xs font-bold uppercase tracking-wider">E.F.F. EARTH FEDERATION FORCE</span>
+                        <div class="md:hidden text-center">
+                            <span class="font-extrabold text-white tracking-tight font-mono-tech">VANGUARD GUNDAM ENGINE</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-gundam-gold animate-pulse"></span>
+                            <span class="text-[#d4af37] font-mono-tech text-[9px] font-bold uppercase tracking-wider hidden sm:inline">PSYCHO-FRAME HARMONIZER ACTIVE</span>
                         </div>
                     </div>
 
                     <div class="w-full md:max-w-xl relative mx-auto md:mx-0">
-                        <div class="relative flex items-center bg-black border-2 border-gray-800 focus-within:border-yellow-500 rounded-md transition-all">
-                            <span class="pl-3 text-yellow-500 font-gundam-hud text-xs font-bold">🎯 TARGET:</span>
-                            <input type="text" id="search-bar" oninput="executeInstantGlobalSearch(this.value)" placeholder="Cari Kode Asset/Meme Coin (BTC, SOL, AI16Z)..." 
-                                class="w-full p-2 bg-transparent text-white font-gundam-tech font-bold text-sm outline-none uppercase placeholder-gray-500 tracking-wider">
-                            <button id="clear-search-btn" onclick="sfx.click(); clearSearchInput()" class="hidden pr-3 text-gray-400 hover:text-white font-bold">✕</button>
+                        <div class="relative flex items-center bg-[#030508] border border-gray-700 focus-within:border-[#d4af37] rounded-none transition-all">
+                            <span class="pl-3 text-gundam-gold font-mono-tech text-[10px] font-bold">⚡ RADAR SEARCH:</span>
+                            <input type="text" id="search-bar" oninput="executeInstantGlobalSearch(this.value); playSound('crunch');" placeholder="Scan mobile suit tracking signature (BTC, SOL, PIPPIN)..." 
+                                class="w-full p-2 bg-transparent text-white font-mono-tech font-bold text-xs outline-none uppercase placeholder-gray-600 tracking-wide text-left">
+                            <button id="clear-search-btn" onclick="clearSearchInput(); playSound('click');" class="hidden pr-3 text-gray-500 hover:text-white font-bold">✕</button>
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-4 text-xs font-bold font-gundam-hud">
-                        <button id="mute-btn" onclick="toggleMute()" class="bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-600 px-3 py-1.5 rounded text-xs font-bold transition-all">
-                            <span id="mute-btn-text">🔊 SOUND ON</span>
+                    <div class="flex items-center gap-4 text-[10px] font-bold text-gray-500 font-mono-tech">
+                        <button onclick="toggleMuteState()" id="sound-toggle-btn" class="text-[9px] border border-gray-700 px-2 py-0.5 text-gundam-gold bg-gray-900 hover:border-[#d4af37]">
+                            🔊 SOUND: ON
                         </button>
-                        <span id="clock-24h" class="text-yellow-500 bg-black border-2 border-blue-600 px-3 py-1 rounded tracking-widest text-sm font-bold">00:00:00</span>
+                        <span class="hidden md:inline">SIDE-7</span> <span class="hidden md:inline">VON BRAUN</span>
+                        <span id="clock-24h" class="text-white bg-gray-900 border border-gray-800 px-2 py-0.5 rounded-none">00:00:00</span>
                     </div>
                 </div>
             </div>
@@ -271,46 +213,49 @@
 
         <div class="max-w-[1600px] mx-auto px-4 sm:px-6 pt-4 pb-12">
             
-            <div id="minovsky-alert-container" class="marquee-wrapper py-2 mb-4 font-gundam-hud text-xs font-medium tracking-wider transition-colors duration-500">
-                <div id="minovsky-alert-text" class="marquee-content"></div>
+            <div class="marquee-wrapper py-1 mb-4 bg-yellow-950/20 border-y border-[#d4af37]/30 font-mono-tech text-[10px] text-[#d4af37] font-medium">
+                <div class="marquee-content">
+                    ⚠️ MINOVSKY PARTICLE INTERFERENCE DETECTED: HIGH VOLATILITY OVERRIDE PROCEDURES ARE ONLINE. TACTICAL REAL-TIME VALUATION ROUTING SECURELY LINKED TO ANAHEIM MAINFRAME BACKBONE ⚠️ &nbsp;&nbsp;&nbsp;&nbsp; ⚠️ MINOVSKY PARTICLE INTERFERENCE DETECTED: HIGH VOLATILITY OVERRIDE PROCEDURES ARE ONLINE. TACTICAL REAL-TIME VALUATION ROUTING SECURELY LINKED TO ANAHEIM MAINFRAME BACKBONE ⚠️
+                </div>
             </div>
 
             <header class="mb-5">
-                <div class="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                    <div class="flex items-center gap-2 mb-3 pb-2 border-b border-gray-700">
-                        <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-                        <h2 class="font-bold text-xs text-white uppercase tracking-wider font-gundam-hud">Fleet Operations Radar Feed & Catalyst Monitor</h2>
+                <div class="bg-[#060b13] border border-gray-800 rounded-none p-3 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-[#d4af37]/10 to-transparent pointer-events-none"></div>
+                    <div class="flex items-center gap-2 mb-2.5 pb-1.5 border-b border-gray-800">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#d4af37] animate-pulse"></span>
+                        <h2 class="font-bold text-[10px] text-white uppercase tracking-wider font-mono-tech">Sensor & Strategic Intelligence Monitor Stream</h2>
                     </div>
-                    <div id="cmc-news-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 font-gundam-tech text-sm text-gray-300"></div>
+                    <div id="cmc-news-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 font-mono-tech text-[11px] text-gray-400"></div>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3 font-gundam-tech">
-                    <div class="bg-gray-900 border border-gray-800 p-3 rounded-lg border-l-4 border-l-emerald-500">
-                        <span class="text-gray-400 text-xs font-bold uppercase tracking-wider">Global Grid Sentiment</span>
-                        <div class="text-emerald-400 font-bold mt-1 text-sm gundam-glow-green" id="gauge-sentiment">Analyzing Matrix...</div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 mt-3">
+                    <div class="bg-[#060b13] border border-gray-800 p-2.5 rounded-none">
+                        <span class="text-gray-500 text-[9px] font-bold uppercase tracking-wider font-mono-tech">Space-Time Market Matrix</span>
+                        <div class="text-psycho-cyan font-bold mt-0.5 text-xs">High Output Fluid Velocity</div>
                     </div>
-                    <div class="bg-gray-900 border border-gray-800 p-3 rounded-lg border-l-4 border-l-blue-500">
-                        <span class="text-gray-400 text-xs font-bold uppercase tracking-wider">Federation Power Gauge (BTC.D)</span>
-                        <div class="text-white font-bold mt-1 text-sm font-gundam-hud">54.81% / 103.85</div>
+                    <div class="bg-[#060b13] border border-gray-800 p-2.5 rounded-none">
+                        <span class="text-gray-500 text-[9px] font-bold uppercase tracking-wider font-mono-tech">System Domination Delta</span>
+                        <div class="text-white font-bold font-mono-tech mt-0.5 text-xs">54.81% / 103.85</div>
                     </div>
-                    <div class="bg-gray-900 border border-gray-800 p-3 rounded-lg border-l-4 border-l-blue-400">
-                        <span class="text-gray-400 text-xs font-bold uppercase tracking-wider">Beam Propulsion Delta (Funding)</span>
-                        <div class="text-blue-400 font-bold mt-1 text-sm font-gundam-hud">+0.0125% Median</div>
+                    <div class="bg-[#060b13] border border-gray-800 p-2.5 rounded-none">
+                        <span class="text-gray-500 text-[9px] font-bold uppercase tracking-wider font-mono-tech">Reactor Pressure Delta</span>
+                        <div class="text-[#d4af37] font-bold font-mono-tech mt-0.5 text-xs">+0.0125% Median</div>
                     </div>
-                    <div class="bg-gray-900 border border-gray-800 p-3 rounded-lg border-l-4 border-l-yellow-500">
-                        <span class="text-gray-400 text-xs font-bold uppercase tracking-wider">Pilot Anxiety Matrix (Fear & Greed)</span>
-                        <div class="text-yellow-400 font-bold mt-1 text-sm font-gundam-hud">58 (Moderate Sync)</div>
+                    <div class="bg-[#060b13] border border-gray-800 p-2.5 rounded-none">
+                        <span class="text-gray-500 text-[9px] font-bold uppercase tracking-wider font-mono-tech">Tactical Alert Matrix Status</span>
+                        <div class="text-amber-400 font-bold mt-0.5 text-xs">58 (Condition Green)</div>
                     </div>
                 </div>
 
                 <div class="flex justify-between items-center mt-6">
-                    <h2 class="text-sm font-bold text-white uppercase tracking-widest font-gundam-hud flex items-center gap-2">
-                        <span class="w-1.5 h-4 bg-blue-600 block"></span> Active Sector Mainframe Stream
+                    <h2 class="text-xs font-bold text-white uppercase tracking-widest font-mono-tech flex items-center gap-2">
+                        <span class="w-1 h-3 bg-gradient-to-b from-[#d4af37] to-yellow-600 block"></span> Tactical Battle Deck Overview
                     </h2>
-                    <div class="flex items-center gap-3 bg-gray-900 px-4 py-1.5 rounded-lg border border-gray-700 font-gundam-hud text-xs">
-                        <button onclick="sfx.click(); triggerSliderLeft()" class="font-bold text-blue-500 hover:text-white transition text-sm">◀</button>
-                        <span id="slider-pagination-label" class="text-gray-300 font-bold tracking-wider text-xs">PAGE 1 / 1</span>
-                        <button onclick="sfx.click(); triggerSliderRight()" class="font-bold text-blue-500 hover:text-white transition text-sm">▶</button>
+                    <div class="flex items-center gap-2.5 bg-[#060b13] px-3 py-1 rounded-none border border-gray-800 font-mono-tech">
+                        <button onclick="triggerSliderLeft(); playSound('click');" class="text-xs font-bold text-[#d4af37] hover:text-white transition">◀</button>
+                        <span id="slider-pagination-label" class="text-[10px] text-gray-400 font-bold tracking-wider">PAGE 1 / 1</span>
+                        <button onclick="triggerSliderRight(); playSound('click');" class="text-xs font-bold text-[#d4af37] hover:text-white transition">▶</button>
                     </div>
                 </div>
             </header>
@@ -321,21 +266,22 @@
         </div>
     </div>
 
-    <div id="specs-modal" class="fixed inset-0 hidden z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-        <div class="bg-gray-900 border-2 border-blue-600 w-full max-w-xl rounded-xl p-5 relative text-sm text-gray-200 font-medium shadow-2xl">
-            <button onclick="sfx.click(); closeSpecsModalWindow()" class="absolute top-4 right-4 text-gray-400 hover:text-white font-gundam-hud text-xs tracking-wider border border-gray-700 px-3 py-1 rounded bg-gray-800">✕ CLOSE MODAL</button>
+    <div id="specs-modal" class="fixed inset-0 hidden z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="bg-[#060b13] border-2 border-[#d4af37] w-full max-w-xl rounded-none p-5 relative text-xs text-gray-300 font-medium">
+            <button onclick="closeSpecsModalWindow(); playSound('click');" class="absolute top-4 right-4 text-gray-400 hover:text-white font-mono-tech text-[10px] tracking-wider border border-gray-800 px-2 py-0.5 rounded-none bg-gray-900">✕ DISMISS</button>
             <div id="modal-content-area" class="mt-2"></div>
         </div>
     </div>
 
-    <footer class="py-6 border-t border-gray-800 bg-black text-center text-xs font-bold text-gray-500 uppercase tracking-widest font-gundam-hud">
-        // MAIN COCKPIT SYSTEMS VERIFIED // KANGGABUT LABS TACTICAL SHIPMENT INDUSTRIAL COMPLEX © 2026
+    <footer class="py-6 border-t-2 border-gray-900 bg-[#030508] text-center text-[9px] font-bold text-gray-600 uppercase tracking-widest font-mono-tech">
+        // PSYCHO-FRAME EMISSION SYSTEMS VERIFIED COMPLIANT WITH RX-0 SPECIFICATION MATRIX PRO © 2026 ANAHEIM LABS
     </footer>
 
     <script>
         const API_BINANCE = "https://api.binance.com/api/v3/ticker/24hr";
         const API_HYPERLIQUID = "https://api.hyperliquid.xyz/info";
 
+        // Memory Registries
         let coreMemoryCache = []; 
         let filteredWorkspacePool = [];
         let selectedFilterRange = "all";
@@ -344,10 +290,12 @@
         let advancedIndicatorsCache = {}; 
         let coreSliderPointer = 0;
         const strictRowMaxItems = 16; 
+        
+        // Sound Module Options
+        let systemAudioMuted = false;
+        let synthAudioContext = null;
 
-        // FITUR 4: Target Lock Database untuk Sound Alert
-        let lockedAlertAssets = {};
-
+        // Ticker Aliases untuk Pencarian Fuzzy / Alias
         const searchAliasDatabase = {
             "pippin": ["PIPPIN", "PIP", "PIPIN"],
             "bome": ["BOME", "BOMECOIN", "BOOK OF MEME"],
@@ -365,14 +313,91 @@
         ];
 
         const cmcCatalystDatabase = [
-            { pair: "SUI/USDT", event: "MAINNET GEARS ACTIVATED", desc: "Network thrust output optimization protocol live.", state: "HOT" },
-            { pair: "SOL/USDT", event: "FLEET LIQUIDITY UNLOCK", desc: "Heavy fuel injection payload mapped into ecosystem.", state: "VOLATILE" },
-            { pair: "AVAX/USDT", event: "ALLIANCE PIPELINE SYNC", desc: "Federation multi-node ledger verification complete.", state: "INFLOW" },
-            { pair: "PEPE/USDT", event: "SUPPLY INCINERATION", desc: "1.2 Trillion mass vectors removed from operational cycle.", state: "VOLUME" },
-            { pair: "NEAR/USDT", event: "SHARDING V3 MATRIX", desc: "Storage drive partitions active over global sectors.", state: "MAINNET" }
+            { pair: "SUI/USDT", event: "MAINNET V2.1 UPGRADE", desc: "Network latency validation scaling sequence launched.", state: "HOT" },
+            { pair: "SOL/USDT", event: "TOKEN UNLOCK ADV", desc: "$240M liquidity unlocks mapped in current cluster.", state: "VOLATILE" },
+            { pair: "AVAX/USDT", event: "BANKING PARTNER PIPELINE", desc: "Institutional smart-contract settlement validation.", state: "INFLOW" },
+            { pair: "PEPE/USDT", event: "TOKEN BURN PROTOCOL", desc: "1.2T supply burned out of standard distribution.", state: "VOLUME" },
+            { pair: "NEAR/USDT", event: "SHARDING V3 CORE", desc: "State sharding storage model active across pools.", state: "MAINNET" }
         ];
 
+        // ====================================================
+        // GUNDAM WEB AUDIO SYNTHESIZER ENGINE (NEW MODULE)
+        // ====================================================
+        function initializeAudioContextEngine() {
+            if (!synthAudioContext) {
+                synthAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(type) {
+            if (systemAudioMuted) return;
+            try {
+                initializeAudioContextEngine();
+                const osc = synthAudioContext.createOscillator();
+                const gain = synthAudioContext.createGain();
+                osc.connect(gain);
+                gain.connect(synthAudioContext.destination);
+
+                const now = synthAudioContext.currentTime;
+
+                if (type === 'click') {
+                    // Mechanical Click Sound
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(800, now);
+                    osc.frequency.exponentialRampToValueAtTime(150, now + 0.08);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'beep') {
+                    // Tactical System Alarm
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(1200, now);
+                    osc.frequency.setValueAtTime(1500, now + 0.05);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.linearRampToValueAtTime(0.005, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                } else if (type === 'crunch') {
+                    // Data Processing Sound
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(200, now);
+                    osc.frequency.setValueAtTime(450, now + 0.03);
+                    gain.gain.setValueAtTime(0.04, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'boot') {
+                    // Heavy Reactor Startup Sequence
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(60, now);
+                    osc.frequency.linearRampToValueAtTime(600, now + 1.2);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 1.5);
+                    osc.start(now);
+                    osc.stop(now + 1.5);
+                }
+            } catch (e) {
+                console.log("Audio syntax blockage ignored: ", e);
+            }
+        }
+
+        function toggleMuteState() {
+            systemAudioMuted = !systemAudioMuted;
+            const btn = document.getElementById('sound-toggle-btn');
+            if(systemAudioMuted) {
+                btn.innerText = "🔇 SOUND: MUTED";
+                btn.className = "text-[9px] border border-red-900 px-2 py-0.5 text-red-500 bg-gray-900";
+            } else {
+                btn.innerText = "🔊 SOUND: ON";
+                btn.className = "text-[9px] border border-gray-700 px-2 py-0.5 text-gundam-gold bg-gray-900 hover:border-[#d4af37]";
+                playSound('click');
+            }
+        }
+
         function triggerTerminalBootSequence() {
+            initializeAudioContextEngine();
+            playSound('boot');
             document.getElementById('launch-btn').classList.add('hidden');
             document.getElementById('boot-progress-container').classList.remove('hidden');
             
@@ -381,11 +406,11 @@
             const pctText = document.getElementById('boot-percent-text');
             const statusText = document.getElementById('boot-status-text');
             const logs = [
-                "Initializing Minovsky Ultra-Compact Fusion Reactor...",
-                "Booting Tactical Combat OS Core Modules...",
-                "Opening Long-Range Radar Quantum Telemetry...",
-                "Synchronizing Fleet Arrays with Universal Central Command...",
-                "System Operational. Welcome Pilot."
+                "Awakening Minovsky Drive Reactors...",
+                "Synchronizing Psycho-Frame Conduits...",
+                "Establishing Link with Anaheim Central Network...",
+                "Decrypting Sector Targeting Radar Arrays...",
+                "NT-D Mode Activated. Systems Operational."
             ];
 
             const interval = setInterval(() => {
@@ -401,6 +426,7 @@
                 bar.style.width = currentPct + "%";
                 pctText.innerText = currentPct + "%";
                 statusText.innerText = logs[Math.floor((currentPct / 100) * logs.length)] || logs[logs.length - 1];
+                if (currentPct % 20 === 0) playSound('crunch');
             }, 50);
         }
 
@@ -415,57 +441,18 @@
             container.innerHTML = '';
             cmcCatalystDatabase.forEach(item => {
                 container.innerHTML += `
-                    <div class="bg-black p-3 border border-gray-800 rounded flex flex-col justify-between">
+                    <div class="bg-[#030508] p-2 border border-gray-800 rounded-none flex flex-col justify-between">
                         <div>
                             <div class="flex justify-between items-center mb-1">
-                                <span class="text-white font-bold font-gundam-hud text-xs">${item.pair}</span>
-                                <span class="text-[10px] bg-blue-950 text-blue-400 px-1.5 border border-blue-900 font-bold uppercase rounded">${item.state}</span>
+                                <span class="text-white font-bold">${item.pair}</span>
+                                <span class="text-[8px] bg-yellow-950 text-[#d4af37] px-1 border border-yellow-900 font-bold uppercase">${item.state}</span>
                             </div>
-                            <p class="text-yellow-500 font-bold text-xs uppercase font-gundam-hud">${item.event}</p>
-                            <p class="text-xs text-gray-400 leading-tight mt-1">${item.desc}</p>
+                            <p class="text-gray-300 font-bold text-[9px] uppercase">${item.event}</p>
+                            <p class="text-[10px] text-gray-500 leading-tight mt-0.5">${item.desc}</p>
                         </div>
                     </div>
                 `;
             });
-        }
-
-        // FITUR 1 & FITUR 4 INTEGRATION: Deteksi Rata-rata Volatilitas Pasar & Alert Check
-        function runDynamicSystemsCalibrator(cluster) {
-            if(cluster.length === 0) return;
-            
-            let totalChange = 0;
-            cluster.forEach(x => {
-                totalChange += Math.abs(x.change24h);
-                
-                // FITUR 4: Deteksi Real-time Trigger Lock-On Alarm jika melewati TP/SL simulator
-                if (lockedAlertAssets[x.uid]) {
-                    const setup = lockedTradingSetupsCache[x.uid];
-                    if (setup && !lockedAlertAssets[x.uid].triggered) {
-                        if (x.price >= setup.tp1 || x.price <= setup.sl) {
-                            sfx.alarm();
-                            lockedAlertAssets[x.uid].triggered = true;
-                            alert(`🚨 GUNDAM RADAR ALERT: Asset ${x.ticker} Telah Menyentuh Batas Target Operasi Taktis!`);
-                        }
-                    }
-                }
-            });
-            
-            let avgVol = totalChange / cluster.length;
-            const container = document.getElementById('minovsky-alert-container');
-            const textEl = document.getElementById('minovsky-alert-text');
-            const sentimentLabel = document.getElementById('gauge-sentiment');
-
-            if(avgVol > 8) {
-                container.className = "marquee-wrapper py-2 mb-4 font-gundam-hud text-xs font-bold tracking-wider bg-red-950/60 border-y-2 border-red-500 text-red-400";
-                textEl.innerHTML = `⚠️ DANGER FIELD: MINOVSKY PARTICLE INTERFERENCE IS HIGH (${avgVol.toFixed(2)}% DELTA). HEAVY VOLATILITY INBOUND. ALL PILOTS ENGAGE INTERCEPTOR PROTOCOLS! ⚠️ &nbsp;&nbsp;&nbsp;&nbsp; `.repeat(2);
-                sentimentLabel.innerText = "CRITICAL VOLATILE";
-                sentimentLabel.className = "text-red-400 font-bold mt-1 text-sm gundam-glow-red";
-            } else {
-                container.className = "marquee-wrapper py-2 mb-4 font-gundam-hud text-xs font-bold tracking-wider bg-emerald-950/40 border-y-2 border-emerald-500 text-emerald-400";
-                textEl.innerHTML = `🌐 RADAR STATUS: CLEAR SKY NETWORK MATRIX ONLINE (${avgVol.toFixed(2)}% AVG CHANGE). MINOVSKY INTERFERENCE STABLE. SAFE OPERATION ASSIGNED. 🌐 &nbsp;&nbsp;&nbsp;&nbsp; `.repeat(2);
-                sentimentLabel.innerText = "TACTICAL STEADY";
-                sentimentLabel.className = "text-emerald-400 font-bold mt-1 text-sm gundam-glow-green";
-            }
         }
 
         async function fetchAllExternalAPIPipelines() {
@@ -480,7 +467,7 @@
                         const price = parseFloat(spot.lastPrice) || 0;
                         const vol = parseFloat(spot.quoteVolume) || 0;
                         temporaryCluster.push({
-                            uid: ticker + "_BNC", ticker: ticker, source: "FEDERATION MAINNET",
+                            uid: ticker + "_BNC", ticker: ticker, source: "BINANCE CONTRACT",
                             price: price, change24h: parseFloat(spot.priceChangePercent) || 0, volume24h: vol,
                             high24h: parseFloat(spot.highPrice) || price, low24h: parseFloat(spot.lowPrice) || price,
                             calculatedWeight: vol * 10
@@ -503,7 +490,7 @@
                                 const change = ((price - (parseFloat(ctx.prevPrice) || price)) / (parseFloat(ctx.prevPrice) || 1)) * 100;
                                 if (!temporaryCluster.some(item => item.ticker === asset.name)) {
                                     temporaryCluster.push({
-                                        uid: asset.name + "_HLP", ticker: asset.name, source: "HYPER THRUST PERP",
+                                        uid: asset.name + "_HLP", ticker: asset.name, source: "HYPERLIQUID PERP",
                                         price: price, change24h: isNaN(change) ? 0 : change, volume24h: vol,
                                         high24h: price * 1.03, low24h: price * 0.97,
                                         calculatedWeight: vol * 8
@@ -527,12 +514,11 @@
 
                 if (temporaryCluster.length > 0) { 
                     coreMemoryCache = temporaryCluster; 
-                    document.getElementById('stats-total-pos').innerText = `${coreMemoryCache.length} Sectors`;
-                    runDynamicSystemsCalibrator(coreMemoryCache);
+                    document.getElementById('stats-total-pos').innerText = `${coreMemoryCache.length} Targets`;
                 }
                 compileActiveFilterSorting();
             } catch (err) { 
-                console.error("Pipeline Fault: ", err);
+                console.error("Critical Anaheim Multiplexer Error: ", err);
             }
         }
 
@@ -559,11 +545,11 @@
             selectedFilterRange = rangeType;
             coreSliderPointer = 0;
             document.querySelectorAll('#plenger-sidebar button').forEach(b => {
-                if(!b.innerText.includes("Mode")) {
-                    b.className = "w-full text-left bg-black border border-gray-800 text-gray-300 p-2.5 rounded text-sm font-medium hover:border-blue-500 transition flex items-center justify-between";
+                if(b.id !== 'clear-sidebar-btn') {
+                    b.className = "w-full text-left bg-gray-900/40 border border-gray-800 text-gray-400 p-2.5 rounded-none text-xs font-medium hover:border-gray-700 transition flex items-center justify-between";
                 }
             });
-            document.getElementById('f-' + rangeType).className = "w-full text-left bg-blue-600/20 border border-blue-500 text-blue-300 p-2.5 rounded text-sm font-medium flex items-center justify-between";
+            document.getElementById('f-' + rangeType).className = "w-full text-left bg-[#d4af37]/10 border border-[#d4af37]/40 text-[#d4af37] p-2.5 rounded-none text-xs font-medium transition flex items-center justify-between";
             compileActiveFilterSorting();
         }
 
@@ -613,29 +599,67 @@
             renderWorkspaceDisplay();
         }
 
+        function getOrComputeAdvancedIndicators(uid, price, change24h) {
+            const now = Date.now();
+            if (advancedIndicatorsCache[uid] && (now - advancedIndicatorsCache[uid].timestamp < 15000)) {
+                return advancedIndicatorsCache[uid].data;
+            }
+
+            const mxwellStrength = Math.floor(Math.abs(change24h) * 2.5 + 40) % 100;
+            const mxwellBias = change24h >= 0 ? "BULLISH" : "BEARISH";
+            const mxwellReversal = Math.floor(Math.random() * 30) + (Math.abs(change24h) > 15 ? 60 : 10);
+
+            const bjorgumPressure = (Math.floor(Math.random() * 40) + 50) + "%";
+            const bjorgumImbalance = change24h >= 0 ? "BUY IMBALANCE" : "SELL IMBALANCE";
+            const bjorgumFootprint = change24h >= 0 ? "ACCUMULATION" : "DISTRIBUTION";
+
+            let rsiVal = Math.floor(50 + (change24h * 1.5));
+            rsiVal = Math.max(10, Math.min(90, rsiVal));
+            let rsiDiv = "NONE";
+            if (rsiVal > 75 && change24h < 5) rsiDiv = "BEARISH DIV";
+            if (rsiVal < 25 && change24h > -5) rsiDiv = "BULLISH DIV";
+            const rsiSlope = change24h >= 0 ? "UPWARD" : "DOWNWARD";
+
+            const smcSignal = change24h >= 0 ? "BOS (BULLISH)" : "CHOCH (BEARISH)";
+            const smcOb = change24h >= 0 ? "MITIGATED BULLISH OB" : "UNMITIGATED BEARISH OB";
+            const smcFvg = change24h >= 0 ? "FVG FILLED" : "OPEN FVG CEILING";
+
+            const sup1 = price * 0.95;
+            const res1 = price * 1.05;
+            const levelScore = Math.floor(Math.random() * 20) + 75;
+
+            const fib618 = change24h >= 0 ? price * 0.98 : price * 1.02;
+            const fib786 = change24h >= 0 ? price * 0.97 : price * 1.03;
+            const fib1618 = change24h >= 0 ? price * 1.12 : price * 0.88;
+
+            const computedConfluence = Math.floor((mxwellStrength + rsiVal + levelScore) / 3);
+
+            const generatedData = {
+                mxwell: { strength: mxwellStrength, bias: mxwellBias, reversal: mxwellReversal },
+                bjorgum: { pressure: bjorgumPressure, imbalance: bjorgumImbalance, footprint: bjorgumFootprint },
+                rsi: { value: rsiVal, divergence: rsiDiv, slope: rsiSlope },
+                smc: { structural: smcSignal, obProximity: smcOb, fvgState: smcFvg },
+                keyLevels: { support: sup1, resistance: res1, score: levelScore },
+                fibonacci: { retracement618: fib618, retracement786: fib786, extension1618: fib1618 },
+                totalProConfluence: computedConfluence
+            };
+
+            advancedIndicatorsCache[uid] = { timestamp: now, data: generatedData };
+            return generatedData;
+        }
+
         function toggleAdvancedAnalysisSection(uid) {
-            sfx.click();
             const el = document.getElementById(`adv-panel-${uid}`);
             const btn = document.getElementById(`adv-btn-${uid}`);
             if (el.classList.contains('hidden')) {
                 el.classList.remove('hidden');
-                btn.innerText = "Close Tactical Analysis ▴";
+                btn.innerText = "Secure Internal Specs ▴";
+                playSound('beep');
             } else {
                 el.classList.add('hidden');
-                btn.innerText = "Expand Tactical Analysis ▾";
+                btn.innerText = "Query Internal Specs ▾";
+                playSound('click');
             }
-        }
-
-        // FITUR 4: Fungsi Toggle Kunci Radar Alert (Target Lock)
-        function toggleTargetAlertLock(uidKey) {
-            sfx.click();
-            if (lockedAlertAssets[uidKey]) {
-                delete lockedAlertAssets[uidKey];
-            } else {
-                lockedAlertAssets[uidKey] = { triggered: false };
-                sfx.alarm();
-            }
-            renderWorkspaceDisplay();
         }
 
         function renderWorkspaceDisplay() {
@@ -643,10 +667,10 @@
             viewport.innerHTML = '';
             
             const activeSlice = filteredWorkspacePool.slice(coreSliderPointer, coreSliderPointer + strictRowMaxItems);
-            document.getElementById('slider-pagination-label').innerText = `PAGE ${Math.floor(coreSliderPointer / strictRowMaxItems) + 1} / ${Math.ceil(filteredWorkspacePool.length / strictRowMaxItems) || 1}`;
+            document.getElementById('slider-pagination-label').innerText = `DECK ${Math.floor(coreSliderPointer / strictRowMaxItems) + 1} / ${Math.ceil(filteredWorkspacePool.length / strictRowMaxItems) || 1}`;
             
             if (activeSlice.length === 0) {
-                viewport.innerHTML = `<div class="col-span-full text-center text-gray-400 py-16 font-gundam-hud uppercase font-bold tracking-widest border border-dashed border-gray-700 rounded-xl bg-gray-900">⚠️ RADAR ERROR: Target Matrix Out of Range / Zero Matching Assets</div>`;
+                viewport.innerHTML = `<div class="col-span-full text-center text-gray-500 py-16 font-mono-tech uppercase font-bold tracking-widest border border-dashed border-gray-800">⚠️ RADAR CONDUIT EMPTY: Target array fingerprint missing</div>`;
                 return;
             }
 
@@ -656,75 +680,166 @@
                 let dPoints = (livePrice < 0.00001) ? 8 : ((livePrice < 0.01) ? 6 : (livePrice < 1 ? 4 : 2));
 
                 if (!lockedTradingSetupsCache[pairNode.uid]) {
-                    const setupTrend = change >= 0 ? 'LONG / THRUST' : 'SHORT / RECOIL';
+                    const setupTrend = change >= 0 ? 'LONG' : 'SHORT';
                     const score = Math.floor(Math.random() * 40) + 55;
-                    const possibleStatus = ['Waiting Command', 'Lock-On Triggered', 'Objective Captured', 'Re-routing Grid'];
+                    const possibleStatus = ['Waiting', 'Entry Hit', 'TP1 Hit', 'Waiting'];
                     
                     lockedTradingSetupsCache[pairNode.uid] = {
                         trend: setupTrend,
-                        entry: livePrice * (change >= 0 ? 0.995 : 1.005),
-                        tp1: change >= 0 ? livePrice * 1.02 : livePrice * 0.98,
-                        tp2: change >= 0 ? livePrice * 1.04 : livePrice * 0.96,
-                        sl: change >= 0 ? livePrice * 0.975 : livePrice * 1.025,
+                        entry: livePrice * (setupTrend === 'LONG' ? 0.995 : 1.005),
+                        tp1: setupTrend === 'LONG' ? livePrice * 1.02 : livePrice * 0.98,
+                        tp2: setupTrend === 'LONG' ? livePrice * 1.04 : livePrice * 0.96,
+                        tp3: setupTrend === 'LONG' ? livePrice * 1.06 : livePrice * 0.94,
+                        sl: setupTrend === 'LONG' ? livePrice * 0.975 : livePrice * 1.025,
                         confluence: score,
+                        volatility: score > 80 ? 'HIGH' : (score > 65 ? 'MED' : 'LOW'),
                         status: possibleStatus[Math.floor(Math.random() * possibleStatus.length)]
                     };
                 }
 
                 const setup = lockedTradingSetupsCache[pairNode.uid];
-                const isAlertLocked = !!lockedAlertAssets[pairNode.uid];
+                const adv = getOrComputeAdvancedIndicators(pairNode.uid, livePrice, change);
+
+                const confBg = setup.confluence > 75 ? 'bg-emerald-950/40 text-emerald-400 border-emerald-900' : (setup.confluence > 65 ? 'bg-amber-950/40 text-amber-400 border-amber-900' : 'bg-gray-900 text-gray-400 border-gray-800');
+                const statusColor = setup.status.includes('TP') ? 'text-emerald-400' : (setup.status.includes('SL') ? 'text-rose-400' : 'text-psycho-cyan');
 
                 const cardBox = document.createElement('div');
-                cardBox.className = "gundam-card p-4 rounded flex flex-col justify-between font-gundam-tech";
-                cardBox.setAttribute('onmouseenter', 'sfx.hover()');
+                cardBox.className = "bloomberg-card p-4 flex flex-col justify-between font-mono-tech";
                 
                 cardBox.innerHTML = `
                     <div class="space-y-3">
-                        <div class="flex justify-between items-start border-b border-gray-700 pb-2">
-                            <div onclick="sfx.modal(); openSpecsModalWindow('${pairNode.uid}')" class="cursor-pointer">
+                        <div onclick="openSpecsModalWindow('${pairNode.uid}'); playSound('beep');" class="cursor-pointer flex justify-between items-start border-b border-gray-800 pb-2">
+                            <div>
                                 <div class="flex items-center gap-1.5">
-                                    <span class="text-white font-bold text-base tracking-wide font-gundam-hud">${pairNode.ticker}</span>
-                                    <span class="text-xs text-gray-500 font-bold">USDT</span>
+                                    <span class="text-white font-bold text-sm tracking-tight">${pairNode.ticker}</span>
+                                    <span class="text-[9px] text-[#d4af37] font-bold">[UC]</span>
                                 </div>
-                                <p class="text-xs text-blue-400 font-bold tracking-wider uppercase mt-0.5">${pairNode.source}</p>
+                                <p class="text-[9px] text-psycho-cyan font-bold tracking-wider uppercase mt-0.5">${pairNode.source}</p>
                             </div>
                             <div class="flex flex-col items-end gap-1">
-                                <div class="flex gap-1.5 items-center">
-                                    <span class="text-xs font-bold px-2 py-0.5 rounded ${change >= 0 ? 'bg-emerald-950 text-emerald-400' : 'bg-rose-950 text-rose-400'}">
+                                <div class="flex gap-1 items-center">
+                                    <span class="text-[10px] font-bold px-1.5 py-0.5 ${change >= 0 ? 'bg-emerald-950 text-emerald-400' : 'bg-rose-950 text-rose-400'}">
                                         ${change >= 0 ? '+' : ''}${change.toFixed(2)}%
                                     </span>
-                                    
-                                    <button onclick="toggleTargetAlertLock('${pairNode.uid}')" class="px-1.5 py-0.5 rounded text-[11px] font-bold border ${isAlertLocked ? 'bg-red-600 border-red-400 text-white animate-pulse' : 'bg-gray-800 border-gray-600 text-gray-400'}">
-                                        ${isAlertLocked ? '🔒 LOCKED' : '🎯 LOCK'}
-                                    </button>
+                                    <span class="text-[10px] font-bold px-1.5 py-0.5 border ${setup.trend === 'LONG' ? 'bg-emerald-950 text-emerald-400 border-emerald-900' : 'bg-rose-950 text-rose-400 border-rose-900'}">
+                                        ${setup.trend}
+                                    </span>
                                 </div>
-                                <span class="text-xs px-2 py-0.2 font-bold text-yellow-400">SYNC: ${setup.confluence}%</span>
+                                <span class="text-[9px] px-1.5 py-0.2 border font-bold ${confBg}">SYNC: ${setup.confluence}%</span>
                             </div>
                         </div>
 
-                        <div onclick="sfx.modal(); openSpecsModalWindow('${pairNode.uid}')" class="cursor-pointer space-y-2 text-sm">
-                            <div class="flex justify-between items-baseline bg-black/60 p-2 rounded border border-gray-800">
-                                <span class="text-gray-400 font-bold uppercase text-xs">Current Energy Price</span>
-                                <span class="text-yellow-400 font-bold text-sm tracking-wide font-gundam-hud">$${livePrice.toFixed(dPoints)}</span>
+                        <div onclick="openSpecsModalWindow('${pairNode.uid}'); playSound('beep');" class="cursor-pointer space-y-2">
+                            <div class="flex justify-between items-baseline bg-gray-900/60 p-1.5 border border-gray-800">
+                                <span class="text-gray-500 text-[9px] uppercase font-bold">Current Velocity Px</span>
+                                <span class="text-gundam-gold font-bold text-xs tracking-wide">$${livePrice.toFixed(dPoints)}</span>
                             </div>
 
-                            <div class="grid grid-cols-2 gap-2">
-                                <div class="bg-blue-950/40 border border-blue-900/60 p-2 rounded">
-                                    <span class="text-blue-400 block text-xs font-bold">🎯 ENTRANCE PROFILE</span>
-                                    <span class="text-white font-bold font-gundam-hud">$${setup.entry.toFixed(dPoints)}</span>
+                            <div class="grid grid-cols-2 gap-1.5 text-[10px]">
+                                <div class="bg-yellow-950/20 border border-yellow-900/40 p-1">
+                                    <span class="text-[#d4af37] block text-[8px] font-bold">TACTICAL ENTRY</span>
+                                    <span class="text-white font-bold">$${setup.entry.toFixed(dPoints)}</span>
                                 </div>
-                                <div class="bg-red-950/40 border border-red-900/60 p-2 rounded">
-                                    <span class="text-red-400 block text-xs font-bold">🛡️ ARMOR DEFENSE (SL)</span>
-                                    <span class="text-white font-bold font-gundam-hud">$${setup.sl.toFixed(dPoints)}</span>
+                                <div class="bg-rose-950/20 border border-rose-900/40 p-1">
+                                    <span class="text-rose-500 block text-[8px] font-bold">ARMOUR DISCHARGE (SL)</span>
+                                    <span class="text-white font-bold">$${setup.sl.toFixed(dPoints)}</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-1 text-center text-[9px]">
+                                <div class="bg-gray-900/60 border border-gray-800 p-1">
+                                    <span class="text-gray-400 block text-[7px] font-bold">ALPHA YIELD</span>
+                                    <span class="text-gray-300 font-bold">$${setup.tp1.toFixed(dPoints)}</span>
+                                </div>
+                                <div class="bg-gray-900/60 border border-gray-800 p-1">
+                                    <span class="text-gray-400 block text-[7px] font-bold">BETA YIELD</span>
+                                    <span class="text-gray-300 font-bold">$${setup.tp2.toFixed(dPoints)}</span>
+                                </div>
+                                <div class="bg-gray-900/60 border border-gray-800 p-1">
+                                    <span class="text-gray-400 block text-[7px] font-bold">GAMMA YIELD</span>
+                                    <span class="text-gray-300 font-bold">$${setup.tp3.toFixed(dPoints)}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div onclick="openSpecsModalWindow('${pairNode.uid}');" class="cursor-pointer pt-2 border-t border-gray-900 text-[9px] text-gray-500 space-y-1">
+                            <div class="flex justify-between">
+                                <span>Output Regime Array:</span>
+                                <span class="text-white font-bold">${setup.volatility} / STABLE THRUST</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span>Funnels Dispatch Status:</span>
+                                <span class="${statusColor} font-bold uppercase tracking-wider">${setup.status}</span>
+                            </div>
+                        </div>
+
+                        <div id="adv-panel-${pairNode.uid}" class="hidden mt-3 pt-3 border-t border-dashed border-gray-800 space-y-2.5 text-[10px] bg-[#030508] p-2">
+                            <div class="flex justify-between items-center border-b border-gray-900 pb-1">
+                                <span class="text-gundam-gold font-bold tracking-wider">🔬 PSYCHO-CONFLUENCE SPEC</span>
+                                <span class="bg-yellow-950 text-[#d4af37] font-mono-tech px-1 text-[8px] font-bold border border-yellow-900">INTEGRATION: ${adv.totalProConfluence}%</span>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-2 text-[9px]">
+                                <div class="border border-gray-800 p-1.5 bg-gray-900/30">
+                                    <p class="text-gundam-gold font-bold uppercase text-[7px]">⚡ MINOVSKY DISPERSION</p>
+                                    <p class="text-gray-300">Str: <span class="text-white font-bold">${adv.mxwell.strength}%</span></p>
+                                    <p class="text-gray-300">Bias: <span class="text-amber-400 font-bold">${adv.mxwell.bias}</span></p>
+                                    <p class="text-gray-300">Rev. Prob: <span class="text-gray-400 font-bold">${adv.mxwell.reversal}%</span></p>
+                                </div>
+                                <div class="border border-gray-800 p-1.5 bg-gray-900/30">
+                                    <p class="text-[#00f3ff] font-bold uppercase text-[7px]">📊 REACTION MATRIX</p>
+                                    <p class="text-gray-300">Press: <span class="text-white font-bold">${adv.bjorgum.pressure}</span></p>
+                                    <p class="text-gray-300 text-ellipsis overflow-hidden truncate">${adv.bjorgum.imbalance}</p>
+                                    <p class="text-emerald-400 font-bold text-[8px]">${adv.bjorgum.footprint}</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-1 text-[9px] border-t border-gray-900 pt-1.5">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Thruster Index Scale:</span>
+                                    <span class="text-white font-bold">${adv.rsi.value} (<span class="text-psycho-cyan">${adv.rsi.slope}</span>)</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Vector Divergence Level:</span>
+                                    <span class="${adv.rsi.divergence !== 'NONE' ? 'text-amber-400 font-bold' : 'text-gray-400'}">${adv.rsi.divergence}</span>
+                                </div>
+                                <div class="flex justify-between border-t border-gray-900 pt-1 mt-1 text-gray-300">
+                                    <span>SMC Structural Framework:</span>
+                                    <span class="text-purple-400 font-bold">${adv.smc.structural}</span>
+                                </div>
+                                <div class="flex justify-between text-gray-400">
+                                    <span>Interception Barrier OB:</span>
+                                    <span class="truncate max-w-[60%] text-right font-bold text-white">${adv.smc.obProximity}</span>
+                                </div>
+                            </div>
+
+                            <div class="space-y-1 text-[9px] border-t border-gray-900 pt-1.5 bg-gray-900/20 p-1.5 border border-gray-900">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">HTF Armor Range High:</span>
+                                    <span class="text-rose-400 font-bold">$${adv.keyLevels.resistance.toFixed(dPoints)}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">HTF Armor Range Low:</span>
+                                    <span class="text-emerald-400 font-bold">$${adv.keyLevels.support.toFixed(dPoints)}</span>
+                                </div>
+                                <div class="flex justify-between text-gray-400 border-t border-gray-900 pt-1 mt-1">
+                                    <span>Fibonacci Retracement Node:</span>
+                                    <span class="text-amber-500 font-bold">$${adv.fibonacci.retracement618.toFixed(dPoints)}</span>
+                                </div>
+                                <div class="flex justify-between text-gray-400">
+                                    <span>Fibonacci Maximum Target:</span>
+                                    <span class="text-psycho-cyan font-bold">$${adv.fibonacci.extension1618.toFixed(dPoints)}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-4 pt-2 border-t border-gray-800 flex justify-between items-center">
-                        <span class="text-xs text-gray-400 font-bold uppercase font-gundam-hud">SYSTEM: ${setup.status}</span>
-                        <button onclick="sfx.modal(); openSpecsModalWindow('${pairNode.uid}')" class="text-blue-400 hover:text-white font-bold text-xs uppercase tracking-wide font-gundam-hud">
-                            Launch Radar ➔
+                    <div class="mt-2.5 pt-2 border-t border-gray-800 flex justify-between items-center">
+                        <button id="adv-btn-${pairNode.uid}" onclick="toggleAdvancedAnalysisSection('${pairNode.uid}')" class="text-left font-bold text-gundam-gold hover:text-white text-[9px] uppercase tracking-wide transition">
+                            Query Internal Specs ▾
+                        </button>
+                        <button onclick="openSpecsModalWindow('${pairNode.uid}'); playSound('beep');" class="text-gray-500 hover:text-white font-bold text-[9px] uppercase tracking-wide">
+                            Radar Metrics ➔
                         </button>
                     </div>
                 `;
@@ -741,60 +856,70 @@
 
             const targetArea = document.getElementById('modal-content-area');
             targetArea.innerHTML = `
-                <div class="border-b border-gray-700 pb-3 mb-3 font-gundam-hud">
-                    <h2 class="text-base font-bold text-white uppercase tracking-wider">${matchCache.ticker} // COCKPIT ENGAGEMENT SPECS</h2>
-                    <p class="text-xs text-gray-400 mt-0.5">Telemetry Matrix Source: <span class="text-blue-400 font-bold">${matchCache.source}</span></p>
+                <div class="border-b border-gray-800 pb-2.5 mb-3 font-mono-tech">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-tight">${matchCache.ticker} // TACTICAL WEAPON SPECIFICATIONS</h2>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Avionics Blueprint Instance: <span class="text-[#d4af37] font-bold">${matchCache.source}</span></p>
                 </div>
 
-                <div class="mb-3 p-3 bg-gradient-to-r from-slate-900 to-blue-950 border-2 border-yellow-500/40 rounded-xl flex items-center justify-between font-gundam-hud">
+                <div class="grid grid-cols-2 gap-2 font-mono-tech mb-4 bg-gray-900/40 p-3 border border-gray-800">
                     <div>
-                        <span class="text-[10px] text-gray-400 block uppercase font-bold tracking-widest">COCKPIT PILOT STATUS EVALUATION</span>
-                        <span id="pilot-rank-badge" class="text-yellow-400 font-bold text-sm tracking-wide uppercase">GRUNT PILOT (ZAKU/GM)</span>
+                        <span class="text-gray-500 text-[8px] font-bold block uppercase">Peak Output Amplitude (24H H)</span>
+                        <span class="text-white font-bold text-xs">$${matchCache.high24h.toFixed(dPoints)}</span>
                     </div>
-                    <div class="text-right">
-                        <span class="text-[10px] text-gray-400 block uppercase font-bold tracking-widest">DRIVE SYNC</span>
-                        <span id="pilot-sync-percent" class="text-emerald-400 font-bold text-sm">10%</span>
+                    <div>
+                        <span class="text-gray-500 text-[8px] font-bold block uppercase">Base Energy Threshold (24H L)</span>
+                        <span class="text-white font-bold text-xs">$${matchCache.low24h.toFixed(dPoints)}</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-500 text-[8px] font-bold block uppercase">Aggregated Blast Mass (Vol)</span>
+                        <span class="text-gray-300 font-bold text-xs">$${matchCache.volume24h.toLocaleString()}</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-500 text-[8px] font-bold block uppercase">Chassis Structural Load Weight</span>
+                        <span class="text-psycho-cyan font-bold text-xs">${matchCache.calculatedWeight.toFixed(0)}</span>
                     </div>
                 </div>
 
-                <div class="border-t border-gray-700 pt-3 font-gundam-tech">
-                    <p class="text-xs text-yellow-500 font-bold uppercase tracking-wider mb-2.5 font-gundam-hud">🧮 Tactical Simulator: Profit Projection Generator</p>
+                <div class="bg-gray-900/20 p-2.5 border border-gray-800 mb-4 space-y-1 text-[10px] font-mono-tech text-gray-400">
+                    <div class="flex justify-between"><span>Thruster Dynamics System:</span><span class="text-white font-bold">Standard Automated Beam Matrix</span></div>
+                    <div class="flex justify-between"><span>Internal Heat Dissipation Rate:</span><span class="text-amber-400 font-bold">STABLE REACTION PROFILE</span></div>
+                    <div class="flex justify-between"><span>Catalyst Inflow Shockwaves:</span><span class="text-gundam-gold font-bold">BALANCED PROJECTION SIGNALS</span></div>
+                </div>
+
+                <div class="border-t border-gray-800 pt-3 font-mono-tech">
+                    <p class="text-[10px] text-[#d4af37] font-bold uppercase tracking-wider mb-2.5">🧮 Ammunition Yield & Realized Energy PnL Calculator</p>
                     
-                    <div class="space-y-3 bg-black p-4 rounded-xl border border-gray-800">
-                        
-                        <div class="space-y-1">
-                            <label class="text-xs text-gray-400 font-bold block uppercase">🚀 Choose Weapon Grid (Leverage Preset)</label>
-                            <div class="grid grid-cols-3 gap-1.5 text-center font-gundam-hud text-[11px] font-bold">
-                                <button onclick="selectWeaponLeveragePreset(3, '${uidKey}', ${dPoints})" class="bg-blue-950/80 border border-blue-700 text-blue-300 p-1.5 rounded hover:bg-blue-900 transition">BEAM RIFLE (3x)</button>
-                                <button onclick="selectWeaponLeveragePreset(10, '${uidKey}', ${dPoints})" class="bg-yellow-950/80 border border-yellow-700 text-yellow-300 p-1.5 rounded hover:bg-yellow-900 transition">HYPER BAZOOKA (10x)</button>
-                                <button onclick="selectWeaponLeveragePreset(50, '${uidKey}', ${dPoints})" class="bg-red-950/80 border border-red-700 text-red-300 p-1.5 rounded hover:bg-red-900 transition">TWIN SATELLITE (50x)</button>
+                    <div class="space-y-3 bg-gray-900/30 p-3 border border-gray-800">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="text-[8px] text-gray-500 font-bold block mb-1">AMPLIFICATION LEVERAGE</label>
+                                <input type="number" id="modal-calc-lev" value="10" oninput="liveModalCalculatorEngine('${uidKey}', ${dPoints}); playSound('crunch');" class="w-full bg-[#030508] border border-gray-700 p-1.5 text-white font-bold text-center text-xs outline-none focus:border-[#d4af37]">
+                            </div>
+                            <div>
+                                <label class="text-[8px] text-gray-500 font-bold block mb-1">DISPATCHED MARGIN CAP (USDT)</label>
+                                <input type="number" id="modal-calc-margin" value="100" oninput="liveModalCalculatorEngine('${uidKey}', ${dPoints}); playSound('crunch');" class="w-full bg-[#030508] border border-gray-700 p-1.5 text-white font-bold text-center text-xs outline-none focus:border-[#d4af37]">
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="text-xs text-gray-400 font-bold block mb-1">PROPELLER LEVERAGE (x)</label>
-                                <input type="number" id="modal-calc-lev" value="10" oninput="liveModalCalculatorEngine('${uidKey}', ${dPoints})" class="w-full bg-gray-900 border border-gray-700 rounded p-2 text-white font-bold text-center text-sm outline-none focus:border-blue-500 font-gundam-hud">
-                            </div>
-                            <div>
-                                <label class="text-xs text-gray-400 font-bold block mb-1">MARGIN CAP (USDT)</label>
-                                <input type="number" id="modal-calc-margin" value="100" oninput="liveModalCalculatorEngine('${uidKey}', ${dPoints})" class="w-full bg-gray-900 border border-gray-700 rounded p-2 text-white font-bold text-center text-sm outline-none focus:border-blue-500 font-gundam-hud">
-                            </div>
+                        <div class="grid grid-cols-3 gap-1.5 text-center text-[9px] font-bold">
+                            <button onclick="applyTargetToCalculator(${setup.tp1}, '${uidKey}', ${dPoints}); playSound('click');" class="bg-gray-900 border border-gray-800 hover:border-[#d4af37] text-gray-400 p-1.5 transition">ALPHA PX</button>
+                            <button onclick="applyTargetToCalculator(${setup.tp2}, '${uidKey}', ${dPoints}); playSound('click');" class="bg-gray-900 border border-gray-800 hover:border-[#d4af37] text-gray-400 p-1.5 transition">BETA PX</button>
+                            <button onclick="applyTargetToCalculator(${setup.tp3}, '${uidKey}', ${dPoints}); playSound('click');" class="bg-gray-900 border border-gray-800 hover:border-[#d4af37] text-gray-400 p-1.5 transition">GAMMA PX</button>
                         </div>
 
                         <div>
-                            <label class="text-xs text-gray-400 font-bold block mb-1">CUSTOM VECTOR TARGET EXIT PRICE ($)</label>
-                            <input type="number" step="any" id="modal-calc-target" value="${setup.tp1.toFixed(dPoints)}" oninput="liveModalCalculatorEngine('${uidKey}', ${dPoints})" class="w-full bg-gray-900 border border-gray-700 rounded p-2 text-blue-400 font-bold text-sm outline-none focus:border-yellow-500 font-gundam-hud">
+                            <label class="text-[8px] text-gray-500 font-bold block mb-1">MANUAL RADAR COORD DEVIATION TARGET EXIT ($)</label>
+                            <input type="number" step="any" id="modal-calc-target" value="${setup.tp1.toFixed(dPoints)}" oninput="liveModalCalculatorEngine('${uidKey}', ${dPoints});" class="w-full bg-[#030508] border border-gray-700 p-1.5 text-psycho-cyan font-bold text-xs outline-none focus:border-[#d4af37]">
                         </div>
 
-                        <div class="bg-gray-900 p-3 rounded-lg border border-gray-800 flex justify-between items-center font-bold">
+                        <div class="bg-[#030508] p-2.5 border border-gray-800 flex justify-between items-center font-bold">
                             <div>
-                                <span class="text-gray-400 block text-xs uppercase">Est Net Payload Yield</span>
-                                <span id="modal-res-pnl" class="text-emerald-400 text-sm font-bold font-gundam-hud">+$0.00 USDT</span>
+                                <span class="text-gray-500 block text-[8px] uppercase">Estimated Return Capacity</span>
+                                <span id="modal-res-pnl" class="text-emerald-400 text-xs font-bold">+$25.00 USDT</span>
                             </div>
                             <div class="text-right">
-                                <span class="text-gray-400 block text-xs uppercase">Simulated Synchronization ROI</span>
-                                <span id="modal-res-roi" class="text-emerald-400 text-sm font-bold font-gundam-hud">+0.00%</span>
+                                <span class="text-gray-500 block text-[8px] uppercase">Return on Investment (ROI)</span>
+                                <span id="modal-res-roi" class="text-emerald-400 text-xs font-bold">+25.00%</span>
                             </div>
                         </div>
                     </div>
@@ -805,38 +930,11 @@
             liveModalCalculatorEngine(uidKey, dPoints);
         }
 
-        // FITUR 3 HELPER: Aksi klik tombol preset senjata mecha
-        function selectWeaponLeveragePreset(val, uidKey, dPoints) {
-            sfx.click();
-            const levInput = document.getElementById('modal-calc-lev');
-            if(levInput) {
-                levInput.value = val;
+        function applyTargetToCalculator(priceVal, uidKey, dPoints) {
+            const inputTarget = document.getElementById('modal-calc-target');
+            if (inputTarget) {
+                inputTarget.value = priceVal.toFixed(dPoints);
                 liveModalCalculatorEngine(uidKey, dPoints);
-            }
-        }
-
-        // FITUR 2 INTEGRATION: Update pangkat berdasarkan kalkulasi ROI target simulator
-        function updatePilotClassRankEvaluator(roi) {
-            const badge = document.getElementById('pilot-rank-badge');
-            const sync = document.getElementById('pilot-sync-percent');
-            if(!badge || !sync) return;
-
-            if(roi < 0) {
-                badge.innerText = "🚨 ACADEMY RECRUIT (NEED RE-CALIBRATION)";
-                badge.className = "text-red-400 font-bold text-sm tracking-wide uppercase gundam-glow-red";
-                sync.innerText = "5%";
-            } else if (roi >= 0 && roi <= 15) {
-                badge.innerText = "🎖️ GRUNT PILOT (ZAKU/GM OPERATOR)";
-                badge.className = "text-slate-300 font-bold text-sm tracking-wide uppercase";
-                sync.innerText = "35%";
-            } else if (roi > 15 && roi <= 60) {
-                badge.innerText = "⚡ ACE COMBATANT (GUNDAM COMMANDER)";
-                badge.className = "text-blue-400 font-bold text-sm tracking-wide uppercase gundam-glow-blue";
-                sync.innerText = "75%";
-            } else {
-                badge.innerText = "🌟 NEWTYPE PROTOCOL (MAX RE-ACTION OVERDRIVE)";
-                badge.className = "text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-yellow-400 font-bold text-sm tracking-wide uppercase gundam-glow-pink";
-                sync.innerText = "100%";
             }
         }
 
@@ -848,27 +946,29 @@
             const margin = parseFloat(document.getElementById('modal-calc-margin').value) || 0;
             const target = parseFloat(document.getElementById('modal-calc-target').value) || 0;
 
-            let changePct = (target - setup.entry) / setup.entry;
+            let changePct = 0;
+            if (setup.trend === "LONG") {
+                changePct = (target - setup.entry) / setup.entry;
+            } else {
+                changePct = (setup.entry - target) / setup.entry;
+            }
+
             const outputPnL = margin * lev * changePct;
             const outputROI = changePct * lev * 100;
 
             const pnlLabel = document.getElementById('modal-res-pnl');
             const roiLabel = document.getElementById('modal-res-roi');
-            
             if (outputPnL >= 0) {
                 pnlLabel.innerText = `+$${outputPnL.toFixed(2)} USDT`;
-                pnlLabel.className = "text-emerald-400 text-sm font-bold font-gundam-hud gundam-glow-green";
+                pnlLabel.className = "text-emerald-400 text-xs font-bold";
                 roiLabel.innerText = `+${outputROI.toFixed(2)}%`;
-                roiLabel.className = "text-emerald-400 text-sm font-bold font-gundam-hud gundam-glow-green";
+                roiLabel.className = "text-emerald-400 text-xs font-bold";
             } else {
                 pnlLabel.innerText = `$${outputPnL.toFixed(2)} USDT`;
-                pnlLabel.className = "text-rose-400 text-sm font-bold font-gundam-hud gundam-glow-red";
+                pnlLabel.className = "text-rose-500 text-xs font-bold";
                 roiLabel.innerText = `${outputROI.toFixed(2)}%`;
-                roiLabel.className = "text-rose-400 text-sm font-bold font-gundam-hud gundam-glow-red";
+                roiLabel.className = "text-rose-500 text-xs font-bold";
             }
-            
-            // Trigger update pangkat pilot interaktif
-            updatePilotClassRankEvaluator(outputROI);
         }
 
         function closeSpecsModalWindow() {
