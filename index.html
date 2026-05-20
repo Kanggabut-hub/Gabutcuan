@@ -67,7 +67,8 @@
         .text-psycho-cyan { color: #00f3ff; text-shadow: 0 0 8px rgba(0, 243, 255, 0.5); }
     </style>
 </head>
-<body class="text-sm"> <div id="landing-screen" class="fixed inset-0 z-[100] bg-[#030508] flex flex-col items-center justify-center p-6 transition-all duration-700 border-4 border-[#1e293b]">
+<body class="text-sm"> 
+    <div id="landing-screen" class="fixed inset-0 z-[100] bg-[#030508] flex flex-col items-center justify-center p-6 transition-all duration-700 border-4 border-[#1e293b]">
         <div class="text-center max-w-md w-full relative">
             <div class="absolute -top-12 left-1/2 -translate-x-1/2 text-[10px] font-mono-tech text-[#d4af37] tracking-widest opacity-60 animate-pulse">
                 [ UNIVERSAL CENTURY PROTOCOL SEED ]
@@ -173,7 +174,7 @@
                 <div class="p-2.5 bg-gray-900/30 border border-gray-800 rounded-none text-[11px] space-y-1.5 font-mono-tech">
                     <div class="flex justify-between items-center"><span>Binance Spot/Fut:</span><span class="text-gundam-gold font-bold">CONNECTED</span></div>
                     <div class="flex justify-between items-center"><span>Hyperliquid L1 Perps:</span><span class="text-gundam-gold font-bold">ONLINE</span></div>
-                    <div class="flex justify-between items-center"><span>Dexscreener Multichain:</span><span class="text-psycho-cyan font-bold">STREAMING</span></div>
+                    <div class="flex justify-between items-center"><span>Dexscreener Multichain:</span><span class="text-psycho-cyan font-bold" id="dex-stream-status">STREAMING</span></div>
                 </div>
             </div>
         </div>
@@ -285,12 +286,13 @@
     <script>
         const API_BINANCE = "https://api.binance.com/api/v3/ticker/24hr";
         const API_HYPERLIQUID = "https://api.hyperliquid.xyz/info";
+        const API_DEXSCREENER_SEARCH = "https://api.dexscreener.com/latest/dex/search?q=";
 
         // Memory Registries
         let coreMemoryCache = []; 
         let filteredWorkspacePool = [];
         let selectedFilterRange = "all";
-        let signalRecommendationFilter = "none"; // Filter rekomendasi baru ('LONG', 'SHORT', 'none')
+        let signalRecommendationFilter = "none"; 
         let activeQueryText = "";
         let lockedTradingSetupsCache = {};
         let advancedIndicatorsCache = {}; 
@@ -300,32 +302,7 @@
         // Sound Module Options
         let systemAudioMuted = false;
         let synthAudioContext = null;
-
-        // Ticker Aliases
-        const searchAliasDatabase = {
-            "pippin": ["PIPPIN", "PIP", "PIPIN"],
-            "bome": ["BOME", "BOMECOIN", "BOOK OF MEME"],
-            "xvs": ["XVS", "VENUS"],
-            "rave": ["RAVE", "RAVECOIN"],
-            "ai16z": ["AI16Z", "AI 16Z", "MARC ANDREESSEN"],
-            "bsb": ["BSB"],
-            "bill": ["BILL"],
-            "naoris": ["NAORIS"],
-            "aria": ["ARIA"]
-        };
-        
-        // BUGFIX 1: Menambahkan aset-aset koin micro/on-chain baru yang diminta pengguna ke local database pool
-        const extraOnChainDexPoolGems = [
-            { ticker: "PIPPIN", source: "DEXSCREENER MULTICHAIN", price: 0.04312, change24h: 34.12, volume24h: 18450000, high24h: 0.0491, low24h: 0.0312, weight: 15400000 },
-            { ticker: "BOME", source: "BINANCE CORE", price: 0.008451, change24h: -5.82, volume24h: 42100000, high24h: 0.00912, low24h: 0.00811, weight: 89000000 },
-            { ticker: "XVS", source: "BINANCE CORE", price: 11.23, change24h: 2.15, volume24h: 8900000, high24h: 11.50, low24h: 10.95, weight: 120000000 },
-            { ticker: "RAVE", source: "DEXSCREENER MULTICHAIN", price: 0.00189, change24h: 145.8, volume24h: 6200000, high24h: 0.0022, low24h: 0.00075, weight: 3400000 },
-            { ticker: "AI16Z", source: "DEXSCREENER MULTICHAIN", price: 0.2145, change24h: -12.4, volume24h: 29500000, high24h: 0.2510, low24h: 0.1980, weight: 67000000 },
-            { ticker: "BSB", source: "BSC PANCAKESWAP", price: 0.000742, change24h: 18.52, volume24h: 1250000, high24h: 0.00081, low24h: 0.00062, weight: 1200000 },
-            { ticker: "BILL", source: "SOLANA RAYDIUM", price: 0.0124, change24h: -4.15, volume24h: 3400000, high24h: 0.0135, low24h: 0.0112, weight: 2800000 },
-            { ticker: "NAORIS", source: "DEXSCREENER MULTICHAIN", price: 0.0895, change24h: 42.10, volume24h: 5800000, high24h: 0.0950, low24h: 0.0620, weight: 4500000 },
-            { ticker: "ARIA", source: "SOLANA JUPITER", price: 0.00315, change24h: 112.4, volume24h: 2150000, high24h: 0.0036, low24h: 0.0014, weight: 1900000 }
-        ];
+        let searchTimeoutDebounce = null;
 
         const cmcCatalystDatabase = [
             { pair: "SUI/USDT", event: "MAINNET V2.1 UPGRADE", desc: "Network latency validation scaling sequence launched.", state: "HOT" },
@@ -460,6 +437,7 @@
             try {
                 let temporaryCluster = [];
                 
+                // 1. Pipeline Cek Binance API
                 const bncRes = await fetch(API_BINANCE).catch(() => null);
                 if (bncRes && bncRes.ok) {
                     const bncData = await bncRes.json();
@@ -476,6 +454,7 @@
                     });
                 }
 
+                // 2. Pipeline Cek Hyperliquid API
                 const hlRes = await fetch(API_HYPERLIQUID, {
                     method: "POST", headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ type: "metaAndAssetCtxs" })
@@ -502,14 +481,10 @@
                     }
                 }
 
-                extraOnChainDexPoolGems.forEach(gem => {
-                    if (!temporaryCluster.some(item => item.ticker === gem.ticker)) {
-                        temporaryCluster.push({
-                            uid: gem.ticker + "_DEX", ticker: gem.ticker, source: gem.source,
-                            price: gem.price, change24h: gem.change24h, volume24h: gem.volume24h,
-                            high24h: gem.high24h, low24h: gem.low24h,
-                            calculatedWeight: gem.weight
-                        });
+                // Pertahankan data koin yang sudah tersimpan di memori sebelumnya (termasuk on-chain dari hasil search)
+                coreMemoryCache.forEach(oldItem => {
+                    if (oldItem.source.includes("DEXSCREENER") && !temporaryCluster.some(t => t.ticker === oldItem.ticker)) {
+                        temporaryCluster.push(oldItem);
                     }
                 });
 
@@ -519,7 +494,59 @@
                 }
                 compileActiveFilterSorting();
             } catch (err) { 
-                console.error("Critical Error: ", err);
+                console.error("Critical Error Pipeline: ", err);
+            }
+        }
+
+        // FITUR BARU: Menembak On-Chain API secara realtime saat user mengetik koin baru yang tidak ada di DB lokal
+        async function searchOnChainTokensViaDexScreener(query) {
+            if(!query || query.length < 2) return;
+            const statusEl = document.getElementById('dex-stream-status');
+            try {
+                statusEl.innerText = "SEARCHING...";
+                statusEl.className = "text-amber-400 font-bold animate-pulse";
+
+                const response = await fetch(`${API_DEXSCREENER_SEARCH}${query}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.pairs) {
+                        // Ambil maksimal 5 token teratas yang paling relevan
+                        const topPairs = data.pairs.slice(0, 5);
+                        topPairs.forEach(pair => {
+                            const baseSymbol = pair.baseToken.symbol.toUpperCase();
+                            const uid = baseSymbol + "_" + pair.chainId.toUpperCase() + "_DEX";
+                            
+                            // Masukkan atau update harga real-time ke memori utama
+                            const existingIdx = coreMemoryCache.findIndex(x => x.uid === uid || (x.ticker === baseSymbol && x.source.includes("DEXSCREENER")));
+                            const tokenNode = {
+                                uid: uid,
+                                ticker: baseSymbol,
+                                source: `DEXSCREENER (${pair.chainId.toUpperCase()})`,
+                                price: parseFloat(pair.priceUsd) || 0,
+                                change24h: parseFloat(pair.priceChange.h24) || 0,
+                                volume24h: parseFloat(pair.volume.h24) || 0,
+                                high24h: parseFloat(pair.priceUsd) * 1.05,
+                                low24h: parseFloat(pair.priceUsd) * 0.95,
+                                calculatedWeight: parseFloat(pair.liquidity?.usd) || 5000 // gunakan likuiditas sebagai indikator berat sektor
+                            };
+
+                            if (existingIdx > -1) {
+                                // Update harga teranyar
+                                coreMemoryCache[existingIdx] = tokenNode;
+                            } else {
+                                // Masukkan koin listingan baru ke pool radar
+                                coreMemoryCache.push(tokenNode);
+                            }
+                        });
+                    }
+                }
+                statusEl.innerText = "STREAMING";
+                statusEl.className = "text-psycho-cyan font-bold";
+                document.getElementById('stats-total-pos').innerText = `${coreMemoryCache.length} Target`;
+                compileActiveFilterSorting();
+            } catch (e) {
+                console.error("Gagal sinkronisasi on-chain API: ", e);
+                statusEl.innerText = "ONLINE";
             }
         }
 
@@ -529,7 +556,16 @@
             if (activeQueryText !== "") { clearBtn.classList.remove('hidden'); } 
             else { clearBtn.classList.add('hidden'); }
             coreSliderPointer = 0;
-            compileActiveFilterSorting();
+
+            // Debounce API On-chain call agar tidak spam request saat mengetik
+            clearTimeout(searchTimeoutDebounce);
+            if(activeQueryText.length >= 2) {
+                searchTimeoutDebounce = setTimeout(() => {
+                    searchOnChainTokensViaDexScreener(activeQueryText);
+                }, 400);
+            } else {
+                compileActiveFilterSorting();
+            }
         }
 
         function clearSearchInput() {
@@ -541,7 +577,7 @@
 
         function applyCapFilterRange(rangeType) {
             selectedFilterRange = rangeType;
-            signalRecommendationFilter = "none"; // Matikan filter rekomendasi jika beralih sektor
+            signalRecommendationFilter = "none"; 
             coreSliderPointer = 0;
             resetSidebarButtonStyles();
             document.getElementById('f-' + rangeType).className = "w-full text-left bg-[#d4af37]/10 border border-[#d4af37]/40 text-[#d4af37] p-2.5 rounded-none text-xs font-medium transition flex items-center justify-between";
@@ -550,7 +586,7 @@
 
         function applySignalFilter(signalType) {
             signalRecommendationFilter = signalType;
-            selectedFilterRange = "all"; // Tampilkan dari semua pool koin
+            selectedFilterRange = "all"; 
             coreSliderPointer = 0;
             resetSidebarButtonStyles();
             
@@ -586,30 +622,16 @@
         }
 
         function compileActiveFilterSorting() {
-            // BUGFIX 2: Memperketat regex dengan anchor (^ & $) agar nama koin berisi huruf seperti 'ARIA' atau 'NAORIS' tidak tereliminasi secara salah oleh kata 'DAI' atau 'TUSD'
-            const patternBlacklist = /^(USDC|FDUSD|TUSD|DAI|BUSD|EUR|TRY)$/;
+            // Membatasi koin stablecoin murni agar tidak merusak esensi trading terminal
+            const patternBlacklist = /^(USDC|FDUSD|TUSD|BUSD|EUR|TRY)$/;
             
             let pool = coreMemoryCache.filter(item => {
                 if (patternBlacklist.test(item.ticker)) return false;
                 
-                // Pencarian teks otomatis bypass filter market cap untuk akurasi instan koin kecil
                 if (activeQueryText !== "") {
-                    let matchedByAlias = false;
-                    for (const [keyRoot, aliasList] of Object.entries(searchAliasDatabase)) {
-                        if (keyRoot.includes(activeQueryText) || activeQueryText.includes(keyRoot)) {
-                            if (aliasList.includes(item.ticker.toUpperCase())) matchedByAlias = true;
-                        }
-                        aliasList.forEach(alias => {
-                            if (alias.toLowerCase().includes(activeQueryText)) {
-                                if (item.ticker.toLowerCase() === keyRoot || aliasList.includes(item.ticker.toUpperCase())) matchedByAlias = true;
-                            }
-                        });
-                    }
-                    const matchedByTicker = item.ticker.toLowerCase().includes(activeQueryText);
-                    return matchedByTicker || matchedByAlias;
+                    return item.ticker.toLowerCase().includes(activeQueryText);
                 }
                 
-                // Filter berdasarkan Kapasitas Sektor Market (Hanya jalan kalau kolom search kosong)
                 const valueCap = item.calculatedWeight;
                 if (selectedFilterRange === 'low') return valueCap < 15000000;
                 if (selectedFilterRange === 'mid') return valueCap >= 15000000 && valueCap < 500000000;
@@ -702,6 +724,19 @@
             return generatedData;
         }
 
+        // FITUR BARU: Menghitung persentase progres perdagangan dari entry ke target TP1 secara visual Gundam Style
+        function calculateTradeProgressPercentage(trend, price, entry, tp1) {
+            if (trend === 'LONG') {
+                if (price <= entry) return 0;
+                if (price >= tp1) return 100;
+                return ((price - entry) / (tp1 - entry)) * 100;
+            } else {
+                if (price >= entry) return 0;
+                if (price <= tp1) return 100;
+                return ((entry - price) / (entry - tp1)) * 100;
+            }
+        }
+
         function toggleAdvancedAnalysisSection(uid) {
             const el = document.getElementById(`adv-panel-${uid}`);
             const btn = document.getElementById(`adv-btn-${uid}`);
@@ -742,6 +777,9 @@
                 const confBg = setup.confluence > 75 ? 'bg-emerald-950/40 text-emerald-400 border-emerald-900' : (setup.confluence > 65 ? 'bg-amber-950/40 text-amber-400 border-amber-900' : 'bg-gray-900 text-gray-400 border-gray-800');
                 const statusColor = setup.status.includes('TP') ? 'text-emerald-400' : (setup.status.includes('SL') ? 'text-rose-400' : 'text-psycho-cyan');
 
+                // Hitung progress trading bar
+                const progressPercent = calculateTradeProgressPercentage(setup.trend, livePrice, setup.entry, setup.tp1);
+
                 const cardBox = document.createElement('div');
                 cardBox.className = "bloomberg-card p-4 flex flex-col justify-between font-mono-tech";
                 
@@ -772,6 +810,16 @@
                             <div class="flex justify-between items-baseline bg-gray-900/60 p-1.5 border border-gray-800">
                                 <span class="text-gray-400 text-[10px] uppercase font-bold">Harga Saat Ini</span>
                                 <span class="text-gundam-gold font-bold text-sm tracking-wide">$${livePrice.toFixed(dPoints)}</span>
+                            </div>
+
+                            <div class="bg-[#040811] border border-gray-800 p-1.5 rounded-none">
+                                <div class="flex justify-between text-[8px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                    <span>Thruster Progress (TP1 Matrix)</span>
+                                    <span class="text-psycho-cyan">${progressPercent.toFixed(1)}%</span>
+                                </div>
+                                <div class="w-full h-1.5 bg-gray-950 border border-gray-800 overflow-hidden relative">
+                                    <div class="h-full bg-gradient-to-r from-[#d4af37] to-[#00f3ff] transition-all duration-300" style="width: ${progressPercent}%"></div>
+                                </div>
                             </div>
 
                             <div class="grid grid-cols-2 gap-1.5 text-xs">
