@@ -1,0 +1,476 @@
+/* =============================================
+   KANGGABUT | VANGUARD V100 PRO — style.css
+   Psycho-Frame Tactical Chassis Design System
+   ============================================= */
+
+:root {
+    --bg-main: #030508;
+    --bg-card: #080d16;
+    --bg-card-hover: #0c1424;
+    --border-color: #1e293b;
+    --text-primary: #d1d5db;
+    --text-muted: #6b7280;
+    --gold-glow: rgba(212, 175, 55, 0.15);
+    --panel-sticky: rgba(3, 5, 8, 0.95);
+    --gold: #d4af37;
+    --gold-dim: #b49426;
+    --cyan: #00f3ff;
+}
+
+/* ── Light Chassis Mode ── */
+body.light-theme {
+    --bg-main: #f4f6f9;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f8fafc;
+    --border-color: #cbd5e1;
+    --text-primary: #1e293b;
+    --text-muted: #64748b;
+    --gold-glow: rgba(180, 148, 38, 0.1);
+    --panel-sticky: rgba(244, 246, 249, 0.95);
+    color: #0f172a;
+}
+
+/* ── Anti-Eye Strain Mode ── */
+body.eye-strain-mode {
+    --bg-main: #12161a;
+    --bg-card: #1a1f26;
+    --bg-card-hover: #222933;
+    --border-color: #2e3745;
+    --gold-glow: rgba(212, 175, 55, 0.08);
+    --panel-sticky: rgba(18, 22, 26, 0.97);
+    filter: contrast(94%) sepia(4%);
+}
+
+/* ── Base ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.font-mono-tech { font-family: 'JetBrains Mono', monospace; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 0; border: 1px solid var(--gold); }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* ── Password Gate ── */
+#password-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #030508;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.pw-box {
+    width: 100%;
+    max-width: 400px;
+    background: #080d16;
+    border: 2px solid #1e293b;
+    padding: 2.5rem 2rem;
+    position: relative;
+    clip-path: polygon(0 0, 96% 0, 100% 16px, 100% 100%, 4% 100%, 0 calc(100% - 16px));
+}
+
+.pw-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--gold);
+    opacity: 0.8;
+}
+
+.pw-logo {
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, var(--gold), #8a6d1c);
+    padding: 1px;
+    border-radius: 0 24px 0 24px;
+    margin: 0 auto 1.25rem;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+}
+
+.pw-logo-inner {
+    width: 100%; height: 100%;
+    background: #030508;
+    border-radius: 0 22px 0 22px;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.pw-title {
+    text-align: center;
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: #fff;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+
+.pw-subtitle {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: #6b7280;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.75rem;
+}
+
+.pw-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--gold);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+    display: block;
+}
+
+.pw-input {
+    width: 100%;
+    background: #030508;
+    border: 1px solid #2d3748;
+    padding: 0.65rem 0.85rem;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 0.85rem;
+}
+
+.pw-input:focus { border-color: var(--gold); }
+.pw-input.error { border-color: #f87171; animation: shake 0.35s ease; }
+
+.pw-btn {
+    width: 100%;
+    padding: 0.7rem;
+    background: linear-gradient(to right, var(--gold-dim), var(--gold));
+    color: #000;
+    font-weight: 900;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pw-btn:hover { background: linear-gradient(to right, var(--gold), #ffe894); }
+
+.pw-error {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #f87171;
+    font-weight: 700;
+    margin-top: 0.75rem;
+    letter-spacing: 0.05em;
+    min-height: 1.2em;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+}
+
+/* ── Marquee ── */
+.marquee-wrapper { overflow: hidden; white-space: nowrap; }
+.marquee-content { display: inline-block; animation: marqueeEffect 35s linear infinite; }
+@keyframes marqueeEffect {
+    0%   { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-50%, 0, 0); }
+}
+
+/* ── Sticky Search Panel ── */
+.sticky-search-panel {
+    background: var(--panel-sticky);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 2px solid var(--gold-dim);
+    transition: background-color 0.4s ease;
+}
+
+/* ── Gundam Armor Card ── */
+.bloomberg-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    position: relative;
+    clip-path: polygon(0 0, 95% 0, 100% 12px, 100% 100%, 5% 100%, 0% calc(100% - 12px));
+    transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.bloomberg-card:hover {
+    border-color: var(--gold);
+    background: var(--bg-card-hover);
+    box-shadow: 0 0 22px var(--gold-glow);
+    transform: translateY(-3px);
+}
+
+.bloomberg-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--gold);
+    opacity: 0.7;
+}
+
+/* ── Neon Pulse ── */
+.psycho-pulse-cyan {
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+    animation: cyanGlowPulse 2s infinite ease-in-out;
+}
+
+@keyframes cyanGlowPulse {
+    0%, 100% { box-shadow: 0 0 8px rgba(0, 243, 255, 0.2); border-color: rgba(0, 243, 255, 0.4); }
+    50%       { box-shadow: 0 0 16px rgba(0, 243, 255, 0.5); border-color: rgba(0, 243, 255, 0.9); }
+}
+
+/* ── Text / Border Utilities ── */
+.text-gundam-gold  { color: var(--gold); text-shadow: 0 0 8px rgba(212,175,55,0.4); }
+.border-gundam-gold { border-color: var(--gold); }
+.bg-gundam-gold    { background-color: var(--gold); }
+.text-psycho-cyan  { color: var(--cyan); text-shadow: 0 0 8px rgba(0,243,255,0.5); }
+
+/* ── LunarCrush Module ── */
+.lunarcrush-panel {
+    background: #060b13;
+    border: 1px solid #1e293b;
+    border-top: 2px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+}
+
+.lunarcrush-panel::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 100px; height: 100%;
+    background: linear-gradient(to right, transparent, rgba(212,175,55,0.03));
+    pointer-events: none;
+}
+
+.lc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.85rem;
+    border-bottom: 1px solid #1e293b;
+    background: rgba(3,5,8,0.4);
+}
+
+.lc-header-title {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.lc-live-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    font-weight: 700;
+    color: var(--gold);
+    background: rgba(212,175,55,0.1);
+    border: 1px solid rgba(212,175,55,0.3);
+    padding: 1px 6px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    animation: pulseBadge 2s infinite;
+}
+
+@keyframes pulseBadge {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+}
+
+.lc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.5rem;
+    padding: 0.65rem;
+}
+
+.lc-coin-card {
+    background: #03050a;
+    border: 1px solid #1a2535;
+    padding: 0.55rem 0.65rem;
+    position: relative;
+    transition: border-color 0.25s, background 0.25s;
+    cursor: default;
+    clip-path: polygon(0 0, 94% 0, 100% 8px, 100% 100%, 6% 100%, 0 calc(100% - 8px));
+}
+
+.lc-coin-card:hover {
+    border-color: rgba(212,175,55,0.5);
+    background: #0a1020;
+}
+
+.lc-coin-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0;
+    width: 2px; height: 100%;
+    background: var(--gold);
+    opacity: 0.5;
+}
+
+.lc-coin-card.anomaly-pump { border-color: rgba(34,197,94,0.5); }
+.lc-coin-card.anomaly-pump::before { background: #22c55e; opacity: 0.8; }
+.lc-coin-card.anomaly-dump { border-color: rgba(239,68,68,0.5); }
+.lc-coin-card.anomaly-dump::before { background: #ef4444; opacity: 0.8; }
+
+.lc-ticker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.06em;
+}
+
+.lc-score-bar {
+    height: 3px;
+    background: #1a2535;
+    margin: 4px 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.lc-score-fill {
+    height: 100%;
+    transition: width 0.6s ease;
+}
+
+.lc-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 3px;
+}
+
+.lc-metric {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5px;
+}
+
+.lc-metric-label { color: #4b5563; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+.lc-metric-val   { font-weight: 700; }
+
+.lc-anomaly-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 1px 5px;
+    margin-top: 3px;
+    border: 1px solid;
+}
+
+.lc-anomaly-badge.pump { color: #4ade80; border-color: #4ade80; background: rgba(74,222,128,0.08); }
+.lc-anomaly-badge.dump { color: #f87171; border-color: #f87171; background: rgba(248,113,113,0.08); }
+.lc-anomaly-badge.neutral { color: #6b7280; border-color: #374151; background: transparent; }
+
+.lc-trending-rank {
+    position: absolute;
+    top: 4px; right: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    font-weight: 700;
+    color: var(--gold);
+    opacity: 0.7;
+}
+
+.lc-error-msg {
+    padding: 1.25rem;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #4b5563;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.lc-skeleton {
+    background: linear-gradient(90deg, #0d1520 25%, #1a2535 50%, #0d1520 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ── Modal ── */
+#specs-modal .modal-inner {
+    background: #060b13;
+    border: 2px solid var(--gold);
+    width: 100%;
+    max-width: 56rem;
+    border-radius: 0;
+    padding: 1.25rem;
+    position: relative;
+    overflow-y: auto;
+    max-height: 95vh;
+    transition: all 0.3s;
+}
+
+/* ── Landing Screen ── */
+#landing-screen {
+    border: 4px solid #1e293b;
+}
+
+/* ── Footer ── */
+footer.site-footer {
+    padding: 1.5rem;
+    border-top: 2px solid #111827;
+    background: #030508;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    color: #374151;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+}
+
+/* ── Sidebar ── */
+#plenger-sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: #1e293b var(--bg-main);
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+    .lc-grid { grid-template-columns: repeat(2, 1fr); }
+    .pw-box { padding: 2rem 1.25rem; }
+}

@@ -4,1169 +4,355 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KANGGABUT | VANGUARD V100 PRO</title>
+
+    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-main: #030508;
-            --bg-card: #080d16;
-            --bg-card-hover: #0c1424;
-            --border-color: #1e293b;
-            --text-primary: #d1d5db;
-            --text-muted: #6b7280;
-            --gold-glow: rgba(212, 175, 55, 0.15);
-            --panel-sticky: rgba(3, 5, 8, 0.95);
-        }
 
-        /* Adaptive Light/Chassis Mode (Anaheim Spec Engineering White Chassis) */
-        body.light-theme {
-            --bg-main: #f4f6f9;
-            --bg-card: #ffffff;
-            --bg-card-hover: #f8fafc;
-            --border-color: #cbd5e1;
-            --text-primary: #1e293b;
-            --text-muted: #64748b;
-            --gold-glow: rgba(180, 148, 38, 0.1);
-            --panel-sticky: rgba(244, 246, 249, 0.95);
-            color: #0f172a;
-        }
-
-        /* Anti-Eye Strain Mode Override */
-        body.eye-strain-mode {
-            --bg-main: #12161a;
-            --bg-card: #1a1f26;
-            --bg-card-hover: #222933;
-            --border-color: #2e3745;
-            --gold-glow: rgba(212, 175, 55, 0.08);
-            --panel-sticky: rgba(18, 22, 26, 0.97);
-            filter: contrast(94%) sepia(4%);
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            min-height: 100vh;
-            transition: background-color 0.4s ease, color 0.4s ease;
-        }
-        .font-mono-tech { font-family: 'JetBrains Mono', monospace; }
-        
-        /* Premium Subtle Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-main); }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 0px; border: 1px solid #d4af37; }
-        ::-webkit-scrollbar-thumb:hover { background: #d4af37; }
-
-        /* Marquee Text Animation */
-        .marquee-wrapper { overflow: hidden; white-space: nowrap; }
-        .marquee-content { display: inline-block; animation: marqueeEffect 35s linear infinite; }
-        @keyframes marqueeEffect {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-50%, 0, 0); }
-        }
-
-        /* Sticky Search Container Backdrop Blur */
-        .sticky-search-panel {
-            background: var(--panel-sticky);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 2px solid #b49426;
-            transition: background-color 0.4s ease;
-        }
-
-        /* Gundam Premium Rigid Armor Card Style with Soft Neon Glow */
-        .bloomberg-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            position: relative;
-            clip-path: polygon(0 0, 95% 0, 100% 12px, 100% 100%, 5% 100%, 0% calc(100% - 12px));
-            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .bloomberg-card:hover {
-            border-color: #d4af37;
-            background: var(--bg-card-hover);
-            box-shadow: 0 0 22px var(--gold-glow);
-            transform: translateY(-3px);
-        }
-        .bloomberg-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 4px; height: 100%;
-            background: #d4af37;
-            opacity: 0.7;
-        }
-
-        /* Psycho-Frame Neon Pulse Utilities */
-        .psycho-pulse-cyan {
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
-            animation: cyanGlowPulse 2s infinite ease-in-out;
-        }
-        @keyframes cyanGlowPulse {
-            0%, 100% { box-shadow: 0 0 8px rgba(0, 243, 255, 0.2); border-color: rgba(0, 243, 255, 0.4); }
-            50% { box-shadow: 0 0 16px rgba(0, 243, 255, 0.5); border-color: rgba(0, 243, 255, 0.9); }
-        }
-
-        /* Gold Foil Glow text */
-        .text-gundam-gold { color: #d4af37; text-shadow: 0 0 8px rgba(212, 175, 55, 0.4); }
-        .border-gundam-gold { border-color: #d4af37; }
-        .bg-gundam-gold { background-color: #d4af37; }
-        .text-psycho-cyan { color: #00f3ff; text-shadow: 0 0 8px rgba(0, 243, 255, 0.5); }
-    </style>
+    <!-- Modular Stylesheet -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="text-sm"> 
-    <div id="landing-screen" class="fixed inset-0 z-[100] bg-[#030508] flex flex-col items-center justify-center p-6 transition-all duration-700 border-4 border-[#1e293b]">
-        <div class="text-center max-w-md w-full relative">
-            <div class="absolute -top-12 left-1/2 -translate-x-1/2 text-[10px] font-mono-tech text-[#d4af37] tracking-widest opacity-60 animate-pulse">
-                [ UNIVERSAL PROTOCOL SEED ]
+<body class="text-sm">
+
+<!-- ════════════════════════════════════════════════════════════════
+     PASSWORD GATE — Shown on every access / auto-refresh
+     Cannot be bypassed: main content is hidden until unlocked.
+     ════════════════════════════════════════════════════════════════ -->
+<div id="password-gate">
+    <div class="pw-box">
+        <div class="pw-logo">
+            <div class="pw-logo-inner">
+                <span style="color:#d4af37;font-size:1.3rem;font-weight:900;font-family:'JetBrains Mono',monospace;letter-spacing:-0.05em">RX-0</span>
             </div>
-            <div class="w-20 h-20 bg-gradient-to-br from-[#d4af37] to-[#8a6d1c] p-[1px] rounded-bl-3xl rounded-tr-3xl mx-auto mb-6 shadow-lg shadow-yellow-500/10 flex items-center justify-center">
-                <div class="w-full h-full bg-[#030508] rounded-bl-3xl rounded-tr-3xl flex items-center justify-center">
-                    <span class="text-[#d4af37] text-3xl font-extrabold font-mono-tech tracking-tighter">RX-0</span>
-                </div>
+        </div>
+        <div class="pw-title">KANGGABUT <span style="color:#d4af37">V100 PRO</span></div>
+        <div class="pw-subtitle">Tactical Psycho-Frame Quant System</div>
+
+        <label class="pw-label" for="pw-input">⚡ ACCESS CODE</label>
+        <input id="pw-input" type="password" class="pw-input" placeholder="Enter access code..." autocomplete="off" spellcheck="false">
+        <button id="pw-submit" class="pw-btn">Initialize Psycho-Frame Link</button>
+        <div id="pw-error" class="pw-error"></div>
+
+        <div style="margin-top:1.25rem;text-align:center;font-family:'JetBrains Mono',monospace;font-size:8px;color:#374151;letter-spacing:0.1em;text-transform:uppercase">
+            [ AUTHORIZED PERSONNEL ONLY — ANAHEIM ELECTRONICS ]
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     LANDING / BOOT SCREEN
+     ════════════════════════════════════════════════════════════════ -->
+<div id="landing-screen" class="fixed inset-0 z-[100] bg-[#030508] flex flex-col items-center justify-center p-6 transition-all duration-700">
+    <div class="text-center max-w-md w-full relative">
+        <div class="absolute -top-12 left-1/2 -translate-x-1/2 text-[10px] font-mono-tech text-[#d4af37] tracking-widest opacity-60 animate-pulse">
+            [ UNIVERSAL PROTOCOL SEED ]
+        </div>
+        <div class="w-20 h-20 bg-gradient-to-br from-[#d4af37] to-[#8a6d1c] p-[1px] rounded-bl-3xl rounded-tr-3xl mx-auto mb-6 shadow-lg shadow-yellow-500/10 flex items-center justify-center">
+            <div class="w-full h-full bg-[#030508] rounded-bl-3xl rounded-tr-3xl flex items-center justify-center">
+                <span class="text-[#d4af37] text-3xl font-extrabold font-mono-tech tracking-tighter">RX-0</span>
             </div>
-            <h1 class="font-extrabold text-2xl text-white tracking-tight mb-1 uppercase">
-                KANGGABUT <span class="text-gundam-gold">V100 PRO</span>
-            </h1>
-            <p class="text-[10px] font-mono-tech text-gray-400 tracking-widest uppercase mb-8">
-                Tactical Psycho-Frame Quant System
-            </p>
-            
-            <button id="launch-btn" onclick="triggerTerminalBootSequence()" class="w-full py-3.5 bg-gradient-to-r from-[#b49426] to-[#d4af37] hover:from-[#d4af37] hover:to-[#ffe894] text-black rounded-none font-black transition-all shadow-md tracking-widest text-[11px] uppercase border border-black">
-                Initialize Psycho-Frame Link (Masuk Terminal)
+        </div>
+        <h1 class="font-extrabold text-2xl text-white tracking-tight mb-1 uppercase">
+            KANGGABUT <span class="text-gundam-gold">V100 PRO</span>
+        </h1>
+        <p class="text-[10px] font-mono-tech text-gray-400 tracking-widest uppercase mb-8">
+            Tactical Psycho-Frame Quant System
+        </p>
+
+        <button id="launch-btn" onclick="triggerTerminalBootSequence()" class="w-full py-3.5 bg-gradient-to-r from-[#b49426] to-[#d4af37] hover:from-[#d4af37] hover:to-[#ffe894] text-black rounded-none font-black transition-all shadow-md tracking-widest text-[11px] uppercase border border-black">
+            Initialize Psycho-Frame Link (Masuk Terminal)
+        </button>
+
+        <div id="boot-progress-container" class="w-full mt-8 hidden border border-gray-800 p-4 bg-[#060a12]">
+            <div class="flex justify-between font-mono-tech text-[10px] text-gray-400 mb-2 uppercase tracking-wider">
+                <span id="boot-status-text" class="truncate max-w-[85%] text-psycho-cyan">Awakening Minovsky Drive...</span>
+                <span id="boot-percent-text" class="font-bold text-[#d4af37]">0%</span>
+            </div>
+            <div class="w-full h-[3px] bg-gray-900 overflow-hidden border border-gray-700">
+                <div id="boot-progress-bar" class="h-full bg-gradient-to-r from-[#d4af37] to-[#00f3ff] w-0 transition-all duration-100"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CONTROL PANEL SIDEBAR
+     ════════════════════════════════════════════════════════════════ -->
+<div id="plenger-sidebar" class="fixed top-0 left-0 bottom-0 w-80 bg-[#060b13] border-r-2 border-[#d4af37] z-50 transform -translate-x-full transition-transform duration-300 p-5 font-mono-tech flex flex-col justify-between shadow-2xl">
+    <div class="overflow-y-auto pr-1 h-full">
+        <div class="flex justify-between items-center mb-6 pb-3 border-b border-gray-800">
+            <div>
+                <h2 class="text-xs font-bold text-white tracking-wider uppercase flex items-center gap-1.5">
+                    <span class="inline-block w-2 h-2 bg-[#d4af37]"></span> MENU KONTROL & FILTER
+                </h2>
+                <p class="text-[9px] text-psycho-cyan uppercase font-semibold">Anaheim Electronics Registry</p>
+            </div>
+            <button onclick="togglePlengerSidebar(false); playSound('click');" class="text-gray-400 hover:text-[#d4af37] text-sm p-1">✕</button>
+        </div>
+
+        <!-- Theme Controls -->
+        <div class="bg-gray-900/90 border border-gundam-gold/30 p-2.5 rounded-none mb-4 space-y-1.5">
+            <p class="text-[9px] text-gundam-gold font-bold uppercase tracking-widest">⚙️ OPTIMALISASI VISUAL CHASSIS</p>
+            <div class="grid grid-cols-2 gap-1 text-[10px]">
+                <button onclick="switchVisualTheme('dark'); playSound('click');" class="bg-gray-950 border border-gray-700 p-1 text-white hover:border-[#d4af37] text-center font-bold">DARK PROTOCOL</button>
+                <button onclick="switchVisualTheme('light'); playSound('click');" class="bg-white border border-gray-300 p-1 text-black hover:border-[#d4af37] text-center font-bold">LIGHT ARMOR</button>
+            </div>
+            <button onclick="toggleAntiEyeStrain(); playSound('beep');" class="w-full text-center bg-amber-950/40 border border-amber-600/50 text-amber-400 p-1 text-[10px] font-bold uppercase tracking-wider block">
+                👁️ TOGGLE ANTI-EYE STRAIN MODE
             </button>
+        </div>
 
-            <div id="boot-progress-container" class="w-full mt-8 hidden border border-gray-800 p-4 bg-[#060a12]">
-                <div class="flex justify-between font-mono-tech text-[10px] text-gray-400 mb-2 uppercase tracking-wider">
-                    <span id="boot-status-text" class="truncate max-w-[85%] text-psycho-cyan">Awakening Minovsky Drive...</span>
-                    <span id="boot-percent-text" class="font-bold text-[#d4af37]">0%</span>
+        <!-- Pilot Identity -->
+        <div class="bg-[#0c1424] border border-gray-800 p-3 rounded-none mb-4 flex items-center gap-3">
+            <div class="w-8 h-8 bg-gray-900 border border-[#d4af37] flex items-center justify-center text-gundam-gold font-bold text-xs">
+                NT-D
+            </div>
+            <div>
+                <p class="text-white font-bold text-xs tracking-wide">COMMANDER PILOT</p>
+                <p class="text-[9px] text-gray-400 font-mono-tech">PSYCHO-FRAME SYNC: 100%</p>
+            </div>
+        </div>
+
+        <!-- Portfolio Stats -->
+        <div class="bg-gray-900/40 border border-gray-800 p-3.5 rounded-none mb-5 space-y-2.5">
+            <p class="text-[10px] text-[#d4af37] font-bold uppercase tracking-wider">⚡ STATISTIK PORTFOLIO</p>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="bg-[#030508] p-2 border border-gray-800">
+                    <span class="text-gray-500 block text-[9px] uppercase font-bold">Total Koin</span>
+                    <span class="text-white font-bold font-mono-tech" id="stats-total-pos">Calculating...</span>
                 </div>
-                <div class="w-full h-[3px] bg-gray-900 overflow-hidden border border-gray-700">
-                    <div id="boot-progress-bar" class="h-full bg-gradient-to-r from-[#d4af37] to-[#00f3ff] w-0 transition-all duration-100"></div>
+                <div class="bg-[#030508] p-2 border border-gray-800">
+                    <span class="text-gray-500 block text-[9px] uppercase font-bold">Rata Winrate</span>
+                    <span class="text-emerald-400 font-bold font-mono-tech" id="stats-success-rate">81.45%</span>
+                </div>
+            </div>
+            <div class="bg-[#030508] p-2 border border-gray-800 text-center">
+                <span class="text-gray-500 block text-[9px] uppercase font-bold">Kumulatif ROI Portfolio</span>
+                <span class="text-gundam-gold text-base font-bold tracking-tight font-mono-tech" id="stats-cum-pnl">+4,102.82%</span>
+            </div>
+        </div>
+
+        <!-- Signal Filters -->
+        <div class="space-y-1.5 mb-5 border-b border-gray-800 pb-4">
+            <p class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider mb-1">🔥 REKOMENDASI FORMASI (HIGHEST CONFLUENCE)</p>
+            <button onclick="applySignalFilter('LONG'); playSound('beep');" id="f-rec-long" class="w-full text-left bg-emerald-950/30 border border-emerald-500/40 text-emerald-400 p-2.5 rounded-none text-xs font-bold hover:bg-emerald-950/50 transition flex items-center justify-between">
+                <span>🟢 Sinyal LONG Terkuat</span>
+                <span class="text-[9px] bg-emerald-900/80 px-1 border border-emerald-600">TOP BUY</span>
+            </button>
+            <button onclick="applySignalFilter('SHORT'); playSound('beep');" id="f-rec-short" class="w-full text-left bg-rose-950/30 border border-rose-500/40 text-rose-400 p-2.5 rounded-none text-xs font-bold hover:bg-rose-950/50 transition flex items-center justify-between">
+                <span>🔴 Sinyal SHORT Terkuat</span>
+                <span class="text-[9px] bg-rose-900/80 px-1 border border-rose-600">TOP SELL</span>
+            </button>
+        </div>
+
+        <!-- Cap Filters -->
+        <div class="space-y-1.5 mb-5">
+            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Filter Sektor Kapitalisasi</p>
+            <button onclick="applyCapFilterRange('all'); playSound('click');" id="f-all" class="w-full text-left bg-[#d4af37]/10 border border-[#d4af37]/40 text-[#d4af37] p-2.5 rounded-none text-xs font-medium transition flex items-center justify-between">
+                <span>🌐 Semua Sektor Aset</span>
+            </button>
+            <button onclick="applyCapFilterRange('big'); playSound('click');" id="f-big" class="w-full text-left bg-gray-900/40 border border-gray-800 text-gray-400 p-2.5 rounded-none text-xs font-medium hover:border-gray-700 transition flex items-center justify-between">
+                <span>🟢 Tier-1 Heavy Armor (Cap Besar)</span>
+            </button>
+            <button onclick="applyCapFilterRange('mid'); playSound('click');" id="f-mid" class="w-full text-left bg-gray-900/40 border border-gray-800 text-gray-400 p-2.5 rounded-none text-xs font-medium hover:border-gray-700 transition flex items-center justify-between">
+                <span>🟡 Mid-Tier Fleet (Cap Menengah)</span>
+            </button>
+            <button onclick="applyCapFilterRange('low'); playSound('click');" id="f-low" class="w-full text-left bg-gray-900/40 border border-gray-800 text-gray-400 p-2.5 rounded-none text-xs font-medium hover:border-gray-700 transition flex items-center justify-between">
+                <span>🔴 Low-Cap Prototype (Cap Kecil Alpha)</span>
+            </button>
+        </div>
+
+        <!-- Connection Status -->
+        <div class="border-t border-gray-800 pt-4 space-y-1.5">
+            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Status Koneksi Data Pipeline</p>
+            <div class="p-2.5 bg-gray-900/30 border border-gray-800 rounded-none text-[11px] space-y-1.5 font-mono-tech">
+                <div class="flex justify-between items-center"><span>Binance Spot/Fut:</span><span class="text-gundam-gold font-bold">CONNECTED</span></div>
+                <div class="flex justify-between items-center"><span>Hyperliquid L1 Perps:</span><span class="text-gundam-gold font-bold">ONLINE</span></div>
+                <div class="flex justify-between items-center"><span>Dexscreener Multichain:</span><span class="text-psycho-cyan font-bold" id="dex-stream-status">STREAMING</span></div>
+                <div class="flex justify-between items-center"><span>LunarCrush Social:</span><span class="text-emerald-400 font-bold" id="lc-connection-status">ACTIVE</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="text-[9px] text-gray-600 border-t border-gray-800 pt-3 uppercase tracking-widest font-bold">
+        ANAHEIM ELECTRONICS COGNITION v1.02
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     MAIN TERMINAL CONTENT (hidden until unlocked)
+     ════════════════════════════════════════════════════════════════ -->
+<div id="main-terminal-content" class="hidden opacity-0 transition-opacity duration-1000">
+
+    <!-- Sticky Search Bar -->
+    <div class="sticky top-0 z-40 sticky-search-panel shadow-xl">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-2.5">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-3">
+
+                <div class="flex items-center justify-between w-full md:w-auto gap-3">
+                    <button onclick="togglePlengerSidebar(true); playSound('click');" class="bg-gray-900 hover:bg-[#0c1424] border border-gray-700 text-white px-3 py-1.5 rounded-none font-bold transition text-xs flex items-center gap-1.5">
+                        <span class="text-[#d4af37]">☰</span> <span>PANEL KONTROL</span>
+                    </button>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-gundam-gold animate-pulse"></span>
+                        <span class="text-[#d4af37] font-mono-tech text-[10px] font-bold uppercase tracking-wider hidden sm:inline">PSYCHO-FRAME MONITOR ONLINE</span>
+                    </div>
+                </div>
+
+                <div class="w-full md:max-w-xl relative mx-auto md:mx-0">
+                    <div class="relative flex items-center bg-[#030508] border border-gray-700 focus-within:border-[#d4af37] rounded-none transition-all">
+                        <span class="pl-3 text-gundam-gold font-mono-tech text-[11px] font-bold">⚡ CARI KOIN:</span>
+                        <input type="text" id="search-bar"
+                            oninput="executeInstantGlobalSearch(this.value); playSound('crunch');"
+                            placeholder="Ketik nama koin (BTC, SOL, PIPPIN)..."
+                            class="w-full p-2 bg-transparent text-white font-mono-tech font-bold text-xs outline-none uppercase placeholder-gray-600 tracking-wide text-left">
+                        <button id="clear-search-btn" onclick="clearSearchInput(); playSound('click');" class="hidden pr-3 text-gray-500 hover:text-white font-bold">✕</button>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4 text-xs font-bold text-gray-500 font-mono-tech">
+                    <button onclick="toggleMuteState()" id="sound-toggle-btn" class="text-[10px] border border-gray-700 px-2 py-0.5 text-gundam-gold bg-gray-900 hover:border-[#d4af37]">
+                        🔊 SUARA: AKTIF
+                    </button>
+                    <span id="clock-24h" class="text-white bg-gray-900 border border-gray-800 px-2 py-0.5 rounded-none">00:00:00</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="plenger-sidebar" class="fixed top-0 left-0 bottom-0 w-80 bg-[#060b13] border-r-2 border-[#d4af37] z-50 transform -translate-x-full transition-transform duration-300 p-5 font-mono-tech flex flex-col justify-between shadow-2xl">
-        <div class="overflow-y-auto pr-1 h-full">
-            <div class="flex justify-between items-center mb-6 pb-3 border-b border-gray-800">
-                <div>
-                    <h2 class="text-xs font-bold text-white tracking-wider uppercase flex items-center gap-1.5">
-                        <span class="inline-block w-2 h-2 bg-[#d4af37]"></span> MENU KONTROL & FILTER
-                    </h2>
-                    <p class="text-[9px] text-psycho-cyan uppercase font-semibold">Anaheim Electronics Registry</p>
-                </div>
-                <button onclick="togglePlengerSidebar(false); playSound('click');" class="text-gray-400 hover:text-[#d4af37] text-sm p-1">✕</button>
-            </div>
+    <!-- Main Content Area -->
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 pt-4 pb-12">
 
-            <div class="bg-gray-900/90 border border-gundam-gold/30 p-2.5 rounded-none mb-4 space-y-1.5">
-                <p class="text-[9px] text-gundam-gold font-bold uppercase tracking-widest">⚙️ OPTIMALISASI VISUAL CHASSIS</p>
-                <div class="grid grid-cols-2 gap-1 text-[10px]">
-                    <button onclick="switchVisualTheme('dark'); playSound('click');" class="bg-gray-950 border border-gray-700 p-1 text-white hover:border-[#d4af37] text-center font-bold">DARK PROTOCOL</button>
-                    <button onclick="switchVisualTheme('light'); playSound('click');" class="bg-white border border-gray-300 p-1 text-black hover:border-[#d4af37] text-center font-bold">LIGHT ARMOR</button>
-                </div>
-                <button onclick="toggleAntiEyeStrain(); playSound('beep');" class="w-full text-center bg-amber-950/40 border border-amber-600/50 text-amber-400 p-1 text-[10px] font-bold uppercase tracking-wider block">
-                    👁️ TOGGLE ANTI-EYE STRAIN MODE
-                </button>
-            </div>
-
-            <div class="bg-[#0c1424] border border-gray-800 p-3 rounded-none mb-4 flex items-center gap-3">
-                <div class="w-8 h-8 bg-gray-900 border border-[#d4af37] flex items-center justify-center text-gundam-gold font-bold text-xs">
-                    NT-D
-                </div>
-                <div>
-                    <p class="text-white font-bold text-xs tracking-wide">COMMANDER PILOT</p>
-                    <p class="text-[9px] text-gray-400 font-mono-tech">PSYCHO-FRAME SYNC: 100%</p>
-                </div>
-            </div>
-
-            <div class="bg-gray-900/40 border border-gray-800 p-3.5 rounded-none mb-5 space-y-2.5">
-                <p class="text-[10px] text-[#d4af37] font-bold uppercase tracking-wider">⚡ STATISTIK PORTFOLIO</p>
-                <div class="grid grid-cols-2 gap-2 text-xs">
-                    <div class="bg-[#030508] p-2 border border-gray-800">
-                        <span class="text-gray-500 block text-[9px] uppercase font-bold">Total Koin</span>
-                        <span class="text-white font-bold font-mono-tech" id="stats-total-pos">Calculating...</span>
-                    </div>
-                    <div class="bg-[#030508] p-2 border border-gray-800">
-                        <span class="text-gray-500 block text-[9px] uppercase font-bold">Rata Winrate</span>
-                        <span class="text-emerald-400 font-bold font-mono-tech" id="stats-success-rate">81.45%</span>
-                    </div>
-                </div>
-                <div class="bg-[#030508] p-2 border border-gray-800 text-center">
-                    <span class="text-gray-500 block text-[9px] uppercase font-bold">Kumulatif ROI Portfolio</span>
-                    <span class="text-gundam-gold text-base font-bold tracking-tight font-mono-tech" id="stats-cum-pnl">+4,102.82%</span>
-                </div>
-            </div>
-
-            <div class="space-y-1.5 mb-5 border-b border-gray-800 pb-4">
-                <p class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider mb-1">🔥 REKOMENDASI FORMASI (HIGHEST CONFLUENCE)</p>
-                <button onclick="applySignalFilter('LONG'); playSound('beep');" id="f-rec-long" class="w-full text-left bg-emerald-950/30 border border-emerald-500/40 text-emerald-400 p-2.5 rounded-none text-xs font-bold hover:bg-emerald-950/50 transition flex items-center justify-between">
-                    <span>🟢 Sinyal LONG Terkuat</span>
-                    <span class="text-[9px] bg-emerald-900/80 px-1 border border-emerald-600">TOP BUY</span>
-                </button>
-                <button onclick="applySignalFilter('SHORT'); playSound('beep');" id="f-rec-short" class="w-full text-left bg-rose-950/30 border border-rose-500/40 text-rose-400 p-2.5 rounded-none text-xs font-bold hover:bg-rose-950/50 transition flex items-center justify-between">
-                    <span>🔴 Sinyal SHORT Terkuat</span>
-                    <span class="text-[9px] bg-rose-900/80 px-1 border border-rose-600">TOP SELL</span>
-                </button>
-            </div>
-
-            <div class="space-y-1.5 mb-5">
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Filter Sektor Kapitalisasi</p>
-                <button onclick="applyCapFilterRange('all'); playSound('click');" id="f-all" class="w-full text-left bg-[#d4af37]/10 border border-[#d4af37]/40 text-[#d4af37] p-2.5 rounded-none text-xs font-medium transition flex items-center justify-between">
-                    <span>🌐 Semua Sektor Aset</span>
-                </button>
-                <button onclick="applyCapFilterRange('big'); playSound('click');" id="f-big" class="w-full text-left bg-gray-900/40 border border-gray-800 text-gray-400 p-2.5 rounded-none text-xs font-medium hover:border-gray-700 transition flex items-center justify-between">
-                    <span>🟢 Tier-1 Heavy Armor (Cap Besar)</span>
-                </button>
-                <button onclick="applyCapFilterRange('mid'); playSound('click');" id="f-mid" class="w-full text-left bg-gray-900/40 border border-gray-800 text-gray-400 p-2.5 rounded-none text-xs font-medium hover:border-gray-700 transition flex items-center justify-between">
-                    <span>🟡 Mid-Tier Fleet (Cap Menengah)</span>
-                </button>
-                <button onclick="applyCapFilterRange('low'); playSound('click');" id="f-low" class="w-full text-left bg-gray-900/40 border border-gray-800 text-gray-400 p-2.5 rounded-none text-xs font-medium hover:border-gray-700 transition flex items-center justify-between">
-                    <span>🔴 Low-Cap Prototype (Cap Kecil Alpha)</span>
-                </button>
-            </div>
-            
-            <div class="border-t border-gray-800 pt-4 space-y-1.5">
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Status Koneksi Data Pipeline</p>
-                <div class="p-2.5 bg-gray-900/30 border border-gray-800 rounded-none text-[11px] space-y-1.5 font-mono-tech">
-                    <div class="flex justify-between items-center"><span>Binance Spot/Fut:</span><span class="text-gundam-gold font-bold">CONNECTED</span></div>
-                    <div class="flex justify-between items-center"><span>Hyperliquid L1 Perps:</span><span class="text-gundam-gold font-bold">ONLINE</span></div>
-                    <div class="flex justify-between items-center"><span>Dexscreener Multichain:</span><span class="text-psycho-cyan font-bold" id="dex-stream-status">STREAMING</span></div>
-                </div>
+        <!-- Marquee Disclaimer -->
+        <div class="marquee-wrapper py-1 mb-4 bg-yellow-950/20 border-y border-[#d4af37]/30 font-mono-tech text-[11px] text-[#d4af37] font-medium">
+            <div class="marquee-content">
+                ⚠️ All information on this website is not financial advice. Please review independently. ⚠️ &nbsp;&nbsp;&nbsp;&nbsp; ⚠️ All information on this website is not financial advice. Please review independently. ⚠️
             </div>
         </div>
-        <div class="text-[9px] text-gray-600 border-t border-gray-800 pt-3 uppercase tracking-widest font-bold">
-            ANAHEIM ELECTRONICS COGNITION v1.02
-        </div>
+
+        <header class="mb-5">
+
+            <!-- ═══ LUNARCRUSH SOCIAL INTELLIGENCE MODULE ═══ -->
+            <!-- Replaces the old "Sensor Berita & Katalis Fundamental Pasar" news module -->
+            <div class="lunarcrush-panel rounded-none mb-3">
+                <div class="lc-header">
+                    <div class="lc-header-title">
+                        <span style="color:#d4af37">🌙</span>
+                        LunarCrush Social Intelligence &nbsp;—&nbsp; Sentiment · Volume · Trending · Anomaly
+                        <span class="lc-live-badge">LIVE</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:0.75rem">
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#4b5563;font-weight:700;text-transform:uppercase;letter-spacing:0.06em">
+                            Updated: <span id="lc-last-refresh" style="color:#6b7280">--:--:--</span>
+                        </span>
+                        <button onclick="renderLunarCrushPanel(); playSound('beep');"
+                            style="font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;color:#d4af37;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);padding:2px 8px;text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;">
+                            ↺ REFRESH
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Legend Row -->
+                <div style="display:flex;gap:1rem;padding:0.35rem 0.85rem;border-bottom:1px solid #1e293b;background:rgba(3,5,8,0.3)">
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#4b5563;font-weight:700;text-transform:uppercase;letter-spacing:0.06em">
+                        <span style="color:#4ade80">■</span> PUMP SIGNAL
+                    </span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#4b5563;font-weight:700;text-transform:uppercase;letter-spacing:0.06em">
+                        <span style="color:#f87171">■</span> DUMP SIGNAL
+                    </span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#4b5563;font-weight:700;text-transform:uppercase;letter-spacing:0.06em">
+                        Bar = Social Volume Intensity
+                    </span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#4b5563;font-weight:700;text-transform:uppercase;letter-spacing:0.06em">
+                        Galaxy 🌙 = LunarCrush Score (0-100)
+                    </span>
+                </div>
+
+                <!-- Coin Cards Grid -->
+                <div id="lunarcrush-panel-body" class="lc-grid"></div>
+            </div>
+            <!-- ═══ END LUNARCRUSH MODULE ═══ -->
+
+            <!-- Market Stats Row -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 mt-3">
+                <div class="bg-[#060b13] border border-gray-800 p-2.5 rounded-none">
+                    <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider font-mono-tech">Volatilitas Pasar</span>
+                    <div class="text-psycho-cyan font-bold mt-0.5 text-xs">High Output Fluid Velocity</div>
+                </div>
+                <div class="bg-[#060b13] border border-gray-800 p-2.5 rounded-none">
+                    <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider font-mono-tech">Dominasi Sistem</span>
+                    <div class="text-white font-bold font-mono-tech mt-0.5 text-xs">54.81% / 103.85</div>
+                </div>
+                <div class="bg-[#060b13] border border-gray-800 p-2.5 rounded-none">
+                    <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider font-mono-tech">Tekanan Reaktor</span>
+                    <div class="text-[#d4af37] font-bold font-mono-tech mt-0.5 text-xs">+0.0125% Median</div>
+                </div>
+                <div class="bg-[#060b13] border border-gray-800 p-2.5 rounded-none">
+                    <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider font-mono-tech">Status Kondisi Radar</span>
+                    <div class="text-emerald-400 font-bold mt-0.5 text-xs">58 (Kondisi Aman/Green)</div>
+                </div>
+            </div>
+
+            <!-- Trading Monitor Header -->
+            <div class="flex justify-between items-center mt-6">
+                <h2 class="text-xs font-bold text-white uppercase tracking-widest font-mono-tech flex items-center gap-2">
+                    <span class="w-1 h-3 bg-gradient-to-b from-[#d4af37] to-yellow-600 block"></span>
+                    📊 DECK MONITOR TRADING REAL-TIME
+                </h2>
+                <div class="flex items-center gap-2.5 bg-[#060b13] px-3 py-1 rounded-none border border-gray-800 font-mono-tech">
+                    <button onclick="triggerSliderLeft(); playSound('click');" class="text-xs font-bold text-[#d4af37] hover:text-white transition">◀ Prev</button>
+                    <span id="slider-pagination-label" class="text-[11px] text-gray-400 font-bold tracking-wider">HALAMAN 1 / 1</span>
+                    <button onclick="triggerSliderRight(); playSound('click');" class="text-xs font-bold text-[#d4af37] hover:text-white transition">Next ▶</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Trading Cards Grid -->
+        <main>
+            <div id="grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+        </main>
     </div>
+</div>
 
-    <div id="main-terminal-content" class="hidden opacity-0 transition-opacity duration-1000">
-        
-        <div class="sticky top-0 z-40 sticky-search-panel shadow-xl">
-            <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-2.5">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-3">
-                    
-                    <div class="flex items-center justify-between w-full md:w-auto gap-3">
-                        <button onclick="togglePlengerSidebar(true); playSound('click');" class="bg-gray-900 hover:bg-[#0c1424] border border-gray-700 text-white px-3 py-1.5 rounded-none font-bold transition text-xs flex items-center gap-1.5">
-                            <span class="text-[#d4af37]">☰</span> <span>PANEL KONTROL</span>
-                        </button>
-                        <div class="flex items-center gap-1.5">
-                            <span class="w-1.5 h-1.5 rounded-full bg-gundam-gold animate-pulse"></span>
-                            <span class="text-[#d4af37] font-mono-tech text-[10px] font-bold uppercase tracking-wider hidden sm:inline">PSYCHO-FRAME MONITOR ONLINE</span>
-                        </div>
-                    </div>
-
-                    <div class="w-full md:max-w-xl relative mx-auto md:mx-0">
-                        <div class="relative flex items-center bg-[#030508] border border-gray-700 focus-within:border-[#d4af37] rounded-none transition-all">
-                            <span class="pl-3 text-gundam-gold font-mono-tech text-[11px] font-bold">⚡ CARI KOIN:</span>
-                            <input type="text" id="search-bar" oninput="executeInstantGlobalSearch(this.value); playSound('crunch');" placeholder="Ketik nama koin (BTC, SOL, PIPPIN)..." 
-                                class="w-full p-2 bg-transparent text-white font-mono-tech font-bold text-xs outline-none uppercase placeholder-gray-600 tracking-wide text-left">
-                            <button id="clear-search-btn" onclick="clearSearchInput(); playSound('click');" class="hidden pr-3 text-gray-500 hover:text-white font-bold">✕</button>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-4 text-xs font-bold text-gray-500 font-mono-tech">
-                        <button onclick="toggleMuteState()" id="sound-toggle-btn" class="text-[10px] border border-gray-700 px-2 py-0.5 text-gundam-gold bg-gray-900 hover:border-[#d4af37]">
-                            🔊 SUARA: AKTIF
-                        </button>
-                        <span id="clock-24h" class="text-white bg-gray-900 border border-gray-800 px-2 py-0.5 rounded-none">00:00:00</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 pt-4 pb-12">
-            
-            <div class="marquee-wrapper py-1 mb-4 bg-yellow-950/20 border-y border-[#d4af37]/30 font-mono-tech text-[11px] text-[#d4af37] font-medium">
-                <div class="marquee-content">
-                    ⚠️ All information on this website is not financial advice. Please review independently. ⚠️ &nbsp;&nbsp;&nbsp;&nbsp; ⚠️ All information on this website is not financial advice. Please review independently. ⚠️
-                </div>
-            </div>
-
-            <header class="mb-5">
-                <div class="bg-[#060b13] border border-gray-800 rounded-none p-3 relative overflow-hidden">
-                    <div class="flex items-center gap-2 mb-2.5 pb-1.5 border-b border-gray-800">
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#d4af37] animate-pulse"></span>
-                        <h2 class="font-bold text-[11px] text-white uppercase tracking-wider font-mono-tech">📢 Sensor Berita & Katalis Fundamental Pasar</h2>
-                    </div>
-                    <div id="cmc-news-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 font-mono-tech text-xs text-gray-400"></div>
-                </div>
-
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 mt-3">
-                    <div class="bg-[#060b13] border border-gray-800 p-2.5 rounded-none">
-                        <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider font-mono-tech">Volatilitas Pasar</span>
-                        <div class="text-psycho-cyan font-bold mt-0.5 text-xs">High Output Fluid Velocity</div>
-                    </div>
-                    <div class="bg-[#060b13] border border-gray-800 p-2.5 rounded-none">
-                        <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider font-mono-tech">Dominasi Sistem</span>
-                        <div class="text-white font-bold font-mono-tech mt-0.5 text-xs">54.81% / 103.85</div>
-                    </div>
-                    <div class="bg-[#060b13] border border-gray-800 p-2.5 rounded-none">
-                        <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider font-mono-tech">Tekanan Reaktor</span>
-                        <div class="text-[#d4af37] font-bold font-mono-tech mt-0.5 text-xs">+0.0125% Median</div>
-                    </div>
-                    <div class="bg-[#060b13] border border-gray-800 p-2.5 rounded-none">
-                        <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider font-mono-tech">Status Kondisi Radar</span>
-                        <div class="text-emerald-400 font-bold mt-0.5 text-xs">58 (Kondisi Aman/Green)</div>
-                    </div>
-                </div>
-
-                <div class="flex justify-between items-center mt-6">
-                    <h2 class="text-xs font-bold text-white uppercase tracking-widest font-mono-tech flex items-center gap-2">
-                        <span class="w-1 h-3 bg-gradient-to-b from-[#d4af37] to-yellow-600 block"></span> 📊 DECK MONITOR DECK TRADING REAL-TIME
-                    </h2>
-                    <div class="flex items-center gap-2.5 bg-[#060b13] px-3 py-1 rounded-none border border-gray-800 font-mono-tech">
-                        <button onclick="triggerSliderLeft(); playSound('click');" class="text-xs font-bold text-[#d4af37] hover:text-white transition">◀ Prev</button>
-                        <span id="slider-pagination-label" class="text-[11px] text-gray-400 font-bold tracking-wider">HALAMAN 1 / 1</span>
-                        <button onclick="triggerSliderRight(); playSound('click');" class="text-xs font-bold text-[#d4af37] hover:text-white transition">Next ▶</button>
-                    </div>
-                </div>
-            </header>
-
-            <main>
-                <div id="grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
-            </main>
-        </div>
+<!-- ════════════════════════════════════════════════════════════════
+     PAIR-CLICK SPECS MODAL (unchanged structure)
+     ════════════════════════════════════════════════════════════════ -->
+<div id="specs-modal" class="fixed inset-0 hidden z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="bg-[#060b13] border-2 border-[#d4af37] w-full max-w-4xl rounded-none p-5 relative text-xs text-gray-300 font-medium overflow-y-auto max-h-[95vh] transition-all duration-300">
+        <button onclick="closeSpecsModalWindow(); playSound('click');" class="absolute top-4 right-4 text-gray-400 hover:text-white font-mono-tech text-[11px] tracking-wider border border-gray-800 px-2 py-0.5 rounded-none bg-gray-900">✕ TUTUP</button>
+        <div id="modal-content-area" class="mt-2"></div>
     </div>
+</div>
 
-    <div id="specs-modal" class="fixed inset-0 hidden z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-        <div class="bg-[#060b13] border-2 border-[#d4af37] w-full max-w-4xl rounded-none p-5 relative text-xs text-gray-300 font-medium overflow-y-auto max-h-[95vh] transition-all duration-300">
-            <button onclick="closeSpecsModalWindow(); playSound('click');" class="absolute top-4 right-4 text-gray-400 hover:text-white font-mono-tech text-[11px] tracking-wider border border-gray-800 px-2 py-0.5 rounded-none bg-gray-900">✕ TUTUP</button>
-            <div id="modal-content-area" class="mt-2"></div>
-        </div>
-    </div>
+<!-- ════════════════════════════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+    // PSYCHO-FRAME SYSTEMS VERIFIED COMPLIANT WITH RX-0 MATRIX PRO © 2026 KANGGABUT LABS
+</footer>
 
-    <footer class="py-6 border-t-2 border-gray-900 bg-[#030508] text-center text-[10px] font-bold text-gray-600 uppercase tracking-widest font-mono-tech">
-        // PSYCHO-FRAME SYSTEMS VERIFIED COMPLIANT WITH RX-0 MATRIX PRO © 2026 KANGGABUT LABS
-    </footer>
+<!-- ════════════════════════════════════════════════════════════════
+     MODULAR SCRIPTS — order matters: api.js → app.js
+     ════════════════════════════════════════════════════════════════ -->
+<script src="api.js"></script>
+<script src="app.js"></script>
 
-    <script>
-        const API_BINANCE = "https://api.binance.com/api/v3/ticker/24hr";
-        const API_HYPERLIQUID = "https://api.hyperliquid.xyz/info";
-        const API_DEXSCREENER_SEARCH = "https://api.dexscreener.com/latest/dex/search?q=";
-
-        // Memory Registries
-        let coreMemoryCache = []; 
-        let filteredWorkspacePool = [];
-        let selectedFilterRange = "all";
-        let signalRecommendationFilter = "none"; 
-        let activeQueryText = "";
-        let lockedTradingSetupsCache = {};
-        let advancedIndicatorsCache = {}; 
-        let coreSliderPointer = 0;
-        const strictRowMaxItems = 16; 
-        
-        // Sound Module Options
-        let systemAudioMuted = false;
-        let synthAudioContext = null;
-        let searchTimeoutDebounce = null;
-
-        const cmcCatalystDatabase = [
-            { pair: "SUI/USDT", event: "MAINNET V2.1 UPGRADE", desc: "Network latency validation scaling sequence launched.", state: "HOT" },
-            { pair: "SOL/USDT", event: "TOKEN UNLOCK ADV", desc: "$240M liquidity unlocks mapped in current cluster.", state: "VOLATILE" },
-            { pair: "AVAX/USDT", event: "BANKING PARTNER PIPELINE", desc: "Institutional smart-contract settlement validation.", state: "INFLOW" },
-            { pair: "PEPE/USDT", event: "TOKEN BURN PROTOCOL", desc: "1.2T supply burned out of standard distribution.", state: "VOLUME" },
-            { pair: "NEAR/USDT", event: "SHARDING V3 CORE", desc: "State sharding storage model active across pools.", state: "MAINNET" }
-        ];
-
-        function initializeAudioContextEngine() {
-            if (!synthAudioContext) {
-                synthAudioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
+<!-- Inline bootstrap: start API polling after boot (called by app.js once terminal loads) -->
+<script>
+    // Hook into the post-boot API polling cycle
+    // This is called once inside triggerTerminalBootSequence after the main content appears
+    const _origFetchAll = fetchAllExternalAPIPipelines;
+    // Override to also start the 15s polling interval after first fetch
+    window._apiPollingStarted = false;
+    async function fetchAllExternalAPIPipelines() {
+        await _origFetchAll();
+        if (!window._apiPollingStarted) {
+            window._apiPollingStarted = true;
+            setInterval(_origFetchAll, 15000);
         }
+    }
+</script>
 
-        function playSound(type) {
-            if (systemAudioMuted) return;
-            try {
-                initializeAudioContextEngine();
-                const osc = synthAudioContext.createOscillator();
-                const gain = synthAudioContext.createGain();
-                osc.connect(gain);
-                gain.connect(synthAudioContext.destination);
-                const now = synthAudioContext.currentTime;
-
-                if (type === 'click') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(800, now);
-                    osc.frequency.exponentialRampToValueAtTime(150, now + 0.08);
-                    gain.gain.setValueAtTime(0.1, now);
-                    gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
-                    osc.start(now); osc.stop(now + 0.08);
-                } else if (type === 'beep') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(1200, now);
-                    osc.frequency.setValueAtTime(1500, now + 0.05);
-                    gain.gain.setValueAtTime(0.08, now);
-                    gain.gain.linearRampToValueAtTime(0.005, now + 0.2);
-                    osc.start(now); osc.stop(now + 0.2);
-                } else if (type === 'crunch') {
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(200, now);
-                    osc.frequency.setValueAtTime(450, now + 0.03);
-                    gain.gain.setValueAtTime(0.04, now);
-                    gain.gain.linearRampToValueAtTime(0.001, now + 0.05);
-                    osc.start(now); osc.stop(now + 0.05);
-                } else if (type === 'boot') {
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(60, now);
-                    osc.frequency.linearRampToValueAtTime(600, now + 1.2);
-                    gain.gain.setValueAtTime(0.15, now);
-                    gain.gain.linearRampToValueAtTime(0.01, now + 1.5);
-                    osc.start(now); osc.stop(now + 1.5);
-                }
-            } catch (e) { console.log(e); }
-        }
-
-        // Adaptive Light/Dark/Anti-Eye Strain Framework Controls
-        function switchVisualTheme(themeMode) {
-            const body = document.body;
-            if(themeMode === 'light') {
-                body.classList.add('light-theme');
-            } else {
-                body.classList.remove('light-theme');
-            }
-        }
-
-        function toggleAntiEyeStrain() {
-            document.body.classList.toggle('eye-strain-mode');
-        }
-
-        function toggleMuteState() {
-            systemAudioMuted = !systemAudioMuted;
-            const btn = document.getElementById('sound-toggle-btn');
-            if(systemAudioMuted) {
-                btn.innerText = "🔇 SUARA: MATI";
-                btn.className = "text-[10px] border border-red-900 px-2 py-0.5 text-red-500 bg-gray-900";
-            } else {
-                btn.innerText = "🔊 SUARA: AKTIF";
-                btn.className = "text-[10px] border border-gray-700 px-2 py-0.5 text-gundam-gold bg-gray-900 hover:border-[#d4af37]";
-                playSound('click');
-            }
-        }
-
-        function triggerTerminalBootSequence() {
-            initializeAudioContextEngine();
-            playSound('boot');
-            document.getElementById('launch-btn').classList.add('hidden');
-            document.getElementById('boot-progress-container').classList.remove('hidden');
-            
-            let currentPct = 0;
-            const bar = document.getElementById('boot-progress-bar');
-            const pctText = document.getElementById('boot-percent-text');
-            const statusText = document.getElementById('boot-status-text');
-            const logs = [
-                "Awakening Minovsky Drive Reactors...",
-                "Synchronizing Psycho-Frame Conduits...",
-                "Establishing Link with Anaheim Central Network...",
-                "Decrypting Sector Targeting Radar Arrays...",
-                "NT-D Mode Activated. Systems Operational."
-            ];
-
-            const interval = setInterval(() => {
-                currentPct += Math.floor(Math.random() * 12) + 8;
-                if (currentPct >= 100) {
-                    currentPct = 100;
-                    clearInterval(interval);
-                    document.getElementById('landing-screen').classList.add('opacity-0', 'pointer-events-none');
-                    const mainElement = document.getElementById('main-terminal-content');
-                    mainElement.classList.remove('hidden');
-                    setTimeout(() => { mainElement.style.opacity = 1; renderCMCCatalystPanel(); }, 50);
-                }
-                bar.style.width = currentPct + "%";
-                pctText.innerText = currentPct + "%";
-                statusText.innerText = logs[Math.floor((currentPct / 100) * logs.length)] || logs[logs.length - 1];
-                if (currentPct % 20 === 0) playSound('crunch');
-            }, 50);
-        }
-
-        function togglePlengerSidebar(openBoolean) {
-            const sidebar = document.getElementById('plenger-sidebar');
-            if (openBoolean) { sidebar.classList.remove('-translate-x-full'); } 
-            else { sidebar.classList.add('-translate-x-full'); }
-        }
-
-        function renderCMCCatalystPanel() {
-            const container = document.getElementById('cmc-news-container');
-            container.innerHTML = '';
-            cmcCatalystDatabase.forEach(item => {
-                container.innerHTML += `
-                    <div class="bg-[#030508] p-2 border border-gray-800 rounded-none flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-white font-bold text-xs">${item.pair}</span>
-                                <span class="text-[9px] bg-yellow-950 text-[#d4af37] px-1 border border-yellow-900 font-bold uppercase">${item.state}</span>
-                            </div>
-                            <p class="text-gray-300 font-bold text-[10px] uppercase">${item.event}</p>
-                            <p class="text-[11px] text-gray-500 leading-tight mt-0.5">${item.desc}</p>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        async function fetchAllExternalAPIPipelines() {
-            try {
-                let temporaryCluster = [];
-                
-                // 1. Pipeline Cek Binance API
-                const bncRes = await fetch(API_BINANCE).catch(() => null);
-                if (bncRes && bncRes.ok) {
-                    const bncData = await bncRes.json();
-                    bncData.filter(x => x.symbol.endsWith("USDT")).forEach(spot => {
-                        const ticker = spot.symbol.replace("USDT", "");
-                        const price = parseFloat(spot.lastPrice) || 0;
-                        const vol = parseFloat(spot.quoteVolume) || 0;
-                        temporaryCluster.push({
-                            uid: ticker + "_BNC", ticker: ticker, source: "BINANCE CONTRACT",
-                            price: price, change24h: parseFloat(spot.priceChangePercent) || 0, volume24h: vol,
-                            high24h: parseFloat(spot.highPrice) || price, low24h: parseFloat(spot.lowPrice) || price,
-                            calculatedWeight: vol * 10
-                        });
-                    });
-                }
-
-                // 2. Pipeline Cek Hyperliquid API
-                const hlRes = await fetch(API_HYPERLIQUID, {
-                    method: "POST", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ type: "metaAndAssetCtxs" })
-                }).catch(() => null);
-                if (hlRes && hlRes.ok) {
-                    const hlData = await hlRes.json();
-                    if (hlData && hlData[0] && hlData[1]) {
-                        hlData[0].universe.forEach((asset, idx) => {
-                            const ctx = hlData[1][idx];
-                            if (ctx) {
-                                const price = parseFloat(ctx.oraclePx || ctx.midPx || 0);
-                                const vol = parseFloat(ctx.dayNfv || 0);
-                                const change = ((price - (parseFloat(ctx.prevPrice) || price)) / (parseFloat(ctx.prevPrice) || 1)) * 100;
-                                if (!temporaryCluster.some(item => item.ticker === asset.name)) {
-                                    temporaryCluster.push({
-                                        uid: asset.name + "_HLP", ticker: asset.name, source: "HYPERLIQUID PERP",
-                                        price: price, change24h: isNaN(change) ? 0 : change, volume24h: vol,
-                                        high24h: price * 1.03, low24h: price * 0.97,
-                                        calculatedWeight: vol * 8
-                                    });
-                                }
-                            }
-                        });
-                    }
-                }
-
-                // Pertahankan data koin yang sudah tersimpan di memori sebelumnya
-                coreMemoryCache.forEach(oldItem => {
-                    if (oldItem.source.includes("DEXSCREENER") && !temporaryCluster.some(t => t.ticker === oldItem.ticker)) {
-                        temporaryCluster.push(oldItem);
-                    }
-                });
-
-                if (temporaryCluster.length > 0) { 
-                    coreMemoryCache = temporaryCluster; 
-                    document.getElementById('stats-total-pos').innerText = `${coreMemoryCache.length} Target`;
-                }
-                compileActiveFilterSorting();
-            } catch (err) { 
-                console.error("Critical Error Pipeline: ", err);
-            }
-        }
-
-        async function searchOnChainTokensViaDexScreener(query) {
-            if(!query || query.length < 2) return;
-            const statusEl = document.getElementById('dex-stream-status');
-            try {
-                statusEl.innerText = "SEARCHING...";
-                statusEl.className = "text-amber-400 font-bold animate-pulse";
-
-                const response = await fetch(`${API_DEXSCREENER_SEARCH}${query}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data && data.pairs) {
-                        const topPairs = data.pairs.slice(0, 5);
-                        topPairs.forEach(pair => {
-                            const baseSymbol = pair.baseToken.symbol.toUpperCase();
-                            const uid = baseSymbol + "_" + pair.chainId.toUpperCase() + "_DEX";
-                            
-                            const existingIdx = coreMemoryCache.findIndex(x => x.uid === uid || (x.ticker === baseSymbol && x.source.includes("DEXSCREENER")));
-                            const tokenNode = {
-                                uid: uid,
-                                ticker: baseSymbol,
-                                source: `DEXSCREENER (${pair.chainId.toUpperCase()})`,
-                                price: parseFloat(pair.priceUsd) || 0,
-                                change24h: parseFloat(pair.priceChange.h24) || 0,
-                                volume24h: parseFloat(pair.volume.h24) || 0,
-                                high24h: parseFloat(pair.priceUsd) * 1.05,
-                                low24h: parseFloat(pair.priceUsd) * 0.95,
-                                calculatedWeight: parseFloat(pair.liquidity?.usd) || 5000
-                            };
-
-                            if (existingIdx > -1) {
-                                coreMemoryCache[existingIdx] = tokenNode;
-                            } else {
-                                coreMemoryCache.push(tokenNode);
-                            }
-                        });
-                    }
-                }
-                statusEl.innerText = "STREAMING";
-                statusEl.className = "text-psycho-cyan font-bold";
-                document.getElementById('stats-total-pos').innerText = `${coreMemoryCache.length} Target`;
-                compileActiveFilterSorting();
-            } catch (e) {
-                console.error("Gagal sinkronisasi on-chain API: ", e);
-                statusEl.innerText = "ONLINE";
-            }
-        }
-
-        function executeInstantGlobalSearch(valStr) {
-            activeQueryText = valStr.trim().toLowerCase();
-            const clearBtn = document.getElementById('clear-search-btn');
-            if (activeQueryText !== "") { clearBtn.classList.remove('hidden'); } 
-            else { clearBtn.classList.add('hidden'); }
-            coreSliderPointer = 0;
-
-            clearTimeout(searchTimeoutDebounce);
-            if(activeQueryText.length >= 2) {
-                searchTimeoutDebounce = setTimeout(() => {
-                    searchOnChainTokensViaDexScreener(activeQueryText);
-                }, 400);
-            } else {
-                compileActiveFilterSorting();
-            }
-        }
-
-        function clearSearchInput() {
-            document.getElementById('search-bar').value = "";
-            activeQueryText = "";
-            document.getElementById('clear-search-btn').classList.add('hidden');
-            compileActiveFilterSorting();
-        }
-
-        function applyCapFilterRange(rangeType) {
-            selectedFilterRange = rangeType;
-            signalRecommendationFilter = "none"; 
-            coreSliderPointer = 0;
-            resetSidebarButtonStyles();
-            document.getElementById('f-' + rangeType).className = "w-full text-left bg-[#d4af37]/10 border border-[#d4af37]/40 text-[#d4af37] p-2.5 rounded-none text-xs font-medium transition flex items-center justify-between";
-            compileActiveFilterSorting();
-        }
-
-        function applySignalFilter(signalType) {
-            signalRecommendationFilter = signalType;
-            selectedFilterRange = "all"; 
-            coreSliderPointer = 0;
-            resetSidebarButtonStyles();
-            
-            if(signalType === 'LONG') {
-                document.getElementById('f-rec-long').className = "w-full text-left bg-emerald-950/60 border border-emerald-400 text-emerald-400 p-2.5 rounded-none text-xs font-bold transition flex items-center justify-between";
-            } else {
-                document.getElementById('f-rec-short').className = "w-full text-left bg-rose-950/60 border border-rose-400 text-rose-400 p-2.5 rounded-none text-xs font-bold transition flex items-center justify-between";
-            }
-            compileActiveFilterSorting();
-        }
-
-        function resetSidebarButtonStyles() {
-            ['all', 'big', 'mid', 'low'].forEach(id => {
-                const b = document.getElementById('f-' + id);
-                if (b) b.className = "w-full text-left bg-gray-900/40 border border-gray-800 text-gray-400 p-2.5 rounded-none text-xs font-medium hover:border-gray-700 transition flex items-center justify-between";
-            });
-            document.getElementById('f-rec-long').className = "w-full text-left bg-emerald-950/30 border border-emerald-500/40 text-emerald-400 p-2.5 rounded-none text-xs font-bold hover:bg-emerald-950/50 transition flex items-center justify-between";
-            document.getElementById('f-rec-short').className = "w-full text-left bg-rose-950/30 border border-rose-500/40 text-rose-400 p-2.5 rounded-none text-xs font-bold hover:bg-rose-950/50 transition flex items-center justify-between";
-        }
-
-        function triggerSliderLeft() {
-            if (coreSliderPointer - strictRowMaxItems >= 0) {
-                coreSliderPointer -= strictRowMaxItems;
-                renderWorkspaceDisplay();
-            }
-        }
-
-        function triggerSliderRight() {
-            if (coreSliderPointer + strictRowMaxItems < filteredWorkspacePool.length) {
-                coreSliderPointer += strictRowMaxItems;
-                renderWorkspaceDisplay();
-            }
-        }
-
-        function compileActiveFilterSorting() {
-            const patternBlacklist = /^(USDC|FDUSD|TUSD|BUSD|EUR|TRY)$/;
-            
-            let pool = coreMemoryCache.filter(item => {
-                if (patternBlacklist.test(item.ticker)) return false;
-                if (activeQueryText !== "") {
-                    return item.ticker.toLowerCase().includes(activeQueryText);
-                }
-                const valueCap = item.calculatedWeight;
-                if (selectedFilterRange === 'low') return valueCap < 15000000;
-                if (selectedFilterRange === 'mid') return valueCap >= 15000000 && valueCap < 500000000;
-                if (selectedFilterRange === 'big') return valueCap >= 500000000;
-                return true;
-            });
-
-            pool.forEach(pairNode => {
-                if (!lockedTradingSetupsCache[pairNode.uid]) {
-                    const change = pairNode.change24h;
-                    const setupTrend = change >= 0 ? 'LONG' : 'SHORT';
-                    
-                    // Deteksi seed deterministik berbasis nama koin agar hitungan matematis konsisten stabil
-                    let seedHash = pairNode.ticker.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-                    const score = (seedHash % 35) + 60; // Skor dasar 60-95 bervariasi teratur
-                    
-                    const possibleStatus = ['Waiting', 'Entry Hit', 'TP1 Hit', 'Waiting'];
-                    lockedTradingSetupsCache[pairNode.uid] = {
-                        trend: setupTrend,
-                        entry: pairNode.price * (setupTrend === 'LONG' ? 0.995 : 1.005),
-                        tp1: setupTrend === 'LONG' ? pairNode.price * 1.02 : pairNode.price * 0.98,
-                        tp2: setupTrend === 'LONG' ? pairNode.price * 1.04 : pairNode.price * 0.96,
-                        tp3: setupTrend === 'LONG' ? pairNode.price * 1.06 : pairNode.price * 0.94,
-                        sl: setupTrend === 'LONG' ? pairNode.price * 0.975 : pairNode.price * 1.025,
-                        confluence: score,
-                        volatility: score > 80 ? 'HIGH' : (score > 65 ? 'MED' : 'LOW'),
-                        status: possibleStatus[seedHash % possibleStatus.length]
-                    };
-                }
-            });
-
-            if (signalRecommendationFilter !== "none") {
-                pool = pool.filter(item => {
-                    const setup = lockedTradingSetupsCache[item.uid];
-                    return setup && setup.trend === signalRecommendationFilter;
-                });
-                pool.sort((a, b) => lockedTradingSetupsCache[b.uid].confluence - lockedTradingSetupsCache[a.uid].confluence);
-            }
-            
-            filteredWorkspacePool = pool;
-            renderWorkspaceDisplay();
-        }
-
-        // PENGUATAN ANALISA INDIKATOR PROFESIONAL SECARA DETERMINISTIK DAN MATEMATIS AKTUAL
-        function getOrComputeAdvancedIndicators(uid, price, change24h) {
-            const now = Date.now();
-            if (advancedIndicatorsCache[uid] && (now - advancedIndicatorsCache[uid].timestamp < 15000)) {
-                return advancedIndicatorsCache[uid].data;
-            }
-
-            // Membangun kalkulasi stabil non-random murni menggunakan basis data API koin
-            let baseSeed = uid.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-            
-            // 1. RSI & MACD Momentum Calculations
-            let rsiVal = Math.floor(50 + (change24h * 1.8));
-            rsiVal = Math.max(12, Math.min(88, rsiVal));
-            const rsiSlope = change24h >= 0 ? "UPWARD" : "DOWNWARD";
-            let rsiDiv = "NONE";
-            if(rsiVal > 70 && change24h < 2) rsiDiv = "BEARISH DIV";
-            if(rsiVal < 30 && change24h > -2) rsiDiv = "BULLISH DIV";
-
-            const macdLine = (change24h * 0.15).toFixed(4);
-            const macdSignal = (change24h * 0.11).toFixed(4);
-            const macdHist = (macdLine - macdSignal).toFixed(4);
-
-            // 2. Market Structure Engine (BOS, CHoCH, Swing Points)
-            const structuralSignal = change24h >= 0 ? "BOS (BULLISH BREAKOUT)" : "CHoCH (TREND REVERSAL)";
-            const swingHigh = price * 1.045;
-            const swingLow = price * 0.955;
-
-            // 3. Supply & Demand + Liquidity Maps
-            const demandZoneMin = price * 0.94;
-            const demandZoneMax = price * 0.965;
-            const supplyZoneMin = price * 1.035;
-            const supplyZoneMax = price * 1.06;
-            
-            const poolLiquidityUpper = price * 1.025;
-            const poolLiquidityLower = price * 0.975;
-
-            // 4. Volume Delta, VWAP & ATR Metrics
-            const volumeDeltaNet = (baseSeed % 2 === 0 ? "+" : "-") + (Math.abs(change24h) * 12.5 + 5).toFixed(1) + "%";
-            const vwapAnchor = price * (change24h >= 0 ? 0.992 : 1.008);
-            const atrVolatilityValue = price * (Math.abs(change24h) * 0.015 + 0.01);
-
-            // 5. Multi-Timeframe Key Levels Matrix
-            const htfResistance = price * 1.10;
-            const htfSupport = price * 0.90;
-            const ltfPivot = price * 1.002;
-
-            // 6. Multi-Factor Confluence Engine (5-9 Faktor Evaluasi Riil)
-            let factors = [];
-            if(change24h >= 0) factors.push("Struktur Pasar Bullish Sesuai Trend"); else factors.push("Struktur Pasar Bearish Sesuai Trend");
-            if(rsiVal > 45 && rsiVal < 65) factors.push("RSI di Zona Netral/Sehat"); else factors.push("RSI Ekstrim Mendekati Titik Reversal");
-            if(Math.abs(macdHist) > 0) factors.push("MACD Histogram Mendukung Momentum Utama");
-            if(baseSeed % 2 === 0) factors.push("Volume Delta Menunjukkan Akumulasi Agresif Buyer"); else factors.push("Volume Delta Menunjukkan Tekanan Distribusi Seller");
-            factors.push("Retest Valid di Area Golden Ratio S&D");
-            if(Math.abs(change24h) > 5) factors.push("Akselerasi ATR Mendukung Pemuaian Volatilitas Lebar");
-            if(vwapAnchor < price && change24h > 0) factors.push("Harga Berada di Atas Garis Pertahanan VWAP Institusional");
-            
-            const computedConfluence = Math.min(95, Math.max(50, 50 + (factors.length * 6)));
-
-            const generatedData = {
-                rsi: { value: rsiVal, divergence: rsiDiv, slope: rsiSlope },
-                macd: { line: macdLine, signal: macdSignal, histogram: macdHist },
-                smc: { structural: structuralSignal, sHigh: swingHigh, sLow: swingLow },
-                sdZone: { dMin: demandZoneMin, dMax: demandZoneMax, sMin: supplyZoneMin, sMax: supplyZoneMax },
-                liquidity: { upper: poolLiquidityUpper, lower: poolLiquidityLower },
-                volTech: { delta: volumeDeltaNet, vwap: vwapAnchor, atr: atrVolatilityValue },
-                keyLevels: { htfRes: htfResistance, htfSup: htfSupport, ltfPivot: ltfPivot },
-                factorMatrix: factors,
-                totalProConfluence: computedConfluence
-            };
-
-            advancedIndicatorsCache[uid] = { timestamp: now, data: generatedData };
-            return generatedData;
-        }
-
-        function calculateTradeProgressPercentage(trend, price, entry, tp1) {
-            if (trend === 'LONG') {
-                if (price <= entry) return 0;
-                if (price >= tp1) return 100;
-                return ((price - entry) / (tp1 - entry)) * 100;
-            } else {
-                if (price >= entry) return 0;
-                if (price <= tp1) return 100;
-                return ((entry - price) / (entry - tp1)) * 100;
-            }
-        }
-
-        function toggleAdvancedAnalysisSection(uid) {
-            const el = document.getElementById(`adv-panel-${uid}`);
-            const btn = document.getElementById(`adv-btn-${uid}`);
-            if (el.classList.contains('hidden')) {
-                el.classList.remove('hidden');
-                btn.innerText = "Sembunyikan Analisis Kedalam ▴";
-                playSound('beep');
-            } else {
-                el.classList.add('hidden');
-                btn.innerText = "Lihat Analisis Kedalam ▾";
-                playSound('click');
-            }
-        }
-
-        function renderWorkspaceDisplay() {
-            const viewport = document.getElementById('grid-container');
-            viewport.innerHTML = '';
-            
-            const activeSlice = filteredWorkspacePool.slice(coreSliderPointer, coreSliderPointer + strictRowMaxItems);
-            const totalPages = Math.ceil(filteredWorkspacePool.length / strictRowMaxItems) || 1;
-            const currentPage = Math.floor(coreSliderPointer / strictRowMaxItems) + 1;
-            document.getElementById('slider-pagination-label').innerText = `HALAMAN ${currentPage} / ${totalPages}`;
-            
-            if (activeSlice.length === 0) {
-                viewport.innerHTML = `<div class="col-span-full text-center text-gray-500 py-16 font-mono-tech uppercase font-bold tracking-widest border border-dashed border-gray-800">⚠️ RADAR KOSONG: Tidak ada data koin yang cocok dengan filter.</div>`;
-                return;
-            }
-
-            activeSlice.forEach(pairNode => {
-                const livePrice = pairNode.price; 
-                const change = pairNode.change24h;
-                let dPoints = (livePrice < 0.00001) ? 8 : ((livePrice < 0.01) ? 6 : (livePrice < 1 ? 4 : 2));
-
-                const setup = lockedTradingSetupsCache[pairNode.uid];
-                const adv = getOrComputeAdvancedIndicators(pairNode.uid, livePrice, change);
-
-                // Sinkronisasi Confluence Score dengan kalkulasi indikator profesional baru
-                setup.confluence = adv.totalProConfluence;
-
-                const confBg = setup.confluence > 75 ? 'bg-emerald-950/40 text-emerald-400 border-emerald-900 psycho-pulse-cyan' : (setup.confluence > 65 ? 'bg-amber-950/40 text-amber-400 border-amber-900' : 'bg-gray-900 text-gray-400 border-gray-800');
-                const statusColor = setup.status.includes('TP') ? 'text-emerald-400 font-bold' : (setup.status.includes('SL') ? 'text-rose-400 font-bold' : 'text-psycho-cyan');
-                const progressPercent = calculateTradeProgressPercentage(setup.trend, livePrice, setup.entry, setup.tp1);
-
-                const cardBox = document.createElement('div');
-                cardBox.className = "bloomberg-card p-4 flex flex-col justify-between font-mono-tech";
-                
-                cardBox.innerHTML = `
-                    <div class="space-y-3">
-                        <div onclick="openSpecsModalWindow('${pairNode.uid}'); playSound('beep');" class="cursor-pointer flex justify-between items-start border-b border-gray-800 pb-2">
-                            <div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-white font-bold text-base tracking-tight">${pairNode.ticker}</span>
-                                    <span class="text-[10px] text-[#d4af37] font-bold">[USDT]</span>
-                                </div>
-                                <p class="text-[10px] text-psycho-cyan font-bold tracking-wider uppercase mt-0.5">${pairNode.source}</p>
-                            </div>
-                            <div class="flex flex-col items-end gap-1">
-                                <div class="flex gap-1 items-center">
-                                    <span class="text-xs font-bold px-1.5 py-0.5 ${change >= 0 ? 'bg-emerald-950 text-emerald-400' : 'bg-rose-950 text-rose-400'}">
-                                        ${change >= 0 ? '+' : ''}${change.toFixed(2)}%
-                                    </span>
-                                    <span class="text-xs font-bold px-1.5 py-0.5 border ${setup.trend === 'LONG' ? 'bg-emerald-950 text-emerald-400 border-emerald-900' : 'bg-rose-950 text-rose-400 border-rose-900'}">
-                                        ${setup.trend}
-                                    </span>
-                                </div>
-                                <span class="text-[9px] px-1.5 py-0.2 border font-bold ${confBg}">CONFLUENCE: ${setup.confluence}%</span>
-                            </div>
-                        </div>
-
-                        <div onclick="openSpecsModalWindow('${pairNode.uid}'); playSound('beep');" class="cursor-pointer space-y-2">
-                            <div class="flex justify-between items-baseline bg-gray-900/60 p-1.5 border border-gray-800">
-                                <span class="text-gray-400 text-[10px] uppercase font-bold">Harga Saat Ini</span>
-                                <span class="text-gundam-gold font-bold text-sm tracking-wide">$${livePrice.toFixed(dPoints)}</span>
-                            </div>
-
-                            <div class="bg-[#040811] border border-gray-800 p-1.5 rounded-none">
-                                <div class="flex justify-between text-[8px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
-                                    <span>Thruster Progress (TP1 Matrix)</span>
-                                    <span class="text-psycho-cyan">${progressPercent.toFixed(1)}%</span>
-                                </div>
-                                <div class="w-full h-1.5 bg-gray-950 border border-gray-800 overflow-hidden relative">
-                                    <div class="h-full bg-gradient-to-r from-[#d4af37] to-[#00f3ff] transition-all duration-300" style="width: ${progressPercent}%"></div>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-1.5 text-xs">
-                                <div class="bg-emerald-950/20 border border-emerald-900/40 p-1">
-                                    <span class="text-emerald-400 block text-[9px] font-bold">HARGA BELI (ENTRY)</span>
-                                    <span class="text-white font-bold">$${setup.entry.toFixed(dPoints)}</span>
-                                </div>
-                                <div class="bg-rose-950/20 border border-rose-900/40 p-1">
-                                    <span class="text-rose-500 block text-[9px] font-bold">BATAS RUGI (SL)</span>
-                                    <span class="text-white font-bold">$${setup.sl.toFixed(dPoints)}</span>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-3 gap-1 text-center text-[10px]">
-                                <div class="bg-gray-900/60 border border-gray-800 p-1">
-                                    <span class="text-gray-400 block text-[8px] font-bold">TARGET 1 (TP)</span>
-                                    <span class="text-emerald-400 font-bold">$${setup.tp1.toFixed(dPoints)}</span>
-                                </div>
-                                <div class="bg-gray-900/60 border border-gray-800 p-1">
-                                    <span class="text-gray-400 block text-[8px] font-bold">TARGET 2</span>
-                                    <span class="text-gray-300 font-bold">$${setup.tp2.toFixed(dPoints)}</span>
-                                </div>
-                                <div class="bg-gray-900/60 border border-gray-800 p-1">
-                                    <span class="text-gray-400 block text-[8px] font-bold">TARGET 3</span>
-                                    <span class="text-gray-300 font-bold">$${setup.tp3.toFixed(dPoints)}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div onclick="openSpecsModalWindow('${pairNode.uid}');" class="cursor-pointer pt-2 border-t border-gray-900 text-[10px] text-gray-500 space-y-1">
-                            <div class="flex justify-between">
-                                <span>Output Volatilitas ATR:</span>
-                                <span class="text-white font-bold">$${adv.volTech.atr.toFixed(dPoints)}</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span>Status Posisi:</span>
-                                <span class="${statusColor} uppercase tracking-wider">${setup.status}</span>
-                            </div>
-                        </div>
-
-                        <div id="adv-panel-${pairNode.uid}" class="hidden mt-3 pt-3 border-t border-dashed border-gray-800 space-y-2 text-xs bg-[#030508] p-2">
-                            <div class="flex justify-between items-center border-b border-gray-900 pb-1">
-                                <span class="text-gundam-gold font-bold tracking-wider">🔬 INDIKATOR TEKNIKAL</span>
-                                <span class="text-psycho-cyan font-bold text-[9px]">SMC QUANT ENG V10</span>
-                            </div>
-                            <div class="space-y-1.5 text-[10px]">
-                                <div class="flex justify-between"><span class="text-gray-500">Struktur SMC:</span><span class="text-purple-400 font-bold text-right">${adv.smc.structural}</span></div>
-                                <div class="flex justify-between"><span class="text-gray-500">Volume Delta:</span><span class="text-emerald-400 font-bold">${adv.volTech.delta} Imbalance</span></div>
-                                <div class="flex justify-between"><span class="text-gray-500">Institusi VWAP:</span><span class="text-gundam-gold font-bold">$${adv.volTech.vwap.toFixed(dPoints)}</span></div>
-                                <div class="flex justify-between"><span class="text-gray-500">Momentum RSI:</span><span class="text-white font-bold">${adv.rsi.value} (${adv.rsi.slope})</span></div>
-                                <div class="flex justify-between"><span class="text-gray-500">MACD Hist:</span><span class="text-amber-400 font-bold">${adv.macd.histogram}</span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-2.5 pt-2 border-t border-gray-800 flex justify-between items-center">
-                        <button id="adv-btn-${pairNode.uid}" onclick="toggleAdvancedAnalysisSection('${pairNode.uid}')" class="text-left font-bold text-gundam-gold hover:text-white text-[10px] uppercase tracking-wide transition">
-                            Lihat Analisis Kedalam ▾
-                        </button>
-                        <button onclick="openSpecsModalWindow('${pairNode.uid}'); playSound('beep');" class="text-gray-500 hover:text-white font-bold text-[10px] uppercase tracking-wide">
-                            Kalkulator & Detail ➔
-                        </button>
-                    </div>
-                `;
-                viewport.appendChild(cardBox);
-            });
-        }
-
-        // PENYUSUNAN STRUKTUR MODAL BARU UNTUK DISPLAY REPORT PROFESIONAL 8-SEKTOR KELAS INSTITUSIONAL
-        function openSpecsModalWindow(uidKey) {
-            const matchCache = coreMemoryCache.find(x => x.uid === uidKey);
-            if (!matchCache) return;
-
-            const setup = lockedTradingSetupsCache[uidKey];
-            const adv = getOrComputeAdvancedIndicators(uidKey, matchCache.price, matchCache.change24h);
-            let dPoints = (matchCache.price < 0.00001) ? 8 : ((matchCache.price < 0.01) ? 6 : (matchCache.price < 1 ? 4 : 2));
-
-            const targetArea = document.getElementById('modal-content-area');
-            
-            // Generate List Dinamis Faktor Confluence yang Terdeteksi Kompleks
-            let factorListHTML = "";
-            adv.factorMatrix.forEach((f, idx) => {
-                factorListHTML += `<li class="text-emerald-400 font-bold text-[11px] flex items-center gap-1">✓ <span class="text-gray-300 font-normal">${f}</span></li>`;
-            });
-
-            targetArea.innerHTML = `
-                <div class="border-b-2 border-gundam-gold pb-3 mb-4 font-mono-tech flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
-                    <div>
-                        <h2 class="text-base font-black text-white uppercase tracking-tight">${matchCache.ticker} // QUANT TACTICAL BLUEPRINT DIAGNOSTICS</h2>
-                        <p class="text-xs text-psycho-cyan font-bold">Data Feed Pipeline Matrix: <span class="text-white border border-gray-700 px-1.5 ml-1 bg-gray-900">${matchCache.source}</span></p>
-                    </div>
-                    <div class="bg-amber-950/40 border border-gundam-gold px-3 py-1 text-center">
-                        <span class="text-gundam-gold font-bold text-[10px] block uppercase tracking-widest">SYSTEM CONFLUENCE</span>
-                        <span class="text-white font-black text-base">${adv.totalProConfluence}% MATRIX VALID</span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono-tech text-xs text-gray-300 mb-5">
-                    
-                    <div class="border border-gray-800 p-3 bg-gray-900/30">
-                        <h3 class="text-gundam-gold font-bold uppercase mb-1.5 flex items-center gap-1">🎚️ 1. Trend Overview</h3>
-                        <p>Kondisi pergerakan 24 jam terakhir mencatatkan tingkat fluktuasi kumulatif sebesar <span class="font-bold ${matchCache.change24h >= 0?'text-emerald-400':'text-rose-500'}">${matchCache.change24h.toFixed(2)}%</span>. Secara struktural makro algoritma terminal mendeteksi dominasi setup <span class="text-white font-bold bg-gray-800 px-1">${setup.trend} Momentum Direction</span>.</p>
-                    </div>
-
-                    <div class="border border-gray-800 p-3 bg-gray-900/30">
-                        <h3 class="text-gundam-gold font-bold uppercase mb-1.5 flex items-center gap-1">📊 2. Market Structure</h3>
-                        <p>Sinyal Arsitektur: <span class="text-purple-400 font-bold">${adv.smc.structural}</span></p>
-                        <div class="grid grid-cols-2 gap-1 mt-1 text-[11px]">
-                            <div>Major Swing High: <span class="text-white font-bold">$${adv.smc.sHigh.toFixed(dPoints)}</span></div>
-                            <div>Major Swing Low: <span class="text-white font-bold">$${adv.smc.sLow.toFixed(dPoints)}</span></div>
-                        </div>
-                    </div>
-
-                    <div class="border border-gray-800 p-3 bg-gray-900/30">
-                        <h3 class="text-gundam-gold font-bold uppercase mb-1.5 flex items-center gap-1">🗺️ 3. Liquidity Map</h3>
-                        <p>Kepadatan orderbook institusional memetakan konsentrasi likuidasi area krusial pada wilayah batas harga:</p>
-                        <div class="mt-1 text-[11px] space-y-0.5">
-                            <div>• Buy-Side Liquidity Ceiling: <span class="text-rose-400 font-bold">$${adv.liquidity.upper.toFixed(dPoints)}</span></div>
-                            <div>• Sell-Side Liquidity Floor: <span class="text-emerald-400 font-bold">$${adv.liquidity.lower.toFixed(dPoints)}</span></div>
-                        </div>
-                    </div>
-
-                    <div class="border border-gray-800 p-3 bg-gray-900/30">
-                        <h3 class="text-gundam-gold font-bold uppercase mb-1.5 flex items-center gap-1">🧩 4. Confluence Score Matrix</h3>
-                        <ul class="space-y-1 max-h-24 overflow-y-auto pr-1">
-                            ${factorListHTML}
-                        </ul>
-                    </div>
-
-                    <div class="border border-gray-800 p-3 bg-gray-900/30">
-                        <h3 class="text-gundam-gold font-bold uppercase mb-1.5 flex items-center gap-1">🎯 5. Entry Models Matrix</h3>
-                        <div class="space-y-1 text-[11px]">
-                            <div>⚡ Scalp Model (M5/M15): Aggressive Market Entry at <span class="text-white font-bold">$${(setup.entry * 1.001).toFixed(dPoints)}</span></div>
-                            <div>💼 Day Model (H1): Optimal Limit Pullback Entry at <span class="text-white font-bold">$${setup.entry.toFixed(dPoints)}</span></div>
-                            <div>🌐 Swing Model (H4): Conservative Key Re-test S&D Entry at <span class="text-white font-bold">$${adv.sdZone.dMin.toFixed(dPoints)}</span></div>
-                        </div>
-                    </div>
-
-                    <div class="border border-gray-800 p-3 bg-gray-900/30">
-                        <h3 class="text-gundam-gold font-bold uppercase mb-1.5 flex items-center gap-1">🛡️ 6. Risk Management Matrix</h3>
-                        <p>Batas toleransi invalidasi spasial ekstrim (Stop Loss) wajib dipasang mutlak di area pertahanan struktur terbawah pada level <span class="text-rose-400 font-bold">$${setup.sl.toFixed(dPoints)}</span>. Rasio untung/rugi disesuaikan otomatis minimal berbobot R:R 1:2.</p>
-                    </div>
-
-                    <div class="border border-gray-800 p-3 bg-gray-900/30">
-                        <h3 class="text-gundam-gold font-bold uppercase mb-1.5 flex items-center gap-1">📈 7. Target Mapping Grid</h3>
-                        <div class="grid grid-cols-3 gap-1 text-[11px] text-center">
-                            <div class="bg-gray-950 p-1 border border-gray-800"><span class="block text-gray-500">TP1 Matrix</span><span class="text-emerald-400 font-bold">$${setup.tp1.toFixed(dPoints)}</span></div>
-                            <div class="bg-gray-950 p-1 border border-gray-800"><span class="block text-gray-500">TP2 Runway</span><span class="text-white font-bold">$${setup.tp2.toFixed(dPoints)}</span></div>
-                            <div class="bg-gray-950 p-1 border border-gray-800"><span class="block text-gray-500">TP3 Apex</span><span class="text-white font-bold">$${setup.tp3.toFixed(dPoints)}</span></div>
-                        </div>
-                    </div>
-
-                    <div class="border border-gray-800 p-3 bg-gray-900/30">
-                        <h3 class="text-gundam-gold font-bold uppercase mb-1.5 flex items-center gap-1">🏁 8. Final Quant Summary</h3>
-                        <p>Aset koin <span class="text-gundam-gold font-bold">${matchCache.ticker}</span> mengonfirmasi konvergensi teknikal terintegrasi tinggi dengan perimbangan indikator kekuatan tren RSI (<span class="font-bold text-white">${adv.rsi.value}</span>) beriringan kekuatan momentum garis signal MACD (<span class="font-bold text-amber-400">${adv.macd.histogram}</span>).</p>
-                    </div>
-
-                </div>
-
-                <div class="border-t border-gray-800 pt-3 font-mono-tech">
-                    <p class="text-xs text-[#d4af37] font-bold uppercase tracking-wider mb-2.5">🧮 KALKULATOR ESTIMASI KEUNTUNGAN (SIMULASI PNL)</p>
-                    
-                    <div class="space-y-3 bg-gray-900/30 p-3 border border-gray-800 text-xs">
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="text-[9px] text-gray-500 font-bold block mb-1">LEVERAGE (DAYA UNGKIT)</label>
-                                <input type="number" id="modal-calc-lev" value="10" oninput="liveModalCalculatorEngine('${uidKey}', ${dPoints});" class="w-full bg-[#030508] border border-gray-700 p-1.5 text-white font-bold text-center text-xs outline-none focus:border-[#d4af37]">
-                            </div>
-                            <div>
-                                <label class="text-[9px] text-gray-500 font-bold block mb-1">MARGIN MODAL (USDT)</label>
-                                <input type="number" id="modal-calc-margin" value="100" oninput="liveModalCalculatorEngine('${uidKey}', ${dPoints});" class="w-full bg-[#030508] border border-gray-700 p-1.5 text-white font-bold text-center text-xs outline-none focus:border-[#d4af37]">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-3 gap-1.5 text-center text-[10px] font-bold">
-                            <button onclick="applyTargetToCalculator(${setup.tp1}, '${uidKey}', ${dPoints});" class="bg-gray-900 border border-gray-800 hover:border-[#d4af37] text-gray-400 p-1.5 transition">TARGET 1 PX</button>
-                            <button onclick="applyTargetToCalculator(${setup.tp2}, '${uidKey}', ${dPoints});" class="bg-gray-900 border border-gray-800 hover:border-[#d4af37] text-gray-400 p-1.5 transition">TARGET 2 PX</button>
-                            <button onclick="applyTargetToCalculator(${setup.tp3}, '${uidKey}', ${dPoints});" class="bg-gray-900 border border-gray-800 hover:border-[#d4af37] text-gray-400 p-1.5 transition">TARGET 3 PX</button>
-                        </div>
-
-                        <div>
-                            <label class="text-[9px] text-gray-500 font-bold block mb-1">HARGA KELUAR MANUALLY (EXIT TARGET)</label>
-                            <input type="number" step="any" id="modal-calc-target" value="${setup.tp1.toFixed(dPoints)}" oninput="liveModalCalculatorEngine('${uidKey}', ${dPoints});" class="w-full bg-[#030508] border border-gray-700 p-1.5 text-psycho-cyan font-bold text-xs outline-none focus:border-[#d4af37]">
-                        </div>
-
-                        <div class="bg-[#030508] p-2.5 border border-gray-800 flex justify-between items-center font-bold">
-                            <div>
-                                <span class="text-gray-500 block text-[9px] uppercase">Estimasi Hasil (PnL)</span>
-                                <span id="modal-res-pnl" class="text-emerald-400 text-xs font-bold">+$25.00 USDT</span>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-gray-500 block text-[9px] uppercase">Hasil Persentase (ROI)</span>
-                                <span id="modal-res-roi" class="text-emerald-400 text-xs font-bold">+25.00%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('specs-modal').classList.remove('hidden');
-            liveModalCalculatorEngine(uidKey, dPoints);
-        }
-
-        function applyTargetToCalculator(priceVal, uidKey, dPoints) {
-            const inputTarget = document.getElementById('modal-calc-target');
-            if (inputTarget) {
-                inputTarget.value = priceVal.toFixed(dPoints);
-                liveModalCalculatorEngine(uidKey, dPoints);
-            }
-        }
-
-        function liveModalCalculatorEngine(uidKey, dPoints) {
-            const setup = lockedTradingSetupsCache[uidKey];
-            if (!setup) return;
-
-            const lev = parseFloat(document.getElementById('modal-calc-lev').value) || 0;
-            const margin = parseFloat(document.getElementById('modal-calc-margin').value) || 0;
-            const target = parseFloat(document.getElementById('modal-calc-target').value) || 0;
-
-            let changePct = 0;
-            if (setup.trend === "LONG") {
-                changePct = (target - setup.entry) / setup.entry;
-            } else {
-                changePct = (setup.entry - target) / setup.entry;
-            }
-
-            const outputPnL = margin * lev * changePct;
-            const outputROI = changePct * lev * 100;
-
-            const pnlLabel = document.getElementById('modal-res-pnl');
-            const roiLabel = document.getElementById('modal-res-roi');
-            if (outputPnL >= 0) {
-                pnlLabel.innerText = `+$${outputPnL.toFixed(2)} USDT`;
-                pnlLabel.className = "text-emerald-400 text-xs font-bold";
-                roiLabel.innerText = `+${outputROI.toFixed(2)}%`;
-                roiLabel.className = "text-emerald-400 text-xs font-bold";
-            } else {
-                pnlLabel.innerText = `$${outputPnL.toFixed(2)} USDT`;
-                pnlLabel.className = "text-rose-500 text-xs font-bold";
-                roiLabel.innerText = `${outputROI.toFixed(2)}%`;
-                roiLabel.className = "text-rose-500 text-xs font-bold";
-            }
-        }
-
-        function closeSpecsModalWindow() {
-            document.getElementById('specs-modal').classList.add('hidden');
-        }
-
-        function clockEngineUpdate() {
-            const time = new Date();
-            document.getElementById('clock-24h').innerText = time.toTimeString().split(' ')[0];
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            clockEngineUpdate();
-            setInterval(clockEngineUpdate, 1000);
-            fetchAllExternalAPIPipelines();
-            setInterval(fetchAllExternalAPIPipelines, 15000); 
-        });
-    </script>
 </body>
 </html>
