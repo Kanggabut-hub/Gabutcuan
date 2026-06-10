@@ -1,124 +1,239 @@
-/* ============================================================================
-   KANGGABUT LABS | INSTITUTIONAL TRADING DESK — style.css
-   Corporate Design Token Sheet & Clean Interface Framework Definitions
-   ============================================================================ */
+/* =============================================
+   KANGGABUT | VANGUARD V100 PRO — style.css
+   Modern Quantitative Design System Architecture
+   ============================================= */
 
 :root {
-    --bg-main: #020617; /* Slate 950 */
-    --bg-card: #0f172a; /* Slate 900 */
-    --bg-card-hover: #1e293b; /* Slate 800 */
+    --bg-main: #030508;
+    --bg-card: #080d16;
+    --bg-card-hover: #0c1424;
     --border-color: #1e293b;
-    --text-primary: #f8fafc;
-    --text-muted: #94a3b8;
-    --amber-accent: #f59e0b;
-    --cyan-accent: #06b6d4;
-    --emerald-accent: #10b981;
+    --text-primary: #d1d5db;
+    --text-muted: #6b7280;
+    --gold-glow: rgba(212, 175, 55, 0.05);
+    --panel-sticky: rgba(3, 5, 8, 0.95);
+    --gold: #d4af37;
+    --gold-dim: #b49426;
+    --cyan: #00f3ff;
 }
 
-/* ── Professional Light Mode Definition Sheet ── */
+/* ── Light Armor Chassis Mode ── */
 body.light-theme {
-    --bg-main: #f8fafc;
+    --bg-main: #f4f6f9;
     --bg-card: #ffffff;
-    --bg-card-hover: #f1f5f9;
-    --border-color: #e2e8f0;
-    --text-primary: #0f172a;
+    --bg-card-hover: #f8fafc;
+    --border-color: #cbd5e1;
+    --text-primary: #1e293b;
     --text-muted: #64748b;
-    --amber-accent: #d97706;
-    --cyan-accent: #0891b2;
-    --emerald-accent: #16a34a;
+    --gold-glow: rgba(180, 148, 38, 0.02);
+    --panel-sticky: rgba(244, 246, 249, 0.95);
+    color: #0f172a;
 }
 
-body.light-theme #main-interface, 
-body.light-theme header,
-body.light-theme .bg-slate-900,
-body.light-theme .bg-slate-950,
-body.light-theme #specs-modal .bg-slate-900 {
-    background-color: var(--bg-card) !important;
-    color: var(--text-primary) !important;
-    border-color: var(--border-color) !important;
+body.light-theme #password-gate,
+body.light-theme #landing-screen,
+body.light-theme #plenger-sidebar,
+body.light-theme .modal-inner,
+body.light-theme .lunarcrush-panel {
+    background: #ffffff !important;
+    border-color: #cbd5e1 !important;
 }
 
-body.light-theme th,
-body.light-theme td,
-body.light-theme h2,
-body.light-theme h3,
-body.light-theme h4,
-body.light-theme p,
-body.light-theme li {
-    color: var(--text-primary) !important;
+body.light-theme .pw-box,
+body.light-theme .bloomberg-card,
+body.light-theme .lc-coin-card {
+    background: #f8fafc !important;
+    border-color: #e2e8f0 !important;
 }
 
-body.light-theme input, 
-body.light-theme select {
-    background-color: var(--bg-main) !important;
-    color: var(--text-primary) !important;
-    border-color: var(--border-color) !important;
+body.light-theme text-white,
+body.light-theme .text-white {
+    color: #0f172a !important;
 }
 
-body.light-theme .filter-badge {
-    border-color: var(--border-color) !important;
-    color: var(--text-muted) !important;
+body.light-theme .bg-gray-950,
+body.light-theme .bg-gray-900\/40,
+body.light-theme .bg-gray-900\/30 {
+    background-color: #f1f5f9 !important;
 }
 
-body.light-theme .filter-badge.active {
-    background-color: var(--amber-accent) !important;
-    color: #ffffff !important;
+/* ── Anti-Eye Strain Overlay ── */
+body.eye-strain-mode {
+    --bg-main: #12161a;
+    --bg-card: #1a1f26;
+    --bg-card-hover: #222933;
+    --border-color: #2e3745;
+    --gold-glow: rgba(212, 175, 55, 0.02);
+    --panel-sticky: rgba(18, 22, 26, 0.97);
+    filter: contrast(93%) sepia(6%);
 }
 
-/* ── Global Style Overrides ── */
+/* ── Global Structure Overrides ── */
+*, *::before, *::after { box-sizing: border-box; }
+
 body {
     background-color: var(--bg-main);
     color: var(--text-primary);
     font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Specialized Filter Badges ── */
-.filter-badge {
-    background-color: transparent;
+.font-mono-tech { font-family: 'JetBrains Mono', monospace; }
+
+/* ── Scrollbars ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* ── Premium Password Authentication Gate ── */
+#password-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #030508;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.pw-box {
+    width: 100%;
+    max-w: 420px;
+    background: #080d16;
+    border: 1px solid #1e293b;
+    padding: 2.5rem 2rem;
+    position: relative;
+    border-radius: 1.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+}
+
+.pw-logo {
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, var(--gold), #8a6d1c);
+    padding: 1px;
+    border-radius: 1rem;
+    margin: 0 auto 1.25rem;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.pw-logo-inner {
+    width: 100%; height: 100%;
+    background: #030508;
+    border-radius: calc(1rem - 1px);
+    display: flex; align-items: center; justify-content: center;
+}
+
+.pw-title {
+    text-align: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: #fff;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+}
+
+.pw-subtitle {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
     color: var(--text-muted);
-    cursor: pointer;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 1.75rem;
 }
 
-.filter-badge:hover {
-    background-color: var(--bg-card-hover);
-    color: var(--text-primary);
-}
-
-.filter-badge.active {
-    background-color: rgba(245, 158, 11, 0.15);
-    border-color: var(--amber-accent);
-    color: var(--amber-accent);
+.pw-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--gold);
     font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    display: block;
 }
 
-/* ── Error Shake Animations ── */
-@keyframes structuralErrorShake {
+.pw-input {
+    width: 100%;
+    background: #030508;
+    border: 1px solid #1e293b;
+    padding: 0.75rem 1rem;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    border-radius: 0.75rem;
+    outline: none;
+    transition: all 0.2s;
+    margin-bottom: 1rem;
+}
+
+.pw-input:focus { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(212,175,55,0.1); }
+.pw-input.error { border-color: #f87171; animation: shake 0.3s ease-in-out; }
+
+.pw-btn {
+    width: 100%;
+    background: gradient-to-r;
+    background-image: linear-gradient(to right, var(--gold-dim), var(--gold));
+    color: #000;
+    font-weight: 700;
+    font-size: 0.825rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    transition: opacity 0.2s;
+}
+.pw-btn:hover { opacity: 0.9; }
+
+.pw-error {
+    color: #f87171;
+    font-size: 11px;
+    margin-top: 0.5rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+@keyframes shake {
     0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-6px); }
-    75% { transform: translateX(6px); }
+    20%, 60% { transform: translateX(-4px); }
+    40%, 80% { transform: translateX(4px); }
 }
 
-.shake-error {
-    animation: structuralErrorShake 0.15s ease-in-out 2;
-    border-color: #ef4444 !important;
-    box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.4) !important;
+/* ── Typography Accents ── */
+.text-gundam-gold { color: var(--gold); }
+.border-gundam-gold { border-color: var(--gold); }
+.bg-gundam-gold { background-color: var(--gold); }
+.text-psycho-cyan { color: #22d3ee; }
+
+/* ── Shimmer Lazy Skeletons ── */
+.lc-skeleton {
+    background: linear-gradient(90deg, #0d1520 25%, #1e293b 50%, #0d1520 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
 }
 
-/* Custom Scrollbar Properties */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+@keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }
 
-::-webkit-scrollbar-track {
-    background: transparent;
+/* ── Optimized Modular Layout Container Adapters ── */
+.header-ticker-tape {
+    background-color: var(--panel-sticky);
 }
 
-::-webkit-scrollbar-thumb {
-    background: #334155;
-    border-radius: 3px;
+.bloomberg-card {
+    background-color: var(--bg-card);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.bloomberg-card:hover {
+    transform: translateY(-2px);
+    border-color: #475569 !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: #475569;
+/* Ensure persistent clean spacing inside scroll pools */
+.lunarcrush-body {
+    scrollbar-width: thin;
 }
