@@ -3,353 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KANGGABUT | VANGUARD V100 PRO</title>
+    <title>KANGGABUT LABS | INSTITUTIONAL TRADING DESK</title>
 
-    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <!-- Modular Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="text-sm">
+<body class="bg-slate-950 text-slate-100 antialiased font-sans text-xs">
 
-<!-- ════════════════════════════════════════════════════════════════
-     PASSWORD GATE — Shown on every access / auto-refresh
-     Cannot be bypassed: main content is hidden until unlocked.
-     ════════════════════════════════════════════════════════════════ -->
-<div id="password-gate">
-    <div class="pw-box">
-        <div class="pw-logo">
-            <div class="pw-logo-inner">
-                <span style="color:#d4af37;font-size:1.3rem;font-weight:900;font-family:'JetBrains Mono',monospace;letter-spacing:-0.05em">RX-0</span>
+<div id="password-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950 px-4">
+    <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-lg p-6 shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 via-emerald-500 to-cyan-500 opacity-60"></div>
+        
+        <div class="text-center mb-6">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-slate-800 border border-slate-700 text-amber-400 font-mono text-lg font-bold tracking-tight mb-3">
+                KB-X
             </div>
+            <h1 class="text-lg font-bold text-white tracking-tight">KANGGABUT QUANTUM GATEWAY</h1>
+            <p class="text-slate-400 text-[11px] mt-1 font-mono uppercase tracking-wider">Enterprise Analytics Chassis v10.4</p>
         </div>
-        <div class="pw-title">KANGGABUT <span style="color:#d4af37">V100 PRO</span></div>
-        <div class="pw-subtitle">Tactical Psycho-Frame Quant System</div>
 
-        <label class="pw-label" for="pw-input">⚡ ACCESS CODE</label>
-        <input id="pw-input" type="password" class="pw-input" placeholder="Enter access code..." autocomplete="off" spellcheck="false">
-        <button id="pw-submit" class="pw-btn">Initialize Psycho-Frame Link</button>
-        <div id="pw-error" class="pw-error"></div>
-
-        <div style="margin-top:1.25rem;text-align:center;font-family:'JetBrains Mono',monospace;font-size:8px;color:#374151;letter-spacing:0.1em;text-transform:uppercase">
-            [ AUTHORIZED PERSONNEL ONLY — ANAHEIM ELECTRONICS ]
-        </div>
-    </div>
-</div>
-
-<!-- ════════════════════════════════════════════════════════════════
-     LANDING / BOOT SCREEN
-     ════════════════════════════════════════════════════════════════ -->
-<div id="landing-screen" class="fixed inset-0 z-[100] bg-[#030508] flex flex-col items-center justify-center p-6 transition-all duration-700">
-    <div class="text-center max-w-md w-full relative">
-        <div class="absolute -top-12 left-1/2 -translate-x-1/2 text-[10px] font-mono-tech text-[#d4af37] tracking-widest opacity-60 animate-pulse">
-            [ UNIVERSAL PROTOCOL SEED ]
-        </div>
-        <div class="w-20 h-20 bg-gradient-to-br from-[#d4af37] to-[#8a6d1c] p-[1px] rounded-bl-3xl rounded-tr-3xl mx-auto mb-6 shadow-lg shadow-yellow-500/10 flex items-center justify-center">
-            <div class="w-full h-full bg-[#030508] rounded-bl-3xl rounded-tr-3xl flex items-center justify-center">
-                <span class="text-[#d4af37] text-3xl font-extrabold font-mono-tech tracking-tighter">RX-0</span>
-            </div>
-        </div>
-        <h1 class="font-extrabold text-2xl text-white tracking-tight mb-1 uppercase">
-            KANGGABUT <span class="text-gundam-gold">V100 PRO</span>
-        </h1>
-        <p class="text-[10px] font-mono-tech text-gray-400 tracking-widest uppercase mb-8">
-            Tactical Psycho-Frame Quant System
-        </p>
-
-        <button id="launch-btn" onclick="triggerTerminalBootSequence()" class="w-full py-3.5 bg-gradient-to-r from-[#b49426] to-[#d4af37] hover:from-[#d4af37] hover:to-[#ffe894] text-black rounded-none font-black transition-all shadow-md tracking-widest text-[11px] uppercase border border-black">
-            Initialize Psycho-Frame Link (Masuk Terminal)
-        </button>
-
-        <div id="boot-progress-container" class="w-full mt-8 hidden border border-gray-800 p-4 bg-[#060a12]">
-            <div class="flex justify-between font-mono-tech text-[10px] text-gray-400 mb-2 uppercase tracking-wider">
-                <span id="boot-status-text" class="truncate max-w-[85%] text-psycho-cyan">Awakening Minovsky Drive...</span>
-                <span id="boot-percent-text" class="font-bold text-[#d4af37]">0%</span>
-            </div>
-            <div class="w-full h-[3px] bg-gray-900 overflow-hidden border border-gray-700">
-                <div id="boot-progress-bar" class="h-full bg-gradient-to-r from-[#d4af37] to-[#00f3ff] w-0 transition-all duration-100"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ════════════════════════════════════════════════════════════════
-     CONTROL PANEL SIDEBAR
-     ════════════════════════════════════════════════════════════════ -->
-<div id="plenger-sidebar" class="fixed top-0 left-0 bottom-0 w-80 bg-[#060b13] border-r-2 border-[#d4af37] z-50 transform -translate-x-full transition-transform duration-300 p-5 font-mono-tech flex flex-col justify-between shadow-2xl">
-    <div class="overflow-y-auto pr-1 h-full">
-        <div class="flex justify-between items-center mb-6 pb-3 border-b border-gray-800">
+        <div class="space-y-4">
             <div>
-                <h2 class="text-xs font-bold text-white tracking-wider uppercase flex items-center gap-1.5">
-                    <span class="inline-block w-2 h-2 bg-[#d4af37]"></span> MENU KONTROL & FILTER
-                </h2>
-                <p class="text-[9px] text-psycho-cyan uppercase font-semibold">Anaheim Electronics Registry</p>
+                <label for="pw-input" class="block text-slate-400 font-mono uppercase text-[10px] tracking-wider mb-1.5 font-medium">System Access Key</label>
+                <input type="password" id="pw-input" placeholder="Masukkan kunci dekripsi..." 
+                       class="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-white placeholder-slate-600 font-mono text-xs focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
             </div>
-            <button onclick="togglePlengerSidebar(false); playSound('click');" class="text-gray-400 hover:text-[#d4af37] text-sm p-1">✕</button>
-        </div>
-
-        <!-- Theme Controls -->
-        <div class="bg-gray-900/90 border border-gundam-gold/30 p-2.5 rounded-none mb-4 space-y-1.5">
-            <p class="text-[9px] text-gundam-gold font-bold uppercase tracking-widest">⚙️ OPTIMALISASI VISUAL CHASSIS</p>
-            <div class="grid grid-cols-2 gap-1 text-[10px]">
-                <button onclick="switchVisualTheme('dark'); playSound('click');" class="bg-gray-950 border border-gray-700 p-1 text-white hover:border-[#d4af37] text-center font-bold">DARK PROTOCOL</button>
-                <button onclick="switchVisualTheme('light'); playSound('click');" class="bg-white border border-gray-300 p-1 text-black hover:border-[#d4af37] text-center font-bold">LIGHT ARMOR</button>
-            </div>
-            <button onclick="toggleAntiEyeStrain(); playSound('beep');" class="w-full text-center bg-amber-950/40 border border-amber-600/50 text-amber-400 p-1 text-[10px] font-bold uppercase tracking-wider block">
-                👁️ TOGGLE ANTI-EYE STRAIN MODE
+            <div id="pw-error" class="text-rose-400 font-mono text-[11px] text-center min-h-[16px] font-medium"></div>
+            <button id="pw-submit" class="w-full bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-mono uppercase text-xs font-bold tracking-wider py-2.5 rounded transition-all shadow-lg shadow-amber-500/10">
+                Otentikasi & Dekripsi Terminal
             </button>
         </div>
-
-        <!-- Pilot Identity -->
-        <div class="bg-[#0c1424] border border-gray-800 p-3 rounded-none mb-4 flex items-center gap-3">
-            <div class="w-8 h-8 bg-gray-900 border border-[#d4af37] flex items-center justify-center text-gundam-gold font-bold text-xs">
-                NT-D
-            </div>
-            <div>
-                <p class="text-white font-bold text-xs tracking-wide">COMMANDER PILOT</p>
-                <p class="text-[9px] text-gray-400 font-mono-tech">PSYCHO-FRAME SYNC: 100%</p>
-            </div>
-        </div>
-
-        <!-- Portfolio Stats -->
-        <div class="bg-gray-900/40 border border-gray-800 p-3.5 rounded-none mb-5 space-y-2.5">
-            <p class="text-[10px] text-[#d4af37] font-bold uppercase tracking-wider">⚡ STATISTIK PORTFOLIO</p>
-            <div class="grid grid-cols-2 gap-2 text-xs">
-                <div class="bg-[#030508] p-2 border border-gray-800">
-                    <span class="text-gray-500 block text-[9px] uppercase font-bold">Total Koin</span>
-                    <span class="text-white font-bold font-mono-tech" id="stats-total-pos">Calculating...</span>
-                </div>
-                <div class="bg-[#030508] p-2 border border-gray-800">
-                    <span class="text-gray-500 block text-[9px] uppercase font-bold">Rata Winrate</span>
-                    <span class="text-emerald-400 font-bold font-mono-tech" id="stats-success-rate">81.45%</span>
-                </div>
-            </div>
-            <div class="bg-[#030508] p-2 border border-gray-800 text-center">
-                <span class="text-gray-500 block text-[9px] uppercase font-bold">Kumulatif ROI Portfolio</span>
-                <span class="text-gundam-gold text-base font-bold tracking-tight font-mono-tech" id="stats-cum-pnl">+4,102.82%</span>
-            </div>
-        </div>
-
-        <!-- Signal Filters -->
-        <div class="space-y-1.5 mb-5 border-b border-gray-800 pb-4">
-            <p class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider mb-1">🔥 REKOMENDASI FORMASI (HIGHEST CONFLUENCE)</p>
-            <button onclick="applySignalFilter('LONG'); playSound('beep');" id="f-rec-long" class="w-full text-left bg-emerald-950/30 border border-emerald-500/40 text-emerald-400 p-2.5 rounded-none text-xs font-bold hover:bg-emerald-950/50 transition flex items-center justify-between">
-                <span>🟢 Sinyal LONG Terkuat</span>
-                <span class="text-[9px] bg-emerald-900/80 px-1 border border-emerald-600">TOP BUY</span>
-            </button>
-            <button onclick="applySignalFilter('SHORT'); playSound('beep');" id="f-rec-short" class="w-full text-left bg-rose-950/30 border border-rose-500/40 text-rose-400 p-2.5 rounded-none text-xs font-bold hover:bg-rose-950/50 transition flex items-center justify-between">
-                <span>🔴 Sinyal SHORT Terkuat</span>
-                <span class="text-[9px] bg-rose-900/80 px-1 border border-rose-600">TOP SELL</span>
-            </button>
-        </div>
-
-        <!-- Cap Filters -->
-        <div class="space-y-1.5 mb-5">
-            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Filter Sektor Kapitalisasi</p>
-            <button onclick="applyCapFilterRange('all'); playSound('click');" id="f-all" class="w-full text-left bg-[#d4af37]/10 border border-[#d4af37]/40 text-[#d4af37] p-2.5 rounded-none text-xs font-medium transition flex items-center justify-between">
-                <span>🌐 Semua Sektor Aset</span>
-            </button>
-            <button onclick="applyCapFilterRange('big'); playSound('click');" id="f-big" class="w-full text-left bg-gray-900/40 border border-gray-800 text-gray-400 p-2.5 rounded-none text-xs font-medium hover:border-gray-700 transition flex items-center justify-between">
-                <span>🟢 Tier-1 Heavy Armor (Cap Besar)</span>
-            </button>
-            <button onclick="applyCapFilterRange('mid'); playSound('click');" id="f-mid" class="w-full text-left bg-gray-900/40 border border-gray-800 text-gray-400 p-2.5 rounded-none text-xs font-medium hover:border-gray-700 transition flex items-center justify-between">
-                <span>🟡 Mid-Tier Fleet (Cap Menengah)</span>
-            </button>
-            <button onclick="applyCapFilterRange('low'); playSound('click');" id="f-low" class="w-full text-left bg-gray-900/40 border border-gray-800 text-gray-400 p-2.5 rounded-none text-xs font-medium hover:border-gray-700 transition flex items-center justify-between">
-                <span>🔴 Low-Cap Prototype (Cap Kecil Alpha)</span>
-            </button>
-        </div>
-
-        <!-- Connection Status -->
-        <div class="border-t border-gray-800 pt-4 space-y-1.5">
-            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Status Koneksi Data Pipeline</p>
-            <div class="p-2.5 bg-gray-900/30 border border-gray-800 rounded-none text-[11px] space-y-1.5 font-mono-tech">
-                <div class="flex justify-between items-center"><span>Binance Spot/Fut:</span><span class="text-gundam-gold font-bold">CONNECTED</span></div>
-                <div class="flex justify-between items-center"><span>Hyperliquid L1 Perps:</span><span class="text-gundam-gold font-bold">ONLINE</span></div>
-                <div class="flex justify-between items-center"><span>Dexscreener Multichain:</span><span class="text-psycho-cyan font-bold" id="dex-stream-status">STREAMING</span></div>
-                <div class="flex justify-between items-center"><span>LunarCrush Social:</span><span class="text-emerald-400 font-bold" id="lc-connection-status">ACTIVE</span></div>
-            </div>
-        </div>
-    </div>
-    <div class="text-[9px] text-gray-600 border-t border-gray-800 pt-3 uppercase tracking-widest font-bold">
-        ANAHEIM ELECTRONICS COGNITION v1.02
     </div>
 </div>
 
-<!-- ════════════════════════════════════════════════════════════════
-     MAIN TERMINAL CONTENT (hidden until unlocked)
-     ════════════════════════════════════════════════════════════════ -->
-<div id="main-terminal-content" class="hidden opacity-0 transition-opacity duration-1000">
-
-    <!-- Sticky Search Bar -->
-    <div class="sticky top-0 z-40 sticky-search-panel shadow-xl">
-        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-2.5">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-3">
-
-                <div class="flex items-center justify-between w-full md:w-auto gap-3">
-                    <button onclick="togglePlengerSidebar(true); playSound('click');" class="bg-gray-900 hover:bg-[#0c1424] border border-gray-700 text-white px-3 py-1.5 rounded-none font-bold transition text-xs flex items-center gap-1.5">
-                        <span class="text-[#d4af37]">☰</span> <span>PANEL KONTROL</span>
-                    </button>
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-gundam-gold animate-pulse"></span>
-                        <span class="text-[#d4af37] font-mono-tech text-[10px] font-bold uppercase tracking-wider hidden sm:inline">PSYCHO-FRAME MONITOR ONLINE</span>
-                    </div>
-                </div>
-
-                <div class="w-full md:max-w-xl relative mx-auto md:mx-0">
-                    <div class="relative flex items-center bg-[#030508] border border-gray-700 focus-within:border-[#d4af37] rounded-none transition-all">
-                        <span class="pl-3 text-gundam-gold font-mono-tech text-[11px] font-bold">⚡ CARI KOIN:</span>
-                        <input type="text" id="search-bar"
-                            oninput="executeInstantGlobalSearch(this.value); playSound('crunch');"
-                            placeholder="Ketik nama koin (BTC, SOL, PIPPIN)..."
-                            class="w-full p-2 bg-transparent text-white font-mono-tech font-bold text-xs outline-none uppercase placeholder-gray-600 tracking-wide text-left">
-                        <button id="clear-search-btn" onclick="clearSearchInput(); playSound('click');" class="hidden pr-3 text-gray-500 hover:text-white font-bold">✕</button>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-4 text-xs font-bold text-gray-500 font-mono-tech">
-                    <button onclick="toggleMuteState()" id="sound-toggle-btn" class="text-[10px] border border-gray-700 px-2 py-0.5 text-gundam-gold bg-gray-900 hover:border-[#d4af37]">
-                        🔊 SUARA: AKTIF
-                    </button>
-                    <span id="clock-24h" class="text-white bg-gray-900 border border-gray-800 px-2 py-0.5 rounded-none">00:00:00</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Content Area -->
-    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 pt-4 pb-12">
-
-        <!-- Marquee Disclaimer -->
-        <div class="marquee-wrapper py-1 mb-4 bg-yellow-950/20 border-y border-[#d4af37]/30 font-mono-tech text-[11px] text-[#d4af37] font-medium">
-            <div class="marquee-content">
-                ⚠️ All information on this website is not financial advice. Please review independently. ⚠️ &nbsp;&nbsp;&nbsp;&nbsp; ⚠️ All information on this website is not financial advice. Please review independently. ⚠️
+<div id="main-interface" class="opacity-0 transition-opacity duration-700 min-h-screen flex flex-col">
+    
+    <header class="bg-slate-900/80 backdrop-blur border-b border-slate-900 px-4 py-3 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-40">
+        <div class="flex items-center space-x-3">
+            <span class="text-amber-400 font-mono font-black text-sm tracking-tighter border border-amber-500/30 px-1.5 py-0.5 rounded bg-amber-500/5">QUANTUM CORE</span>
+            <div>
+                <h2 class="text-sm font-extrabold text-white tracking-tight">KANGGABUT DASHBOARD <span class="text-slate-400 font-normal text-xs">| V100 PRO</span></h2>
+                <p class="text-[10px] text-slate-500 font-mono uppercase tracking-widest">Algorithmic Low-Cap Market Intelligence</p>
             </div>
         </div>
 
-        <header class="mb-5">
+        <div class="flex items-center space-x-6 text-[11px] font-mono">
+            <div class="flex items-center space-x-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-slate-400 uppercase tracking-wider">API Sync: <span id="sync-status" class="text-emerald-400 font-bold">ONLINE</span></span>
+            </div>
+            <div class="hidden sm:flex flex-col text-right">
+                <span class="text-slate-500 text-[10px] uppercase">Waktu Sistem</span>
+                <span id="clock-24h" class="text-cyan-400 font-bold tracking-wider text-xs">00:00:00</span>
+            </div>
+            <button onclick="toggleChassisTheme()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded border border-slate-700 transition-colors uppercase tracking-wider text-[10px]">
+                Ubah Tema UI
+            </button>
+        </div>
+    </header>
 
-            <!-- ═══ LUNARCRUSH SOCIAL INTELLIGENCE MODULE ═══ -->
-            <!-- Replaces the old "Sensor Berita & Katalis Fundamental Pasar" news module -->
-            <div class="lunarcrush-panel rounded-none mb-3">
-                <div class="lc-header">
-                    <div class="lc-header-title">
-                        <span style="color:#d4af37">🌙</span>
-                        LunarCrush Social Intelligence &nbsp;—&nbsp; Sentiment · Volume · Trending · Anomaly
-                        <span class="lc-live-badge">LIVE</span>
+    <main class="flex-1 p-4 grid grid-cols-1 xl:grid-cols-4 gap-4 max-w-[1920px] mx-full w-full">
+        
+        <section class="xl:col-span-1 space-y-4 flex flex-col">
+            
+            <div class="bg-slate-900 border border-slate-900 rounded-lg p-4 shadow-xl space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider font-mono flex items-center gap-2">
+                        <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                        Tools & Filter Penjelajah
+                    </h3>
+                    <span class="text-[10px] bg-slate-800 text-slate-400 font-mono px-1.5 py-0.5 rounded">Engine V2</span>
+                </div>
+
+                <div>
+                    <label class="block text-slate-400 font-mono uppercase text-[10px] tracking-wider mb-1">Cari Koin / Kontrak</label>
+                    <div class="relative">
+                        <input type="text" id="workspace-search-input" placeholder="Contoh: BTC, SOL, PEPE..." 
+                               class="w-full bg-slate-950 border border-slate-800 rounded px-2.5 py-1.5 font-mono text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition-colors">
                     </div>
-                    <div style="display:flex;align-items:center;gap:0.75rem">
-                        <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#4b5563;font-weight:700;text-transform:uppercase;letter-spacing:0.06em">
-                            Updated: <span id="lc-last-refresh" style="color:#6b7280">--:--:--</span>
-                        </span>
-                        <button onclick="renderLunarCrushPanel(); playSound('beep');"
-                            style="font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;color:#d4af37;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);padding:2px 8px;text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;">
-                            ↺ REFRESH
+                </div>
+
+                <div>
+                    <label class="block text-slate-400 font-mono uppercase text-[10px] tracking-wider mb-1">Segmentasi Kapitalisasi Pasar</label>
+                    <div class="grid grid-cols-2 gap-1.5 font-mono text-[11px]">
+                        <button onclick="setFilterRangePointer('all')" id="filter-btn-all" class="filter-badge active py-1 rounded text-center transition-all border border-slate-800">Semua Ukuran</button>
+                        <button onclick="setFilterRangePointer('blue-chip')" id="filter-btn-blue-chip" class="filter-badge py-1 rounded text-center transition-all border border-slate-800" title="Koin dengan likuiditas institusional tinggi">Blue-Chip</button>
+                        <button onclick="setFilterRangePointer('mid-cap')" id="filter-btn-mid-cap" class="filter-badge py-1 rounded text-center transition-all border border-slate-800" title="Kapitalisasi pasar menengah dengan volatilitas stabil">Mid-Cap</button>
+                        <button onclick="setFilterRangePointer('low-cap')" id="filter-btn-low-cap" class="filter-badge py-1 rounded text-center transition-all border border-slate-800" title="Kapitalisasi pasar rendah, potensi pump eksplosif">Low-Cap (&lt;50M)</button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-slate-400 font-mono uppercase text-[10px] tracking-wider mb-1">Penyaringan Sinyal Algoritmik</label>
+                    <select id="signal-recommendation-select" onchange="updateRecommendationSignalFilter(this.value)" 
+                            class="w-full bg-slate-950 border border-slate-800 rounded px-2 py-1.5 font-mono text-xs text-slate-300 focus:outline-none focus:border-amber-500 transition-colors">
+                        <option value="none">Tampilkan Semua Sinyal</option>
+                        <option value="STRONG BUY">STRONG BUY (Konfluensi Maksimal)</option>
+                        <option value="BUY">BUY (Momentum Positif)</option>
+                        <option value="SELL">SELL (Tekanan Distribusi)</option>
+                        <option value="STRONG SELL">STRONG SELL (Konstruksi Bearish)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-900 rounded-lg p-4 shadow-xl flex-1 flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider font-mono flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+                            Low-Cap Radar Mode
+                        </h3>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="low-cap-radar-toggle" onchange="toggleLowCapRadarMode(this.checked)" class="sr-only peer">
+                            <div class="w-8 h-4 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:after:bg-cyan-400 peer-checked:bg-cyan-950/50 border border-slate-700"></div>
+                        </label>
+                    </div>
+                    <p class="text-slate-400 text-[11px] leading-relaxed font-sans">
+                        Sistem memindai aset mikro dengan volatilitas tinggi, menyaring anomali volume sosial, lonjakan keterlibatan komunitas, dan peningkatan sentimen institusional secara real-time.
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-2 bg-slate-950 p-2.5 rounded border border-slate-900 font-mono text-[10px]">
+                        <div>
+                            <span class="text-slate-500 block uppercase">Spike Detector</span>
+                            <span id="radar-spike-status" class="text-amber-400 font-bold uppercase">Memonitor...</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 block uppercase">Social Dom</span>
+                            <span id="radar-dom-status" class="text-cyan-400 font-bold uppercase">Stabil (1.4%)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-[10px] text-slate-500 font-mono pt-2 border-t border-slate-800/60 leading-tight">
+                    *Gundam chassis architecture downgraded to 30%. Core psycho-frame operational under strict standard risk parameters.
+                </div>
+            </div>
+        </section>
+
+        <section class="xl:col-span-3 space-y-4 flex flex-col">
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                
+                <div class="bg-slate-900 border border-slate-900 rounded-lg p-4 shadow-xl relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute top-0 right-0 p-2 font-mono text-[9px] text-slate-600 uppercase">Aset ID: #KB-902</div>
+                    <div>
+                        <h4 class="text-slate-400 font-mono uppercase text-[10px] tracking-wider mb-1 flex items-center gap-1.5">
+                            <svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                            Performa Portofolio Simbiosis
+                        </h4>
+                        <div class="text-lg font-bold text-white font-mono tracking-tight" id="portfolio-gross-value">$84,152.00 <span class="text-xs font-normal text-slate-400">USDT</span></div>
+                    </div>
+                    <div class="flex items-center gap-4 mt-2 pt-2 border-t border-slate-800/50 font-mono">
+                        <div>
+                            <span class="text-slate-500 text-[9px] block uppercase">P&amp;L Berjalan</span>
+                            <span id="pnl-output-value" class="text-emerald-400 font-bold font-mono">+$1,450.25 USDT</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 text-[9px] block uppercase">ROI Akumulatif</span>
+                            <span id="roi-output-value" class="text-emerald-400 font-bold font-mono">+4.12%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-900 rounded-lg p-4 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-slate-400 font-mono uppercase text-[10px] tracking-wider mb-1 flex items-center gap-1.5">
+                            <svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            Kecerdasan Sosial Global (LunarCrush)
+                        </h4>
+                        <div class="text-lg font-bold text-cyan-400 font-mono tracking-tight" id="global-social-volume-display">4,819,402 <span class="text-xs font-normal text-slate-400">Interaksi</span></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-slate-800/50 font-mono text-[10px]">
+                        <div>
+                            <span class="text-slate-500 uppercase block">Rata-rata AltRank</span>
+                            <span id="global-altrank-avg" class="text-slate-300 font-bold">#241 Dari Semua Koin</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 uppercase block">Deteksi Spam Makro</span>
+                            <span id="global-spam-score" class="text-rose-400 font-bold">3.14% (Rendah)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-900 rounded-lg p-4 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-slate-400 font-mono uppercase text-[10px] tracking-wider mb-1 flex items-center gap-1.5">
+                            <svg class="w-3 h-3 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                            Status Filter &amp; Kolam Kerja
+                        </h4>
+                        <div class="text-lg font-bold text-white font-mono tracking-tight" id="workspace-pool-count">00 <span class="text-xs font-normal text-slate-400">Koin Lolos Saringan</span></div>
+                    </div>
+                    <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-800/50 font-mono text-[10px]">
+                        <div>
+                            <span class="text-slate-500 uppercase block">Penyaringan</span>
+                            <span id="current-range-badge" class="text-amber-400 font-bold uppercase">Semua Koin</span>
+                        </div>
+                        <button onclick="triggerForceManualRefreshPipelines()" class="text-cyan-400 hover:text-cyan-300 transition-colors uppercase font-bold text-[9px] border border-cyan-500/20 px-1.5 py-0.5 rounded bg-cyan-500/5">
+                            Paksa Refresh Data
                         </button>
                     </div>
                 </div>
-
-                <!-- Legend Row -->
-                <div style="display:flex;gap:1rem;padding:0.35rem 0.85rem;border-bottom:1px solid #1e293b;background:rgba(3,5,8,0.3)">
-                    <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#4b5563;font-weight:700;text-transform:uppercase;letter-spacing:0.06em">
-                        <span style="color:#4ade80">■</span> PUMP SIGNAL
-                    </span>
-                    <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#4b5563;font-weight:700;text-transform:uppercase;letter-spacing:0.06em">
-                        <span style="color:#f87171">■</span> DUMP SIGNAL
-                    </span>
-                    <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#4b5563;font-weight:700;text-transform:uppercase;letter-spacing:0.06em">
-                        Bar = Social Volume Intensity
-                    </span>
-                    <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#4b5563;font-weight:700;text-transform:uppercase;letter-spacing:0.06em">
-                        Galaxy 🌙 = LunarCrush Score (0-100)
-                    </span>
-                </div>
-
-                <!-- Coin Cards Grid -->
-                <div id="lunarcrush-panel-body" class="lc-grid"></div>
-            </div>
-            <!-- ═══ END LUNARCRUSH MODULE ═══ -->
-
-            <!-- Market Stats Row -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 mt-3">
-                <div class="bg-[#060b13] border border-gray-800 p-2.5 rounded-none">
-                    <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider font-mono-tech">Volatilitas Pasar</span>
-                    <div class="text-psycho-cyan font-bold mt-0.5 text-xs">High Output Fluid Velocity</div>
-                </div>
-                <div class="bg-[#060b13] border border-gray-800 p-2.5 rounded-none">
-                    <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider font-mono-tech">Dominasi Sistem</span>
-                    <div class="text-white font-bold font-mono-tech mt-0.5 text-xs">54.81% / 103.85</div>
-                </div>
-                <div class="bg-[#060b13] border border-gray-800 p-2.5 rounded-none">
-                    <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider font-mono-tech">Tekanan Reaktor</span>
-                    <div class="text-[#d4af37] font-bold font-mono-tech mt-0.5 text-xs">+0.0125% Median</div>
-                </div>
-                <div class="bg-[#060b13] border border-gray-800 p-2.5 rounded-none">
-                    <span class="text-gray-500 text-[10px] font-bold uppercase tracking-wider font-mono-tech">Status Kondisi Radar</span>
-                    <div class="text-emerald-400 font-bold mt-0.5 text-xs">58 (Kondisi Aman/Green)</div>
-                </div>
             </div>
 
-            <!-- Trading Monitor Header -->
-            <div class="flex justify-between items-center mt-6">
-                <h2 class="text-xs font-bold text-white uppercase tracking-widest font-mono-tech flex items-center gap-2">
-                    <span class="w-1 h-3 bg-gradient-to-b from-[#d4af37] to-yellow-600 block"></span>
-                    📊 DECK MONITOR TRADING REAL-TIME
-                </h2>
-                <div class="flex items-center gap-2.5 bg-[#060b13] px-3 py-1 rounded-none border border-gray-800 font-mono-tech">
-                    <button onclick="triggerSliderLeft(); playSound('click');" class="text-xs font-bold text-[#d4af37] hover:text-white transition">◀ Prev</button>
-                    <span id="slider-pagination-label" class="text-[11px] text-gray-400 font-bold tracking-wider">HALAMAN 1 / 1</span>
-                    <button onclick="triggerSliderRight(); playSound('click');" class="text-xs font-bold text-[#d4af37] hover:text-white transition">Next ▶</button>
+            <div class="bg-slate-900 border border-slate-900 rounded-lg shadow-xl overflow-hidden flex-1 flex flex-col">
+                <div class="bg-slate-950 border-b border-slate-800 px-4 py-3 flex items-center justify-between flex-wrap gap-2">
+                    <div class="flex items-center space-x-2">
+                        <span class="inline-block w-2 h-2 rounded-full bg-amber-500"></span>
+                        <h3 class="text-xs font-extrabold text-white uppercase font-mono tracking-wider">
+                            Papan Indikator &amp; Matriks Sinyal Koin Eksklusif
+                        </h3>
+                    </div>
+                    <div class="text-[11px] text-slate-400 font-mono">
+                        Klik baris aset untuk memuat <span class="text-cyan-400 font-bold underline">Kecerdasan Konfluensi Teknikal Lengkap</span>
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-x-auto">
+                    <table class="w-full text-left font-mono text-xs border-collapse min-w-[900px]">
+                        <thead>
+                            <tr class="bg-slate-950/60 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+                                <th class="py-3 px-4">Nama Koin / Kontrak</th>
+                                <th class="py-3 px-3">Harga Sekarang</th>
+                                <th class="py-3 px-3">Perubahan 24j</th>
+                                <th class="py-3 px-3" title="Skor gabungan keaktifan sosial dari LunarCrush">Galaxy Score</th>
+                                <th class="py-3 px-3" title="Peringkat gabungan performa harga vs sosial">AltRank</th>
+                                <th class="py-3 px-3" title="Persentase dominasi pembicaraan aset di internet">Social Dom</th>
+                                <th class="py-3 px-3" title="Prediksi probabilitas gerakan eksplosif jangka pendek">Pump Prob</th>
+                                <th class="py-3 px-3" title="Struktur Market Utama (Smart Money Concepts)">SMC Struktur</th>
+                                <th class="py-3 px-4 text-right">Rekomendasi Sinyal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="core-trading-matrix-body" class="divide-y divide-slate-800/40">
+                            <tr>
+                                <td colspan="9" class="py-8 text-center text-slate-500 font-mono uppercase tracking-wider">
+                                    <div class="inline-block w-4 h-4 border-2 border-amber-500 border-t-transparent rounded-full animate-spin mr-2 align-middle"></div>
+                                    Sedang menginisialisasi sistem... Menunggu otentikasi kunci dekripsi.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </header>
+        </section>
+    </main>
 
-        <!-- Trading Cards Grid -->
-        <main>
-            <div id="grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
-        </main>
+    <footer class="bg-slate-950 border-t border-slate-900 px-4 py-2 text-center text-slate-600 font-mono text-[10px] flex items-center justify-between">
+        <span>QUANTUM CORE DESK v10.4 PRO • MULTI-PIPELINE ARCHITECTURE INTEGRATED</span>
+        <span>© 2026 KANGGABUT LABS. HAK CIPTA DILINDUNGI UNDANG-UNDANG.</span>
+    </footer>
+</div>
+
+<div id="specs-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden px-4 py-6 overflow-y-auto">
+    <div class="bg-slate-900 border border-amber-500/40 rounded-lg w-full max-w-4xl shadow-2xl relative overflow-hidden flex flex-col my-auto max-h-[90vh]">
+        <div class="bg-slate-950 border-b border-slate-800 px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                <h4 class="text-xs font-bold text-white uppercase font-mono tracking-wider">
+                    Analisis Kedalaman Konfluensi Multi-Indikator Pro
+                </h4>
+            </div>
+            <button onclick="closeSpecsModalWindow()" class="text-slate-400 hover:text-white font-mono text-xs border border-slate-800 px-2 py-0.5 rounded bg-slate-950 transition-colors">
+                ✕ CLOSE WINDOW
+            </button>
+        </div>
+
+        <div id="modal-content-area" class="p-5 overflow-y-auto flex-1 space-y-5 text-slate-300">
+            </div>
     </div>
 </div>
 
-<!-- ════════════════════════════════════════════════════════════════
-     PAIR-CLICK SPECS MODAL (unchanged structure)
-     ════════════════════════════════════════════════════════════════ -->
-<div id="specs-modal" class="fixed inset-0 hidden z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-    <div class="bg-[#060b13] border-2 border-[#d4af37] w-full max-w-4xl rounded-none p-5 relative text-xs text-gray-300 font-medium overflow-y-auto max-h-[95vh] transition-all duration-300">
-        <button onclick="closeSpecsModalWindow(); playSound('click');" class="absolute top-4 right-4 text-gray-400 hover:text-white font-mono-tech text-[11px] tracking-wider border border-gray-800 px-2 py-0.5 rounded-none bg-gray-900">✕ TUTUP</button>
-        <div id="modal-content-area" class="mt-2"></div>
-    </div>
-</div>
-
-<!-- ════════════════════════════════════════════════════════════════
-     FOOTER
-     ════════════════════════════════════════════════════════════════ -->
-<footer class="site-footer">
-    // PSYCHO-FRAME SYSTEMS VERIFIED COMPLIANT WITH RX-0 MATRIX PRO © 2026 KANGGABUT LABS
-</footer>
-
-<!-- ════════════════════════════════════════════════════════════════
-     MODULAR SCRIPTS — order matters: api.js → app.js
-     ════════════════════════════════════════════════════════════════ -->
 <script src="api.js"></script>
 <script src="app.js"></script>
 
-<!-- Inline bootstrap: start API polling after boot (called by app.js once terminal loads) -->
 <script>
-    // Hook into the post-boot API polling cycle
-    // This is called once inside triggerTerminalBootSequence after the main content appears
-    const _origFetchAll = fetchAllExternalAPIPipelines;
-    // Override to also start the 15s polling interval after first fetch
+    // Hook into the core data orchestration engine after auth unlocks the desk
+    const originalPipelineOrchestrator = fetchAllExternalAPIPipelines;
     window._apiPollingStarted = false;
+    
     async function fetchAllExternalAPIPipelines() {
-        await _origFetchAll();
+        await originalPipelineOrchestrator();
         if (!window._apiPollingStarted) {
             window._apiPollingStarted = true;
-            setInterval(_origFetchAll, 15000);
+            // Establish a high-frequency polling telemetry pulse every 15 seconds
+            setInterval(async () => {
+                console.log("[TELEMETRY] Triggering 15-second automatic data sync pulse...");
+                await originalPipelineOrchestrator();
+            }, 15000);
         }
     }
 </script>
