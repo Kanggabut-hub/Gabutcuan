@@ -349,13 +349,17 @@ function renderScanners() {
 }
 
 function rowHTML(pair, type) {
-    const cls  = type === 'long' ? 'text-long' : 'text-short';
-    const sym  = escapeHTML(pair.symbol);
-    const px   = fmtPrice(pair.price);
+    const cls    = type === 'long' ? 'text-long' : 'text-short';
+    const sym    = escapeHTML(pair.symbol);
+    const px     = fmtPrice(pair.price);
+    const of     = pair.orderFlow;
+    const ofBadge = of
+        ? `<span class="of-badge ${of.bullish ? 'bull' : 'bear'}">${of.bullish ? '▲OF' : '▼OF'}</span>`
+        : '';
     return `
     <div class="data-row" onclick="openModal('${sym}')" role="row" tabindex="0"
          onkeypress="if(event.key==='Enter')openModal('${sym}')">
-        <span class="symbol">${sym}</span>
+        <span class="symbol">${sym}${ofBadge}</span>
         <span class="score-cell ${cls}">${pair.score ?? '—'}</span>
         <span class="price-cell">${px}</span>
         <div class="actions-cell">
@@ -683,6 +687,20 @@ window.openModal = function(symbol, isReanalyze = false, silent = false) {
                 `<li><span>${escapeHTML(k.toUpperCase())}</span><span>${escapeHTML(String(v))}</span></li>`
             ).join('');
         }
+
+        // Order Flow
+        const of = pair.orderFlow || {};
+        const ofBull = of.bullish;
+        const setOF = (id, val, bull) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = val ?? '—';
+            el.className = `of-value${bull === true ? ' bull' : bull === false ? ' bear' : ''}`;
+        };
+        setOF('of-delta',     of.delta,     of.ofScore > 0 ? true : of.ofScore < 0 ? false : null);
+        setOF('of-cvd',       of.cvd,       of.cvd === 'Rising' ? true : of.cvd === 'Falling' ? false : null);
+        setOF('of-imbalance', of.imbalance, parseFloat(of.imbalance) < 1.0 ? true : parseFloat(of.imbalance) > 1.0 ? false : null);
+        setOF('of-footprint', of.footprint, ofBull ?? null);
 
         if (!silent) {
             els.quantModal.classList.remove('hidden');

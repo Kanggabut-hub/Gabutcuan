@@ -940,3 +940,144 @@ body {
         transition-duration: 0.01ms !important;
     }
 }
+
+
+/* ============================================================
+   V5000 ADDITIONS — Order Flow, card backgrounds, mobile fixes
+   ============================================================ */
+
+/* --- Card SVG background illustration --------------------- */
+/* Subtle candlestick-wave pattern behind pair cards using
+   CSS-only radial + linear gradients — zero text interference */
+.panel {
+    background-image:
+        radial-gradient(ellipse 60% 30% at 80% 70%,
+            rgba(59,130,246,0.04) 0%, transparent 70%),
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 18px,
+            rgba(255,255,255,0.015) 18px,
+            rgba(255,255,255,0.015) 19px
+        );
+}
+[data-theme="light"] .panel {
+    background-image:
+        radial-gradient(ellipse 60% 30% at 80% 70%,
+            rgba(59,130,246,0.06) 0%, transparent 70%),
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 18px,
+            rgba(0,0,0,0.025) 18px,
+            rgba(0,0,0,0.025) 19px
+        );
+}
+
+/* Long panel tint */
+#panel-longs {
+    background-image:
+        radial-gradient(ellipse 70% 40% at 90% 80%,
+            rgba(16,185,129,0.06) 0%, transparent 65%),
+        repeating-linear-gradient(90deg,transparent,transparent 18px,
+            rgba(255,255,255,0.012) 18px,rgba(255,255,255,0.012) 19px);
+}
+/* Short panel tint */
+#panel-shorts {
+    background-image:
+        radial-gradient(ellipse 70% 40% at 90% 80%,
+            rgba(244,63,94,0.06) 0%, transparent 65%),
+        repeating-linear-gradient(90deg,transparent,transparent 18px,
+            rgba(255,255,255,0.012) 18px,rgba(255,255,255,0.012) 19px);
+}
+
+/* --- Order Flow section in modal -------------------------- */
+.of-section {
+    background: var(--bg-base);
+    padding: var(--sp-3);
+    border-radius: var(--r-md);
+    border: 1px solid var(--border);
+    margin-bottom: var(--sp-3);
+}
+.of-section h3 {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: var(--sp-2);
+    font-weight: 600;
+}
+.of-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-2);
+}
+.of-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.of-label {
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.of-value {
+    font-family: var(--font-mono);
+    font-size: clamp(0.78rem,2.5vw,0.85rem);
+    font-weight: 600;
+    color: var(--text-main);
+}
+.of-value.bull { color: var(--long); }
+.of-value.bear { color: var(--short); }
+
+/* OF micro-badge on scan rows */
+.of-badge {
+    display: inline-block;
+    font-size: 0.58rem;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    vertical-align: middle;
+    margin-left: 3px;
+}
+.of-badge.bull { background: var(--long-bg);  color: var(--long);  border: 1px solid rgba(16,185,129,0.3); }
+.of-badge.bear { background: var(--short-bg); color: var(--short); border: 1px solid rgba(244,63,94,0.3); }
+
+/* --- Sidebar toggle ALWAYS visible on mobile -------------- */
+/* The toggle button must remain accessible even when sidebar
+   is collapsed (off-screen). We pin it to the layout-wrapper
+   left edge on phones so it's always reachable. */
+@media (max-width: 768px) {
+    /* Keep toggle-sidebar visible as a floating pill
+       outside the collapsed sidebar */
+    #toggle-sidebar {
+        position: fixed;
+        left: var(--sp-2);
+        bottom: calc(var(--footer-h) + 44px);
+        z-index: 45;
+        background: var(--bg-surface);
+        border: 1px solid var(--border) !important;
+        border-radius: var(--r-md) !important;
+        width: 36px !important;
+        height: 36px !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        font-size: 1rem;
+        color: var(--text-sub);
+        transition: background var(--t-fast), color var(--t-fast);
+    }
+    #toggle-sidebar:active { background: var(--bg-hover); color: var(--text-main); }
+
+    /* Avatar slightly larger on mobile */
+    .avatar {
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        font-size: 0.9rem !important;
+    }
+}
