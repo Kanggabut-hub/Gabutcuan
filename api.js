@@ -1,192 +1,278 @@
-"use strict";
+/**
+ * api.js — Quant OS Data Pipeline v2
+ * - Binance primary → Bybit fallback → deterministic fallback
+ * - AbortSignal.timeout polyfill for older browsers
+ * - Retry logic with exponential backoff
+ * - Normalized data schema, NaN-safe everywhere
+ * - DexScreener search with query normalization
+ */
 
-const API_BINANCE         = "https://api.binance.com/api/v3/ticker/24hr";
-const API_HYPERLIQUID     = "https://api.hyperliquid.xyz/info";
-const API_DEXSCREENER_SEARCH = "https://api.dexscreener.com/latest/dex/search?q=";
-const API_LUNARCRUSH_BASE = "https://lunarcrush.com/api4/public";
-const LUNARCRUSH_API_KEY  = "";
+'use strict';
 
-let coreMemoryCache         = [];
-let filteredWorkspacePool   = [];
-let selectedFilterRange     = "all";
-let signalRecommendationFilter = "none";
-let activeQueryText         = "";
-let lockedTradingSetupsCache = {};
-let advancedIndicatorsCache  = {};
-let coreSliderPointer        = 0;
-const strictRowMaxItems      = 12; // optimized for 3x4 or 2x6 grid view
+const API = {
+    BINANCE_URL:     'https://api.binance.com/api/v3/ticker/24hr',
+    BYBIT_URL:       'https://api.bybit.com/v5/market/tickers?category=linear',
+    DEXSCREENER_URL: 'https://api.dexscreener.com/latest/dex/search?q=',
 
-let lunarCrushDataCache = [];
-let lunarCrushLastFetch = 0;
-const LUNARCRUSH_TTL    = 60000;
+    MIN_VOLUME: 10_000_000, // lowered to include more pairs incl. low-cap
 
-async function fetchBinancePipeline(cluster) {
-    try {
-        const res = await fetch(API_BINANCE);
-        if (!res.ok) return;
-        const data = await res.json();
-        data.filter(x => x.symbol.endsWith("USDT")).forEach(spot => {
-            const ticker = spot.symbol.replace("USDT", "");
-            const price  = parseFloat(spot.lastPrice) || 0;
-            const vol    = parseFloat(spot.quoteVolume) || 0;
-            cluster.push({
-                uid: ticker + "_BNC", ticker: ticker, source: "BINANCE CONTRACT",
-                price: price, change24h: parseFloat(spot.priceChangePercent) || 0,
-                volume24h: vol, high24h: parseFloat(spot.highPrice) || price,
-                low24h: parseFloat(spot.lowPrice) || price, calculatedWeight: vol * 10
-            });
-        });
-    } catch (err) { console.warn("[API] Binance error:", err.message); }
-}
+    // ── AbortSignal polyfill ───────────────────────────────
+    _timeout(ms) {
+        if (typeof AbortSignal.timeout === 'function') return AbortSignal.timeout(ms);
+        const ctrl = new AbortController();
+        setTimeout(() => ctrl.abort(), ms);
+        return ctrl.signal;
+    },
 
-async function fetchHyperliquidPipeline(cluster) {
-    try {
-        const res = await fetch(API_HYPERLIQUID, {
-            method: "POST", headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ type: "metaAndAssetCtxs" })
-        });
-        if (!res.ok) return;
-        const data = await res.json();
-        if (!data || !data[0] || !data[1]) return;
-        data[0].universe.forEach((asset, idx) => {
-            const ctx = data[1][idx];
-            if (!ctx) return;
-            const price  = parseFloat(ctx.oraclePx || ctx.midPx || 0);
-            const vol    = parseFloat(ctx.dayNfv || 0);
-            const prev   = parseFloat(ctx.prevPrice) || price;
-            const change = prev ? ((price - prev) / prev) * 100 : 0;
-            if (!cluster.some(item => item.ticker === asset.name)) {
-                cluster.push({
-                    uid: asset.name + "_HLP", ticker: asset.name, source: "HYPERLIQUID PERP",
-                    price: price, change24h: isNaN(change) ? 0 : change,
-                    volume24h: vol, high24h: price * 1.03, low24h: price * 0.97,
-                    calculatedWeight: vol * 8
+    // ── Generic fetch with retry ──────────────────────────
+    async _fetch(url, ms = 7000, retries = 1) {
+        for (let attempt = 0; attempt <= retries; attempt++) {
+            try {
+                const res = await fetch(url, {
+                    signal: this._timeout(ms),
+                    headers: { Accept: 'application/json' },
                 });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return await res.json();
+            } catch (err) {
+                if (attempt === retries) throw err;
+                // brief back-off before retry
+                await new Promise(r => setTimeout(r, 600 * (attempt + 1)));
             }
-        });
-    } catch (err) { console.warn("[API] Hyperliquid error:", err.message); }
-}
-
-async function fetchAllExternalAPIPipelines() {
-    try {
-        const cluster = [];
-        await Promise.allSettled([fetchBinancePipeline(cluster), fetchHyperliquidPipeline(cluster)]);
-        coreMemoryCache.forEach(old => {
-            if (old.source.includes("DEXSCREENER") && !cluster.some(t => t.ticker === old.ticker)) cluster.push(old);
-        });
-        if (cluster.length > 0) {
-            coreMemoryCache = cluster;
-            const el = document.getElementById("stats-total-pos");
-            if (el) el.innerText = `${coreMemoryCache.length} Target`;
         }
-        compileActiveFilterSorting();
-    } catch (err) { console.error("[API] Critical error:", err); }
-}
+    },
 
-async function searchOnChainTokensViaDexScreener(query) {
-    if (!query || query.length < 2) return;
-    try {
-        const res = await fetch(`${API_DEXSCREENER_SEARCH}${encodeURIComponent(query)}`);
-        if (!res.ok) return;
-        const data = await res.json();
-        if (data && data.pairs) {
-            const cluster = [...coreMemoryCache];
-            data.pairs.slice(0, 5).forEach(pair => {
-                const baseSymbol = pair.baseToken.symbol.toUpperCase();
-                const uid = `${baseSymbol}_${pair.chainId.toUpperCase()}_DEX`;
-                const idx = cluster.findIndex(x => x.uid === uid || (x.ticker === baseSymbol && x.source.includes("DEXSCREENER")));
-                const node = {
-                    uid, ticker: baseSymbol, source: `DEXSCREENER (${pair.chainId.toUpperCase()})`,
-                    price: parseFloat(pair.priceUsd) || 0, change24h: parseFloat(pair.priceChange?.h24) || 0,
-                    volume24h: parseFloat(pair.volume?.h24) || 0, high24h: (parseFloat(pair.priceUsd) || 0) * 1.05,
-                    low24h: (parseFloat(pair.priceUsd) || 0) * 0.95, calculatedWeight: parseFloat(pair.liquidity?.usd) || 5000
-                };
-                if (idx > -1) cluster[idx] = node; else cluster.push(node);
-            });
-            coreMemoryCache = cluster;
+    // ── Primary: Binance ──────────────────────────────────
+    async _fetchBinance() {
+        const data = await this._fetch(this.BINANCE_URL, 7000, 1);
+        if (!Array.isArray(data)) throw new Error('Binance: unexpected payload');
+
+        const pairs = data
+            .filter(d =>
+                d && typeof d.symbol === 'string' &&
+                d.symbol.endsWith('USDT') &&
+                this._n(d.quoteVolume) >= this.MIN_VOLUME
+            )
+            .map(d => this._normalizeBinance(d));
+
+        if (pairs.length === 0) throw new Error('Binance: no pairs passed filter');
+        return pairs;
+    },
+
+    _normalizeBinance(d) {
+        return {
+            symbol:    d.symbol,
+            price:     this._n(d.lastPrice),
+            change24h: this._n(d.priceChangePercent),
+            volume:    this._n(d.quoteVolume),
+            source:    'binance',
+        };
+    },
+
+    // ── Secondary: Bybit ─────────────────────────────────
+    async _fetchBybit() {
+        const data = await this._fetch(this.BYBIT_URL, 7000, 1);
+        const list = data?.result?.list;
+        if (!Array.isArray(list)) throw new Error('Bybit: unexpected payload');
+
+        const pairs = list
+            .filter(d =>
+                d && typeof d.symbol === 'string' &&
+                d.symbol.endsWith('USDT') &&
+                this._n(d.turnover24h) >= this.MIN_VOLUME
+            )
+            .map(d => ({
+                symbol:    d.symbol,
+                price:     this._n(d.lastPrice),
+                change24h: this._n(d.price24hPcnt) * 100,
+                volume:    this._n(d.turnover24h),
+                source:    'bybit',
+            }));
+
+        if (pairs.length === 0) throw new Error('Bybit: no pairs passed filter');
+        return pairs;
+    },
+
+    // ── Merge deduplicated pairs (Binance takes priority) ─
+    _mergePairs(primary, secondary) {
+        const seen = new Set(primary.map(p => p.symbol));
+        const extra = secondary.filter(p => !seen.has(p.symbol));
+        return [...primary, ...extra];
+    },
+
+    // ── Public: fetch market data ─────────────────────────
+    async fetchMarketData() {
+        // Try Binance
+        try {
+            const binance = await this._fetchBinance();
+            // Also try Bybit in background to enrich coverage
+            try {
+                const bybit = await this._fetchBybit();
+                return this._mergePairs(binance, bybit);
+            } catch {
+                return binance; // Bybit failed but Binance ok
+            }
+        } catch (binanceErr) {
+            console.warn('[API] Binance failed — trying Bybit.', binanceErr.message);
+            try {
+                return await this._fetchBybit();
+            } catch (bybitErr) {
+                console.warn('[API] Bybit failed — using fallback.', bybitErr.message);
+                return this.getFallbackData();
+            }
         }
-        const el = document.getElementById("stats-total-pos");
-        if (el) el.innerText = `${coreMemoryCache.length} Target`;
-        compileActiveFilterSorting();
-    } catch (e) { console.error("[API] DexScreener error:", e); }
-}
+    },
 
-async function fetchLunarCrushData() {
-    const now = Date.now();
-    if (lunarCrushDataCache.length > 0 && (now - lunarCrushLastFetch) < LUNARCRUSH_TTL) return lunarCrushDataCache;
-    try {
-        const headers = {};
-        if (LUNARCRUSH_API_KEY) headers["Authorization"] = `Bearer ${LUNARCRUSH_API_KEY}`;
-        const res = await fetch(`${API_LUNARCRUSH_BASE}/coins/list?sort=social_volume_24h&limit=24`, { headers });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const raw = await res.json();
-        const coins = (raw.data || []).map((c, i) => normalizeLunarCoin(c, i));
-        lunarCrushDataCache = coins;
-        lunarCrushLastFetch = now;
-        return coins;
-    } catch (err) {
-        return generateSyntheticLunarData();
-    }
-}
+    // ── DEX search ────────────────────────────────────────
+    async searchPairs(query) {
+        if (!query || typeof query !== 'string') return [];
+        const q = query.trim().toUpperCase();
+        if (!q) return [];
+        try {
+            const data = await this._fetch(
+                `${this.DEXSCREENER_URL}${encodeURIComponent(q)}`,
+                5000, 0
+            );
+            if (!data || !Array.isArray(data.pairs)) return [];
 
-function normalizeLunarCoin(raw, rank) {
-    const sentiment = parseFloat(raw.sentiment) || 50, socialVol = parseInt(raw.social_volume_24h) || 0;
-    const galaxyScore = parseFloat(raw.galaxy_score) || 0, priceChange = parseFloat(raw.percent_change_24h) || 0;
-    const socialChange = parseFloat(raw.social_volume_24h_rank_change) || 0;
-    return {
-        ticker: (raw.symbol || "???").toUpperCase(), rank: rank + 1, sentiment: Math.round(sentiment),
-        socialVolume: socialVol, galaxyScore: Math.round(galaxyScore), priceChange,
-        anomaly: detectLunarAnomaly(socialVol, priceChange, socialChange)
-    };
-}
+            return data.pairs.slice(0, 8).map(p => ({
+                symbol:    `${p?.baseToken?.symbol ?? '?'}/${p?.quoteToken?.symbol ?? '?'}`,
+                price:     this._n(p?.priceUsd),
+                change24h: this._n(p?.priceChange?.h24),
+                volume:    this._n(p?.volume?.h24),
+                source:    'dex',
+            })).filter(p => p.price > 0 || p.volume > 0);
+        } catch (e) {
+            console.warn('[API] searchPairs failed:', e.message);
+            return [];
+        }
+    },
 
-function detectLunarAnomaly(socialVol, priceChange, socialChange) {
-    if (socialChange > 50 && priceChange > 5) return "PUMP";
-    if (socialChange > 50 && priceChange < -5) return "DUMP";
-    if (socialChange > 80 && Math.abs(priceChange) < 2) return "PUMP";
-    return "NEUTRAL";
-}
+    // ── Market Regime (deterministic, day-stable) ─────────
+    getMarketRegime() {
+        const t = Date.now() / 86_400_000;
+        const s1 = Math.sin(t), s2 = Math.sin(t / 2), s3 = Math.sin(t / 3);
+        const fearGreed    = Math.round(50 + s1 * 30);
+        const btcDominance = (52.5 + s2 * 2).toFixed(1);
+        const dxy          = (103.5 - s3 * 1.5).toFixed(2);
+        const moonPhase    = s1 > 0.5 ? 'Full Moon' : s1 < -0.5 ? 'New Moon' : 'Waxing';
+        const regimeBias   = parseFloat(s1.toFixed(3));
 
-function generateSyntheticLunarData() {
-    const seeds = [
-        { ticker: "BTC", sentiment: 72, socialVol: 148200, galaxyScore: 87, priceChange: 2.4, socialChange: 12 },
-        { ticker: "ETH", sentiment: 68, socialVol: 92400, galaxyScore: 82, priceChange: 1.8, socialChange: 8 },
-        { ticker: "SOL", sentiment: 81, socialVol: 64100, galaxyScore: 78, priceChange: 6.2, socialChange: 74 },
-        { ticker: "SUI", sentiment: 76, socialVol: 41300, galaxyScore: 71, priceChange: 8.1, socialChange: 88 },
-        { ticker: "PEPE", sentiment: 83, socialVol: 38700, galaxyScore: 62, priceChange: -3.4, socialChange: 61 },
-        { ticker: "DOGE", sentiment: 65, socialVol: 35100, galaxyScore: 70, priceChange: -6.8, socialChange: 55 }
-    ];
-    return seeds.map((s, i) => ({
-        ticker: s.ticker, rank: i + 1, sentiment: s.sentiment, socialVolume: s.socialVol,
-        galaxyScore: s.galaxyScore, priceChange: s.priceChange, anomaly: detectLunarAnomaly(s.socialVol, s.priceChange, s.socialChange)
-    }));
-}
+        return {
+            fearGreed:    this._clamp(fearGreed, 0, 100),
+            btcDominance,
+            dxy,
+            moonPhase,
+            regimeBias,   // always a valid float
+        };
+    },
 
-function getOrComputeAdvancedIndicators(uid, price, change24h) {
-    const now = Date.now();
-    if (advancedIndicatorsCache[uid] && (now - advancedIndicatorsCache[uid].timestamp < 15000)) return advancedIndicatorsCache[uid].data;
-    
-    let baseSeed = uid.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-    let rsiVal = Math.max(12, Math.min(88, Math.floor(50 + (change24h * 1.8))));
-    const macdHist = ((change24h * 0.15) - (change24h * 0.11)).toFixed(4);
-    
-    const factors = [];
-    if (change24h >= 0) factors.push("Bullish Market Structure Trend Alignment");
-    else factors.push("Bearish Market Structure Trend Alignment");
-    if (rsiVal > 45 && rsiVal < 65) factors.push("RSI in Neutral Optimal Zone");
-    if (Math.abs(macdHist) > 0) factors.push("MACD Histogram Momentum Validation");
-    if (baseSeed % 2 === 0) factors.push("Volume Delta: Aggressive Accumulation");
-    
-    const computedConfluence = Math.min(95, Math.max(50, 50 + (factors.length * 6)));
-    
-    const data = {
-        rsi: { value: rsiVal, slope: change24h >= 0 ? "UPWARD" : "DOWNWARD" },
-        macd: { histogram: macdHist },
-        smc: { structural: change24h >= 0 ? "BOS (BULLISH)" : "CHoCH (BEARISH)" },
-        sdZone: { dMin: price * 0.94, dMax: price * 0.965, sMin: price * 1.035, sMax: price * 1.06 },
-        volTech: { delta: (baseSeed % 2 === 0 ? "+" : "-") + (Math.abs(change24h) * 12.5 + 5).toFixed(1) + "%", vwap: price * (change24h >= 0 ? 0.992 : 1.008) },
-        factorMatrix: factors, totalProConfluence: computedConfluence
-    };
-    advancedIndicatorsCache[uid] = { timestamp: now, data: data };
-    return data;
-}
+    // ── Indicator Simulation ─────────────────────────────
+    simulateIndicators(symbol, price, baseChange, isReanalyze = false) {
+        if (!symbol || typeof symbol !== 'string') return this._emptyIndicators();
+
+        const safePrice  = this._n(price);
+        const safeChange = this._n(baseChange);
+
+        const regime = this.getMarketRegime();
+
+        // Deterministic integer hash from symbol
+        let hash = 0;
+        for (let i = 0; i < symbol.length; i++) {
+            hash = (symbol.charCodeAt(i) + ((hash << 5) - hash)) | 0;
+        }
+        if (isReanalyze) hash = (hash + Math.floor(Date.now() / 60_000)) | 0;
+
+        // Seeded pseudo-random [0,1)
+        const rand = (seed) => {
+            const x = Math.sin(hash + seed) * 10_000;
+            return x - Math.floor(x);
+        };
+
+        const baseBias = safeChange >= 0 ? 1 : -1;
+
+        const mtf = {
+            M15: rand(1) > 0.50 ? 'Bullish' : 'Bearish',
+            H1:  rand(2) > 0.40 ? 'Bullish' : 'Bearish',
+            H4:  baseBias > 0   ? 'Bullish' : 'Bearish',
+            D1:  baseBias > 0   ? 'Bullish' : 'Bearish',
+        };
+
+        const indicators = {
+            liquiditySweep: rand(3) > 0.70 ? 'Detected' : 'None',
+            smc:            rand(4) > 0.50 ? 'CHoCH'    : 'BOS',
+            delta:          `${(rand(5) * 100).toFixed(1)}M`,
+            ema:            baseBias > 0   ? 'Price > EMA200' : 'Price < EMA200',
+            fib:            rand(6) > 0.50 ? '0.618 Pocket'   : '0.382 Retrace',
+        };
+
+        // Score — always valid float [0,10]
+        let score = 5 + regime.regimeBias * 1.5;
+        if (mtf.H1 === mtf.H4) score += mtf.H4 === 'Bullish' ?  1.5 : -1.5;
+        if (mtf.H4 === mtf.D1) score += mtf.D1 === 'Bullish' ?  1.0 : -1.0;
+        if (indicators.liquiditySweep === 'Detected') score += baseBias > 0 ? 1 : -1;
+        score += safeChange / 5;
+        score += rand(7) * 1.5 - 0.75;
+        score  = this._clamp(score, 0, 10);
+        if (!isFinite(score)) score = 5; // final NaN guard
+
+        const direction = score >= 5 ? 'LONG' : 'SHORT';
+
+        let biasHint;
+        if      (regime.fearGreed > 75) biasHint = 'Caution: Extreme Greed regime. Expect pullbacks.';
+        else if (regime.fearGreed < 25) biasHint = 'Accumulation phase. Macro favors Long setups.';
+        else if (score > 8)             biasHint = 'Strong momentum alignment across MTF.';
+        else if (score < 2)             biasHint = 'Heavy distribution detected. Favor Shorts.';
+        else                            biasHint = 'Mixed signals. Wait for structural confirmation.';
+
+        const dec = safePrice > 10 ? 2 : 5;
+        const fmt = (n) => isFinite(n) ? n.toFixed(dec) : '0';
+
+        return {
+            score:     score.toFixed(1),
+            direction,
+            biasHint,
+            mtf,
+            indicators,
+            tradeStructure: {
+                entry:      fmt(safePrice),
+                sl:         fmt(direction === 'LONG' ? safePrice * 0.98 : safePrice * 1.02),
+                tp:         fmt(direction === 'LONG' ? safePrice * 1.05 : safePrice * 0.95),
+                powerRatio: Math.floor(rand(8) * 30) + 70,
+            },
+        };
+    },
+
+    // ── Safe empty indicators ─────────────────────────────
+    _emptyIndicators() {
+        return {
+            score: '5.0', direction: 'LONG', biasHint: 'Insufficient data.',
+            mtf: { M15: 'Neutral', H1: 'Neutral', H4: 'Neutral', D1: 'Neutral' },
+            indicators: { liquiditySweep: 'None', smc: 'BOS', delta: '0M', ema: '—', fib: '—' },
+            tradeStructure: { entry: '0', sl: '0', tp: '0', powerRatio: 50 },
+        };
+    },
+
+    // ── Fallback dataset ──────────────────────────────────
+    getFallbackData() {
+        return [
+            { symbol: 'BTCUSDT',  price: 65420.50, change24h:  2.4, volume: 45_000_000_000, source: 'fallback' },
+            { symbol: 'ETHUSDT',  price: 3450.10,  change24h: -1.2, volume: 15_000_000_000, source: 'fallback' },
+            { symbol: 'SOLUSDT',  price: 145.20,   change24h:  5.6, volume:  4_000_000_000, source: 'fallback' },
+            { symbol: 'XRPUSDT',  price: 0.58,     change24h: -0.5, volume:  1_200_000_000, source: 'fallback' },
+            { symbol: 'BNBUSDT',  price: 412.30,   change24h:  1.1, volume:    900_000_000, source: 'fallback' },
+            { symbol: 'DOGEUSDT', price: 0.1240,   change24h:  3.2, volume:    750_000_000, source: 'fallback' },
+        ];
+    },
+
+    // ── Numeric safe parse ────────────────────────────────
+    _n(v) {
+        const n = parseFloat(v);
+        return isFinite(n) ? n : 0;
+    },
+
+    // ── Clamp ─────────────────────────────────────────────
+    _clamp(v, min, max) {
+        return Math.max(min, Math.min(max, v));
+    },
+};

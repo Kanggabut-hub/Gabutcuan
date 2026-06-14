@@ -1,207 +1,279 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-mode="scan">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KANGGABUT | VANGUARD V100 PRO</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0e14" id="meta-theme-color">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Kegabutan OS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="text-sm selection:bg-amber-500/20 antialiased overflow-x-hidden">
+<body>
 
-<div id="password-gate" class="fixed inset-0 z-[9999] bg-[#030508] flex items-center justify-center p-4">
-    <div class="pw-box w-full max-w-sm bg-[#080d16] border border-gray-800 rounded-2xl shadow-2xl p-8 relative">
-        <div class="w-14 h-14 bg-gradient-to-br from-[#d4af37] to-[#8a6d1c] p-[1px] rounded-xl mx-auto mb-6 flex items-center justify-center">
-            <div class="w-full h-full bg-[#030508] rounded-[11px] flex items-center justify-center">
-                <span class="text-[#d4af37] text-lg font-bold font-mono-tech tracking-tight">V100</span>
-            </div>
-        </div>
-        <div class="text-center font-bold text-xl text-white tracking-tight mb-1">KANGGABUT <span class="text-[#d4af37]">V100 PRO</span></div>
-        <div class="text-center font-mono-tech text-[9px] text-gray-500 uppercase tracking-widest mb-8">Quantitative Intelligence Matrix</div>
-
-        <label class="block font-mono-tech text-[9px] text-[#d4af37] font-bold tracking-widest uppercase mb-2" for="pw-input">⚡ Secure Access Token</label>
-        <input id="pw-input" type="password" class="w-full bg-[#030508] border border-gray-800 rounded-lg px-4 py-3 text-white font-mono-tech text-sm outline-none focus:border-[#d4af37] transition mb-4" placeholder="Enter password..." autocomplete="off">
-        <button id="pw-submit" class="w-full bg-gradient-to-r from-[#b49426] to-[#d4af37] text-black font-bold text-xs py-3 rounded-lg hover:opacity-90 transition uppercase tracking-wide">Authenticate Session</button>
-        <div id="pw-error" class="text-rose-500 text-[10px] text-center mt-3 font-mono-tech h-4"></div>
-    </div>
-</div>
-
-<div id="landing-screen" class="fixed inset-0 z-[100] bg-[#030508] flex flex-col items-center justify-center p-6 transition-opacity duration-700">
-    <div class="text-center max-w-sm w-full">
-        <div class="w-16 h-16 bg-gradient-to-br from-[#d4af37] to-[#8a6d1c] p-[1px] rounded-xl mx-auto mb-6 shadow-xl shadow-yellow-500/5 flex items-center justify-center">
-            <div class="w-full h-full bg-[#030508] rounded-[11px] flex items-center justify-center">
-                <span class="text-[#d4af37] text-xl font-bold font-mono-tech tracking-tighter">V100</span>
-            </div>
-        </div>
-        <h1 class="font-extrabold text-2xl text-white tracking-tight mb-1 uppercase">KANGGABUT <span class="text-[#d4af37]">V100 PRO</span></h1>
-        <p class="text-[10px] font-mono-tech text-gray-500 tracking-widest uppercase mb-8">Advanced Quantitative Intelligence Platform</p>
-
-        <button id="launch-btn" onclick="triggerTerminalBootSequence()" class="w-full py-3.5 bg-gradient-to-r from-[#b49426] to-[#d4af37] hover:brightness-110 text-black font-bold rounded-lg transition-all shadow-md tracking-wider text-xs uppercase">
-            Launch Quant Network Terminal
-        </button>
-
-        <div id="boot-progress-container" class="w-full mt-8 hidden border border-gray-800/80 p-4 bg-[#080d16] rounded-xl text-left">
-            <div class="flex justify-between font-mono-tech text-[10px] text-gray-400 mb-2 uppercase tracking-wider">
-                <span id="boot-status-text" class="truncate text-[#00f3ff]">Initializing environment...</span>
-                <span id="boot-percent-text" class="font-bold text-[#d4af37]">0%</span>
-            </div>
-            <div class="w-full h-1 bg-gray-900 overflow-hidden rounded-full">
-                <div id="boot-progress-bar" class="h-full bg-gradient-to-r from-[#d4af37] to-[#00f3ff] w-0 transition-all duration-100"></div>
-            </div>
+    <!-- LOGIN GATE -->
+    <div id="login-gate" class="active">
+        <div class="login-box">
+            <div class="login-logo">G<span>OS</span></div>
+            <h2>Gabut OS Access</h2>
+            <p>Enter passphrase to initialize terminal.</p>
+            <input type="password" id="login-password" placeholder="Passphrase" autofocus autocomplete="current-password">
+            <button id="login-btn" type="button">Initialize System</button>
+            <div id="login-error" class="hidden">⚠ Astagrifurllah.</div>
         </div>
     </div>
-</div>
 
-<div id="plenger-sidebar" class="fixed top-0 left-0 bottom-0 w-72 sm:w-80 bg-[#060b13] border-r border-gray-800 z-50 transform -translate-x-full transition-transform duration-300 p-5 font-mono-tech flex flex-col shadow-2xl">
-    <div class="overflow-y-auto pr-2 flex-grow scrollbar-hide">
-        <div class="flex justify-between items-center mb-6 pb-3 border-b border-gray-800">
-            <div>
-                <h2 class="text-xs font-bold text-white tracking-wider uppercase flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 bg-[#d4af37] rounded-full"></span> CONTROL REGISTRY
-                </h2>
-                <p class="text-[9px] text-[#00f3ff] uppercase font-semibold mt-0.5">Engine Workspace Filters</p>
+    <!-- MAIN APP -->
+    <div id="app-container" class="hidden">
+
+        <!-- HEADBAR -->
+        <header id="headbar">
+            <div class="logo">Gabut<span>OS</span></div>
+
+            <!-- WORKSPACE MODE SWITCHER -->
+            <nav class="mode-switcher" role="tablist" aria-label="Workspace mode">
+                <button class="mode-btn active" data-mode="scan" role="tab" aria-selected="true" title="Scan Mode">Scan</button>
+                <button class="mode-btn" data-mode="journal" role="tab" aria-selected="false" title="Journal Mode">Journal</button>
+                <button class="mode-btn" data-mode="research" role="tab" aria-selected="false" title="Research Mode">Research</button>
+            </nav>
+
+            <!-- SEARCH -->
+            <div class="search-container">
+                <input type="text" id="global-search" placeholder="Search pairs…" autocomplete="off"
+                       autocorrect="off" autocapitalize="off" spellcheck="false"
+                       aria-label="Search trading pairs" aria-controls="search-results" aria-autocomplete="list">
+                <div id="search-results" class="hidden" role="listbox" aria-label="Search results"></div>
             </div>
-            <button onclick="togglePlengerSidebar(false); playSound('click');" class="text-gray-500 hover:text-white transition p-1 text-lg">✕</button>
-        </div>
 
-        <div class="bg-gray-900/40 border border-gray-800 p-3 rounded-xl mb-5">
-            <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest mb-2">VISUAL MATRIX</p>
-            <div class="grid grid-cols-2 gap-2 text-[10px] mb-2">
-                <button onclick="switchVisualTheme('dark'); playSound('click');" class="bg-gray-950 border border-gray-800 p-1.5 text-white hover:border-[#d4af37] rounded-md transition">DARK</button>
-                <button onclick="switchVisualTheme('light'); playSound('click');" class="bg-white border border-gray-300 p-1.5 text-black hover:border-[#d4af37] rounded-md transition">LIGHT</button>
+            <!-- QUICK FILTERS -->
+            <div class="quick-filters" aria-label="Quick filters">
+                <button class="filter-btn" data-filter="long" type="button">Long</button>
+                <button class="filter-btn" data-filter="short" type="button">Short</button>
+                <button class="filter-btn active" data-filter="all" type="button">All</button>
             </div>
-            <button onclick="toggleAntiEyeStrain(); playSound('beep');" class="w-full bg-amber-950/20 border border-amber-900/50 text-amber-500 hover:bg-amber-950/40 p-1.5 text-[10px] rounded-md transition uppercase font-bold tracking-wider">👁️ Anti-Eye Strain</button>
+
+            <!-- MOBILE MODE NAV (phones only) -->
+            <div class="mobile-mode-nav" aria-label="Mobile mode navigation">
+                <button class="mob-mode-btn active" data-mode="scan" type="button">Scan</button>
+                <button class="mob-mode-btn" data-mode="journal" type="button">Journal</button>
+                <button class="mob-mode-btn" data-mode="research" type="button">Research</button>
+            </div>
+
+            <!-- THEME TOGGLE -->
+            <button id="theme-toggle" class="icon-btn" type="button" title="Toggle theme" aria-label="Toggle theme">◑</button>
+        </header>
+
+        <!-- STATUS BAR -->
+        <div id="status-bar" role="status" aria-live="polite">
+            <span class="status-item">
+                <span class="pulse-dot" aria-hidden="true"></span>
+                <span id="status-data">Data: OK</span>
+            </span>
+            <span class="status-sep" aria-hidden="true">|</span>
+            <span class="status-item" id="status-refresh">Refresh: —</span>
+            <span class="status-sep" aria-hidden="true">|</span>
+            <span class="status-item">Mode: <span id="status-mode">Scan</span></span>
+            <span class="status-sep" aria-hidden="true">|</span>
+            <span class="status-item" id="status-pairs">Pairs: —</span>
         </div>
 
-        <div class="space-y-1.5 mb-6">
-            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest px-1 mb-1">CAPITALIZATION BRACKETS</p>
-            <button id="f-all" onclick="applyCapFilterRange('all'); playSound('click');" class="w-full text-left bg-gradient-to-r from-amber-500/10 to-transparent border border-[#d4af37]/40 text-[#d4af37] p-2.5 rounded-lg text-xs font-semibold transition flex justify-between items-center">
-                <span>ALL CAPS</span> <span class="text-[9px] text-gray-500 font-normal">Global</span>
-            </button>
-            <button id="f-mega" onclick="applyCapFilterRange('mega'); playSound('click');" class="w-full text-left bg-gray-900/30 border border-gray-800 hover:border-gray-600 text-gray-300 p-2.5 rounded-lg text-xs transition flex justify-between items-center">
-                <span>MEGA CAP</span> <span class="text-[9px] text-blue-400">&gt;$10B</span>
-            </button>
-            <button id="f-mid" onclick="applyCapFilterRange('mid'); playSound('click');" class="w-full text-left bg-gray-900/30 border border-gray-800 hover:border-gray-600 text-gray-300 p-2.5 rounded-lg text-xs transition flex justify-between items-center">
-                <span>MID CAP</span> <span class="text-[9px] text-purple-400">$1B-$10B</span>
-            </button>
-            <button id="f-low" onclick="applyCapFilterRange('low'); playSound('click');" class="w-full text-left bg-gray-900/30 border border-gray-800 hover:border-gray-600 text-gray-300 p-2.5 rounded-lg text-xs transition flex justify-between items-center">
-                <span>LOW CAP</span> <span class="text-[9px] text-amber-500">$100M-$1B</span>
-            </button>
-            <button id="f-micro" onclick="applyCapFilterRange('micro'); playSound('click');" class="w-full text-left bg-gray-900/30 border border-gray-800 hover:border-gray-600 text-gray-300 p-2.5 rounded-lg text-xs transition flex justify-between items-center">
-                <span>MICRO CAP</span> <span class="text-[9px] text-rose-400">&lt;$100M</span>
-            </button>
-        </div>
+        <!-- LAYOUT WRAPPER -->
+        <div class="layout-wrapper">
 
-        <div class="space-y-1.5">
-            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest px-1 mb-1">DIRECTIONAL CONFLUENCE</p>
-            <button id="f-rec-long" onclick="applySignalFilter('LONG'); playSound('click');" class="w-full text-left bg-emerald-950/20 border border-emerald-900/40 text-emerald-400 p-2.5 rounded-lg text-xs font-bold transition flex justify-between items-center hover:bg-emerald-950/40">
-                <span>BULLISH SETUP</span> <span>LONG</span>
-            </button>
-            <button id="f-rec-short" onclick="applySignalFilter('SHORT'); playSound('click');" class="w-full text-left bg-rose-950/20 border border-rose-900/40 text-rose-400 p-2.5 rounded-lg text-xs font-bold transition flex justify-between items-center hover:bg-rose-950/40">
-                <span>BEARISH SETUP</span> <span>SHORT</span>
-            </button>
-        </div>
-    </div>
-    
-    <div class="pt-4 border-t border-gray-800 mt-4 text-[9px] text-gray-600 uppercase text-center font-bold tracking-widest">V100.41 FIRMWARE OK</div>
-</div>
+            <!-- SIDEBAR OVERLAY (mobile) -->
+            <div id="sidebar-overlay" class="hidden" aria-hidden="true"></div>
 
-<div id="main-terminal-content" class="hidden opacity-0 flex flex-col min-h-screen transition-opacity duration-500">
-    
-    <header class="sticky top-0 z-40 bg-[#030508]/95 backdrop-blur-md border-b border-gray-800 px-4 py-3 shadow-md">
-        <div class="max-w-[1600px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            
-            <div class="flex items-center justify-between w-full sm:w-auto gap-4">
-                <button onclick="togglePlengerSidebar(true); playSound('click');" class="p-2 bg-gray-900 border border-gray-800 hover:bg-gray-800 rounded-lg transition text-white">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-                </button>
-                <div class="flex flex-col">
-                    <div class="flex items-center gap-2">
-                        <span class="text-white font-bold tracking-tight">KANGGABUT</span>
-                        <span class="text-[9px] font-mono-tech bg-amber-500/10 text-[#d4af37] border border-amber-500/20 px-1.5 py-0.5 rounded font-bold">V100 PRO</span>
+            <!-- SIDEBAR -->
+            <aside id="sidebar" aria-label="Intelligence sidebar">
+                <div class="sidebar-header">
+                    <h3>Intelligence</h3>
+                    <button id="toggle-sidebar" type="button" aria-label="Collapse sidebar" aria-expanded="true">⇋</button>
+                </div>
+
+                <div class="regime-grid" id="regime-data" aria-label="Market regime data"></div>
+
+                <hr class="sidebar-divider">
+
+                <div class="sidebar-pnl">
+                    <span class="label">Total Est. PNL</span>
+                    <span class="value" id="sidebar-total-pnl">$0.00</span>
+                </div>
+
+                <hr class="sidebar-divider">
+
+                <!-- PROFILE PANEL -->
+                <div id="profile-panel">
+                    <input type="file" id="avatar-upload" accept="image/*" class="hidden" aria-label="Upload avatar">
+                    <div class="avatar" id="user-avatar" title="Click to change avatar"
+                         role="button" tabindex="0" aria-label="User avatar">Q</div>
+                    <div class="user-info">
+                        <input type="text" id="user-name" value="Quant User" aria-label="User name" maxlength="24">
+                        <span class="status-dot-text">
+                            <span class="pulse-dot sm" aria-hidden="true"></span> Terminal Active
+                        </span>
                     </div>
                 </div>
-                <div id="clock-24h-mobile" class="sm:hidden font-mono-tech text-[10px] text-[#00f3ff] font-bold">00:00:00</div>
-            </div>
+            </aside>
 
-            <div class="hidden md:flex gap-3 font-mono-tech text-[10px]">
-                <div class="bg-gray-900/50 border border-gray-800 px-3 py-1.5 rounded-lg flex flex-col items-center">
-                    <span class="text-gray-500 uppercase text-[8px]">Total Pool</span>
-                    <span id="stats-total-pos" class="text-white font-bold">0 Target</span>
-                </div>
-                <div class="bg-gray-900/50 border border-gray-800 px-3 py-1.5 rounded-lg flex flex-col items-center">
-                    <span class="text-gray-500 uppercase text-[8px]">Filtered</span>
-                    <span id="stats-filtered-count" class="text-[#d4af37] font-bold">0 Units</span>
-                </div>
-            </div>
+            <!-- MAIN CONTENT -->
+            <main id="main-content">
 
-            <div class="flex items-center w-full sm:w-auto justify-between gap-3 font-mono-tech">
-                <div id="clock-24h" class="hidden sm:block text-[11px] text-[#00f3ff] font-bold bg-gray-900 px-2 py-1 rounded-md border border-gray-800">00:00:00</div>
-                <button id="sound-toggle-btn" onclick="toggleMuteState()" class="text-[10px] bg-gray-900 border border-gray-800 text-[#d4af37] px-3 py-1.5 rounded-lg hover:bg-gray-800 transition">🔊 ON</button>
-            </div>
-        </div>
-    </header>
+                <!-- SCAN MODE PANELS -->
+                <div class="mode-panels" data-for-mode="scan">
+                    <div class="grid-row">
+                        <section class="panel" id="panel-longs">
+                            <div class="panel-header">
+                                <h2 class="text-long">Potential Longs</h2>
+                                <div class="panel-header-right">
+                                    <span class="score-badge long">Score &gt; 7</span>
+                                    <span class="count" id="count-longs" aria-label="Long count">0</span>
+                                </div>
+                            </div>
+                            <div class="table-container" id="list-longs" role="list">
+                                <div class="loading-state">Initializing data stream…</div>
+                            </div>
+                        </section>
 
-    <main class="max-w-[1600px] mx-auto w-full p-4 grid grid-cols-1 xl:grid-cols-4 gap-6 flex-grow">
-        
-        <section class="xl:col-span-1">
-            <div class="flex flex-col h-[400px] xl:h-[calc(100vh-140px)] border border-gray-800 rounded-xl bg-[#060b13] overflow-hidden shadow-lg sticky top-24">
-                <div class="px-4 py-3 bg-gray-900/40 border-b border-gray-800 flex justify-between items-center">
-                    <h2 class="text-xs font-bold text-white tracking-wide uppercase flex items-center gap-2 font-mono-tech">
-                        <span class="w-1.5 h-1.5 bg-[#00f3ff] rounded-full animate-pulse"></span> SOCIAL INTEL
-                    </h2>
-                    <span id="lc-last-refresh" class="text-[9px] font-mono-tech text-gray-400">--:--:--</span>
-                </div>
-                <div id="lunarcrush-panel-body" class="p-3 overflow-y-auto flex-grow scrollbar-hide space-y-2"></div>
-            </div>
-        </section>
-
-        <section class="xl:col-span-3 flex flex-col space-y-4">
-            
-            <div class="bg-gray-900/30 border border-gray-800 rounded-xl p-3 flex flex-col md:flex-row justify-between items-center gap-4 font-mono-tech">
-                <div class="relative w-full md:max-w-md">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 text-xs">🔍</span>
-                    <input id="global-token-search-input" oninput="executeInstantGlobalSearch(this.value)" type="text" class="w-full bg-[#030508] border border-gray-800 focus:border-[#d4af37] text-white pl-8 pr-8 py-2 rounded-lg text-xs placeholder-gray-600 outline-none transition uppercase" placeholder="SEARCH PROTOCOL...">
-                    <button id="clear-search-btn" onclick="clearGlobalSearchQuery(); playSound('click');" class="hidden absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-white text-xs">✕</button>
-                </div>
-                <div class="flex items-center justify-between w-full md:w-auto gap-4">
-                    <span id="pagination-indicator-text" class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">VIEWING 0-0</span>
-                    <div class="flex gap-1.5">
-                        <button onclick="shiftPagingIndexPointer(-1); playSound('click');" class="px-3 py-1.5 bg-gray-900 hover:bg-gray-800 border border-gray-800 text-white rounded-lg transition">&lt;</button>
-                        <button onclick="shiftPagingIndexPointer(1); playSound('click');" class="px-3 py-1.5 bg-gray-900 hover:bg-gray-800 border border-gray-800 text-white rounded-lg transition">&gt;</button>
+                        <section class="panel" id="panel-shorts">
+                            <div class="panel-header">
+                                <h2 class="text-short">Potential Shorts</h2>
+                                <div class="panel-header-right">
+                                    <span class="score-badge short">Score &lt; 4</span>
+                                    <span class="count" id="count-shorts" aria-label="Short count">0</span>
+                                </div>
+                            </div>
+                            <div class="table-container" id="list-shorts" role="list">
+                                <div class="loading-state">Initializing data stream…</div>
+                            </div>
+                        </section>
                     </div>
                 </div>
+
+                <!-- JOURNAL MODE PANELS -->
+                <div class="mode-panels hidden" data-for-mode="journal">
+                    <div class="grid-row">
+                        <section class="panel" id="panel-locked">
+                            <div class="panel-header">
+                                <h2>Locked Signals</h2>
+                                <span class="hint-text" id="locked-update-time">Updated: Just now</span>
+                            </div>
+                            <div class="table-container" id="list-locked" role="list">
+                                <div class="empty-state">No locked signals yet.</div>
+                            </div>
+                        </section>
+
+                        <section class="panel" id="panel-journal">
+                            <div class="panel-header">
+                                <div class="panel-header-stack">
+                                    <div class="panel-header-top">
+                                        <h2>Trading Journal</h2>
+                                    </div>
+                                    <div class="journal-insights" aria-label="PNL statistics">
+                                        <div class="insight-stat">Realized <span id="stat-realized">$0.00</span></div>
+                                        <div class="insight-stat">Unrealized <span id="stat-unrealized">$0.00</span></div>
+                                        <div class="insight-stat">W/L <span id="stat-wl">0/0</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-container" id="list-journal" role="list">
+                                <div class="empty-state">No journal entries yet.</div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- RESEARCH MODE PANELS -->
+                <div class="mode-panels hidden" data-for-mode="research">
+                    <div class="grid-row research-grid">
+                        <section class="panel" id="panel-regime-detail">
+                            <div class="panel-header">
+                                <h2>Market Regime</h2>
+                                <span class="hint-text" id="regime-update-time">Live</span>
+                            </div>
+                            <div class="table-container" id="regime-detail-content">
+                                <div class="loading-state">Calibrating…</div>
+                            </div>
+                        </section>
+
+                        <section class="panel" id="panel-top-signals">
+                            <div class="panel-header">
+                                <h2>Top Confluence Signals</h2>
+                                <span class="count" id="count-research">0</span>
+                            </div>
+                            <div class="table-container" id="list-research" role="list">
+                                <div class="loading-state">Analyzing pairs…</div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
+        <!-- MOBILE STATUS FOOTER -->
+        <div id="status-footer" aria-hidden="true">
+            <span id="footer-mode">SCAN</span>
+            <span id="footer-refresh">—</span>
+            <span id="footer-status">OK</span>
+        </div>
+
+    </div><!-- /#app-container -->
+
+    <!-- QUANT CARD MODAL -->
+    <div id="quant-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-symbol">
+        <div class="quant-card" tabindex="-1">
+            <button id="close-modal" class="close-btn" type="button" aria-label="Close modal">×</button>
+
+            <div class="card-header">
+                <h2 id="modal-symbol">BTCUSDT</h2>
+                <div id="modal-direction" class="badge">LONG</div>
             </div>
 
-            <div id="trading-setup-matrix-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-        </section>
-    </main>
+            <div class="score-display">
+                <span class="score-value" id="modal-score">8.5</span>
+                <span class="score-label">Confluence Score</span>
+                <div class="health-badge hidden" id="modal-health">Health: Calibrating…</div>
+            </div>
 
-    <footer class="mt-auto py-4 border-t border-gray-800 text-center font-mono-tech text-[10px] text-gray-600 bg-[#030508]">
-        QUANT MATRIX ENGINE V100 PRO &copy; 2026
-    </footer>
-</div>
+            <div class="bias-hint" id="modal-bias-hint">Processing macro environment…</div>
 
-<div id="specs-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none hidden">
-    <div class="modal-inner w-full max-w-4xl bg-[#060b13] border border-gray-800 rounded-2xl shadow-2xl p-5 md:p-6 relative overflow-y-auto max-h-[90vh] font-mono-tech">
-        <button onclick="closeSpecsModalWindow(); playSound('click');" class="absolute top-4 right-4 text-gray-500 hover:text-white text-xs border border-gray-800 px-3 py-1 rounded-lg bg-gray-900 transition">✕ CLOSE</button>
-        <div id="modal-content-area" class="mt-4"></div>
+            <div class="power-bar-container" aria-hidden="true">
+                <div id="modal-power-bar" class="power-bar" style="width:50%"></div>
+            </div>
+
+            <div class="card-grid">
+                <div class="card-section">
+                    <h3>Multi-Timeframe</h3>
+                    <ul id="modal-mtf" class="data-list"></ul>
+                </div>
+                <div class="card-section">
+                    <h3>Indicators</h3>
+                    <ul id="modal-indicators" class="data-list"></ul>
+                </div>
+                <div class="card-section">
+                    <h3>Trade Structure</h3>
+                    <ul class="data-list">
+                        <li><span>Entry</span><span id="modal-entry">—</span></li>
+                        <li><span>Stop Loss (2%)</span><span id="modal-sl" class="text-short">—</span></li>
+                        <li><span>Take Profit (5%)</span><span id="modal-tp" class="text-long">—</span></li>
+                        <li><span>Leverage</span><span>20× Isolated</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card-actions">
+                <button id="btn-reanalyze" class="action-btn" type="button">Re-Analyze</button>
+                <button id="btn-lock" class="action-btn outline" type="button">Lock Signal</button>
+                <button id="btn-journal" class="action-btn outline" type="button">Add to Journal</button>
+            </div>
+        </div>
     </div>
-</div>
 
-<script src="api.js"></script>
-<script src="app.js"></script>
-<script>
-    const _origFetchAll = fetchAllExternalAPIPipelines;
-    window._apiPollingStarted = false;
-    async function fetchAllExternalAPIPipelines() {
-        await _origFetchAll();
-        if (!window._apiPollingStarted) {
-            window._apiPollingStarted = true;
-            setInterval(_origFetchAll, 15000);
-        }
-    }
-</script>
+    <script src="api.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
