@@ -16,14 +16,16 @@
 <body>
 
     <!-- LOGIN GATE -->
-    <div id="login-gate" class="active">
+    <div id="login-gate" class="active" role="main" aria-label="Login">
         <div class="login-box">
-            <div class="login-logo">G<span>OS</span></div>
-            <h2>Gabut OS Access</h2>
-            <p>Enter passphrase to initialize terminal.</p>
-            <input type="password" id="login-password" placeholder="Passphrase" autofocus autocomplete="current-password">
-            <button id="login-btn" type="button">Initialize System</button>
-            <div id="login-error" class="hidden">⚠ Astagrifurllah.</div>
+            <div class="login-logo" aria-hidden="true">G<span>OS</span></div>
+            <h1 data-i18n="loginTitle">Gabut OS Access</h1>
+            <p data-i18n="loginDesc">Enter passphrase to initialize terminal.</p>
+            <input type="password" id="login-password" placeholder="Passphrase"
+                   autofocus autocomplete="current-password"
+                   aria-label="Passphrase" aria-describedby="login-error">
+            <button id="login-btn" type="button" data-i18n="loginBtn">Initialize System</button>
+            <div id="login-error" class="hidden" role="alert">⚠ Astagrifurllah.</div>
         </div>
     </div>
 
@@ -32,43 +34,46 @@
 
         <!-- HEADBAR -->
         <header id="headbar">
-            <div class="logo">Gabut<span>OS</span></div>
+            <div class="logo" aria-label="GabutOS">Gabut<span>OS</span></div>
 
-            <!-- WORKSPACE MODE SWITCHER -->
+            <!-- WORKSPACE MODE SWITCHER (desktop) -->
             <nav class="mode-switcher" role="tablist" aria-label="Workspace mode">
-                <button class="mode-btn active" data-mode="scan" role="tab" aria-selected="true" title="Scan Mode">Scan</button>
-                <button class="mode-btn" data-mode="journal" role="tab" aria-selected="false" title="Journal Mode">Journal</button>
-                <button class="mode-btn" data-mode="research" role="tab" aria-selected="false" title="Research Mode">Research</button>
+                <button class="mode-btn active" data-mode="scan" role="tab" aria-selected="true" data-i18n="scan">Scan</button>
+                <button class="mode-btn" data-mode="journal" role="tab" aria-selected="false" data-i18n="journal">Journal</button>
+                <button class="mode-btn" data-mode="research" role="tab" aria-selected="false" data-i18n="research">Research</button>
             </nav>
 
-            <!-- SEARCH -->
+            <!-- SEARCH — position:relative is on .search-container in CSS -->
             <div class="search-container">
+                <label for="global-search" class="sr-only">Search pairs</label>
                 <input type="text" id="global-search" placeholder="Search pairs…" autocomplete="off"
                        autocorrect="off" autocapitalize="off" spellcheck="false"
-                       aria-label="Search trading pairs" aria-controls="search-results" aria-autocomplete="list">
+                       aria-label="Search trading pairs" aria-controls="search-results"
+                       aria-autocomplete="list" aria-expanded="false">
                 <div id="search-results" class="hidden" role="listbox" aria-label="Search results"></div>
             </div>
 
             <!-- QUICK FILTERS -->
-            <div class="quick-filters" aria-label="Quick filters">
-                <button class="filter-btn" data-filter="long" type="button">Long</button>
-                <button class="filter-btn" data-filter="short" type="button">Short</button>
-                <button class="filter-btn active" data-filter="all" type="button">All</button>
+            <div class="quick-filters" role="group" aria-label="Quick filters">
+                <button class="filter-btn" data-filter="long" type="button" data-i18n="filterLong">Long</button>
+                <button class="filter-btn" data-filter="short" type="button" data-i18n="filterShort">Short</button>
+                <button class="filter-btn active" data-filter="all" type="button" data-i18n="filterAll">All</button>
             </div>
 
             <!-- MOBILE MODE NAV (phones only) -->
-            <div class="mobile-mode-nav" aria-label="Mobile mode navigation">
-                <button class="mob-mode-btn active" data-mode="scan" type="button">Scan</button>
-                <button class="mob-mode-btn" data-mode="journal" type="button">Journal</button>
-                <button class="mob-mode-btn" data-mode="research" type="button">Research</button>
-            </div>
+            <nav class="mobile-mode-nav" aria-label="Mobile mode navigation">
+                <button class="mob-mode-btn active" data-mode="scan" type="button" data-i18n="scan">Scan</button>
+                <button class="mob-mode-btn" data-mode="journal" type="button" data-i18n="journal">Journal</button>
+                <button class="mob-mode-btn" data-mode="research" type="button" data-i18n="research">Research</button>
+            </nav>
 
-            <!-- THEME TOGGLE -->
+            <!-- THEME + LANG -->
             <button id="theme-toggle" class="icon-btn" type="button" title="Toggle theme" aria-label="Toggle theme">◑</button>
+            <button id="lang-toggle" class="icon-btn" type="button" title="Toggle language" aria-label="Toggle language">EN</button>
         </header>
 
         <!-- STATUS BAR -->
-        <div id="status-bar" role="status" aria-live="polite">
+        <div id="status-bar" role="status" aria-live="polite" aria-atomic="false">
             <span class="status-item">
                 <span class="pulse-dot" aria-hidden="true"></span>
                 <span id="status-data">Data: OK</span>
@@ -76,7 +81,7 @@
             <span class="status-sep" aria-hidden="true">|</span>
             <span class="status-item" id="status-refresh">Refresh: —</span>
             <span class="status-sep" aria-hidden="true">|</span>
-            <span class="status-item">Mode: <span id="status-mode">Scan</span></span>
+            <span class="status-item"><span data-i18n="modeLabel">Mode</span>: <span id="status-mode">Scan</span></span>
             <span class="status-sep" aria-hidden="true">|</span>
             <span class="status-item" id="status-pairs">Pairs: —</span>
         </div>
@@ -87,19 +92,22 @@
             <!-- SIDEBAR OVERLAY (mobile) -->
             <div id="sidebar-overlay" class="hidden" aria-hidden="true"></div>
 
+            <!-- FLOATING SIDEBAR TOGGLE (mobile, always visible) -->
+            <button id="sidebar-fab" class="sidebar-fab hidden" type="button" aria-label="Open sidebar">☰</button>
+
             <!-- SIDEBAR -->
             <aside id="sidebar" aria-label="Intelligence sidebar">
                 <div class="sidebar-header">
-                    <h3>Intelligence</h3>
+                    <h3 data-i18n="intelligence">Intelligence</h3>
                     <button id="toggle-sidebar" type="button" aria-label="Collapse sidebar" aria-expanded="true">⇋</button>
                 </div>
 
-                <div class="regime-grid" id="regime-data" aria-label="Market regime data"></div>
+                <div class="regime-grid" id="regime-data" aria-label="Market regime data" aria-live="polite"></div>
 
                 <hr class="sidebar-divider">
 
-                <div class="sidebar-pnl">
-                    <span class="label">Total Est. PNL</span>
+                <div class="sidebar-pnl" aria-label="Total PNL">
+                    <span class="label" data-i18n="totalPnl">Total Est. PNL</span>
                     <span class="value" id="sidebar-total-pnl">$0.00</span>
                 </div>
 
@@ -113,7 +121,8 @@
                     <div class="user-info">
                         <input type="text" id="user-name" value="Quant User" aria-label="User name" maxlength="24">
                         <span class="status-dot-text">
-                            <span class="pulse-dot sm" aria-hidden="true"></span> Terminal Active
+                            <span class="pulse-dot sm" aria-hidden="true"></span>
+                            <span data-i18n="terminalActive">Terminal Active</span>
                         </span>
                     </div>
                 </div>
@@ -122,92 +131,112 @@
             <!-- MAIN CONTENT -->
             <main id="main-content">
 
-                <!-- SCAN MODE PANELS -->
+                <!-- SCAN MODE -->
                 <div class="mode-panels" data-for-mode="scan">
                     <div class="grid-row">
-                        <section class="panel" id="panel-longs">
+                        <section class="panel panel-longs" id="panel-longs" aria-label="Long signals">
                             <div class="panel-header">
-                                <h2 class="text-long">Potential Longs</h2>
+                                <h2 class="text-long" data-i18n="longSignals">Potential Longs</h2>
                                 <div class="panel-header-right">
-                                    <span class="score-badge long">Score &gt; 7</span>
+                                    <span class="score-badge long" aria-label="Score filter">Score &gt; 7</span>
                                     <span class="count" id="count-longs" aria-label="Long count">0</span>
                                 </div>
                             </div>
-                            <div class="table-container" id="list-longs" role="list">
-                                <div class="loading-state">Initializing data stream…</div>
+                            <div class="table-container" id="list-longs" role="list" aria-label="Long signal list">
+                                <div class="loading-state" data-i18n="initStream">Initializing data stream…</div>
                             </div>
                         </section>
 
-                        <section class="panel" id="panel-shorts">
+                        <section class="panel panel-shorts" id="panel-shorts" aria-label="Short signals">
                             <div class="panel-header">
-                                <h2 class="text-short">Potential Shorts</h2>
+                                <h2 class="text-short" data-i18n="shortSignals">Potential Shorts</h2>
                                 <div class="panel-header-right">
-                                    <span class="score-badge short">Score &lt; 4</span>
+                                    <span class="score-badge short" aria-label="Score filter">Score &lt; 4</span>
                                     <span class="count" id="count-shorts" aria-label="Short count">0</span>
                                 </div>
                             </div>
-                            <div class="table-container" id="list-shorts" role="list">
-                                <div class="loading-state">Initializing data stream…</div>
+                            <div class="table-container" id="list-shorts" role="list" aria-label="Short signal list">
+                                <div class="loading-state" data-i18n="initStream">Initializing data stream…</div>
                             </div>
                         </section>
                     </div>
                 </div>
 
-                <!-- JOURNAL MODE PANELS -->
+                <!-- JOURNAL MODE -->
                 <div class="mode-panels hidden" data-for-mode="journal">
                     <div class="grid-row">
-                        <section class="panel" id="panel-locked">
+                        <section class="panel" id="panel-locked" aria-label="Locked signals">
                             <div class="panel-header">
-                                <h2>Locked Signals</h2>
-                                <span class="hint-text" id="locked-update-time">Updated: Just now</span>
+                                <h2 data-i18n="lockedSignals">Locked Signals</h2>
+                                <span class="hint-text" id="locked-update-time" aria-live="polite" data-i18n="updatedNow">Updated: Just now</span>
                             </div>
-                            <div class="table-container" id="list-locked" role="list">
-                                <div class="empty-state">No locked signals yet.</div>
+                            <div class="table-container" id="list-locked" role="list" aria-label="Locked signal list">
+                                <div class="empty-state" data-i18n="noLocked">No locked signals yet.</div>
                             </div>
                         </section>
 
-                        <section class="panel" id="panel-journal">
+                        <section class="panel" id="panel-journal" aria-label="Trading journal">
                             <div class="panel-header">
                                 <div class="panel-header-stack">
                                     <div class="panel-header-top">
-                                        <h2>Trading Journal</h2>
+                                        <h2 data-i18n="tradingJournal">Trading Journal</h2>
                                     </div>
-                                    <div class="journal-insights" aria-label="PNL statistics">
-                                        <div class="insight-stat">Realized <span id="stat-realized">$0.00</span></div>
-                                        <div class="insight-stat">Unrealized <span id="stat-unrealized">$0.00</span></div>
+                                    <div class="journal-insights" aria-label="PNL statistics" aria-live="polite">
+                                        <div class="insight-stat"><span data-i18n="realized">Realized</span> <span id="stat-realized">$0.00</span></div>
+                                        <div class="insight-stat"><span data-i18n="unrealized">Unrealized</span> <span id="stat-unrealized">$0.00</span></div>
                                         <div class="insight-stat">W/L <span id="stat-wl">0/0</span></div>
+                                        <div class="insight-stat">RR <span id="stat-rr">—</span></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="table-container" id="list-journal" role="list">
-                                <div class="empty-state">No journal entries yet.</div>
+                            <div class="table-container" id="list-journal" role="list" aria-label="Journal entry list">
+                                <div class="empty-state" data-i18n="noJournal">No journal entries yet.</div>
                             </div>
                         </section>
                     </div>
                 </div>
 
-                <!-- RESEARCH MODE PANELS -->
+                <!-- RESEARCH MODE -->
                 <div class="mode-panels hidden" data-for-mode="research">
                     <div class="grid-row research-grid">
-                        <section class="panel" id="panel-regime-detail">
+                        <section class="panel" id="panel-regime-detail" aria-label="Market regime detail">
                             <div class="panel-header">
-                                <h2>Market Regime</h2>
-                                <span class="hint-text" id="regime-update-time">Live</span>
+                                <h2 data-i18n="marketRegime">Market Regime</h2>
+                                <span class="hint-text" id="regime-update-time" aria-live="polite">Live</span>
                             </div>
-                            <div class="table-container" id="regime-detail-content">
-                                <div class="loading-state">Calibrating…</div>
+                            <div class="table-container" id="regime-detail-content" aria-live="polite">
+                                <div class="loading-state" data-i18n="calibrating">Calibrating…</div>
                             </div>
                         </section>
 
-                        <section class="panel" id="panel-top-signals">
+                        <section class="panel" id="panel-top-signals" aria-label="Top signals">
                             <div class="panel-header">
-                                <h2>Top Confluence Signals</h2>
-                                <span class="count" id="count-research">0</span>
+                                <h2 data-i18n="topSignals">Top Confluence Signals</h2>
+                                <span class="count" id="count-research" aria-label="Signal count">0</span>
                             </div>
-                            <div class="table-container" id="list-research" role="list">
-                                <div class="loading-state">Analyzing pairs…</div>
+                            <div class="table-container" id="list-research" role="list" aria-label="Research signal list">
+                                <div class="loading-state" data-i18n="analyzing">Analyzing pairs…</div>
                             </div>
                         </section>
+                    </div>
+
+                    <!-- BRAIN PANEL -->
+                    <div class="brain-panel" id="brain-panel" aria-label="Autonomous Brain Panel">
+                        <div class="brain-panel-header">
+                            <span aria-hidden="true">🧠</span>
+                            <h3 data-i18n="brainPanel">Autonomous Brain Panel</h3>
+                            <span class="brain-regime-tag" id="brain-regime-tag" aria-live="polite">—</span>
+                        </div>
+                        <div class="brain-panel-body">
+                            <div class="brain-panel-col">
+                                <div class="brain-panel-label" data-i18n="brainFocus">Focus Pairs</div>
+                                <div id="brain-focus-list"><div class="empty-state" style="padding:8px">—</div></div>
+                            </div>
+                            <div class="brain-panel-col">
+                                <div class="brain-panel-label" data-i18n="brainAvoid">Avoid Pairs</div>
+                                <div id="brain-avoid-list"><div class="empty-state" style="padding:8px">—</div></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -215,15 +244,15 @@
         </div>
 
         <!-- MOBILE STATUS FOOTER -->
-        <div id="status-footer" aria-hidden="true">
+        <footer id="status-footer" aria-hidden="true">
             <span id="footer-mode">SCAN</span>
             <span id="footer-refresh">—</span>
             <span id="footer-status">OK</span>
-        </div>
+        </footer>
 
     </div><!-- /#app-container -->
 
-    <!-- QUANT CARD MODAL -->
+    <!-- QUANT CARD MODAL (Legendary Card) -->
     <div id="quant-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-symbol">
         <div class="quant-card" tabindex="-1">
             <button id="close-modal" class="close-btn" type="button" aria-label="Close modal">×</button>
@@ -235,11 +264,23 @@
 
             <div class="score-display">
                 <span class="score-value" id="modal-score">8.5</span>
-                <span class="score-label">Confluence Score</span>
+                <span class="score-label" data-i18n="confluenceScore">Confluence Score</span>
                 <div class="health-badge hidden" id="modal-health">Health: Calibrating…</div>
             </div>
 
             <div class="bias-hint" id="modal-bias-hint">Processing macro environment…</div>
+
+            <!-- INSIGHT SECTION -->
+            <div class="insight-block">
+                <div class="insight-row">
+                    <span class="insight-label" data-i18n="conviction">Conviction</span>
+                    <span class="conviction-badge med" id="modal-conviction">Med</span>
+                    <span class="insight-label" style="margin-left:12px" data-i18n="risk">Risk</span>
+                    <span class="riskenv-badge normal" id="modal-riskenv">Normal</span>
+                </div>
+                <div class="insight-line" id="modal-insight-line"></div>
+                <div class="insight-detail" id="modal-insight-detail"></div>
+            </div>
 
             <div class="power-bar-container" aria-hidden="true">
                 <div id="modal-power-bar" class="power-bar" style="width:50%"></div>
@@ -247,16 +288,16 @@
 
             <div class="card-grid">
                 <div class="card-section">
-                    <h3>Multi-Timeframe</h3>
+                    <h3 data-i18n="multiTimeframe">Multi-Timeframe</h3>
                     <ul id="modal-mtf" class="data-list"></ul>
                 </div>
                 <div class="card-section">
-                    <h3>Indicators</h3>
+                    <h3 data-i18n="indicators">Indicators</h3>
                     <ul id="modal-indicators" class="data-list"></ul>
                 </div>
-                <!-- ORDER FLOW SECTION -->
+                <!-- ORDER FLOW -->
                 <div class="card-section of-section">
-                    <h3>Order Flow</h3>
+                    <h3 data-i18n="orderFlow">Order Flow</h3>
                     <div class="of-grid" id="modal-orderflow">
                         <div class="of-item">
                             <span class="of-label">Delta</span>
@@ -277,23 +318,72 @@
                     </div>
                 </div>
                 <div class="card-section">
-                    <h3>Trade Structure</h3>
+                    <h3 data-i18n="tradeStructure">Trade Structure</h3>
                     <ul class="data-list">
-                        <li><span>Entry</span><span id="modal-entry">—</span></li>
-                        <li><span>Stop Loss (2%)</span><span id="modal-sl" class="text-short">—</span></li>
-                        <li><span>Take Profit (5%)</span><span id="modal-tp" class="text-long">—</span></li>
-                        <li><span>Leverage</span><span>20× Isolated</span></li>
+                        <li><span data-i18n="entry">Entry</span><span id="modal-entry">—</span></li>
+                        <li><span data-i18n="sl">Stop Loss</span><span id="modal-sl" class="text-short">—</span></li>
+                        <li><span data-i18n="tp">Take Profit</span><span id="modal-tp" class="text-long">—</span></li>
+                        <li><span data-i18n="rrLabel">R:R</span><span id="modal-rr">—</span></li>
+                        <li><span data-i18n="leverage">Leverage</span><span>20× Isolated</span></li>
                     </ul>
                 </div>
             </div>
 
+            <!-- BRAIN STRATEGY SECTION -->
+            <div class="brain-strategy" id="brain-strategy">
+                <div class="brain-header">
+                    <span class="brain-icon" aria-hidden="true">🧠</span>
+                    <span class="brain-title" data-i18n="brainStrategy">Brain Strategy</span>
+                    <span class="brain-type-badge" id="brain-type-badge">—</span>
+                </div>
+                <div class="brain-summary" id="brain-summary">Analyzing…</div>
+                <div class="brain-meta">
+                    <span><span class="brain-meta-label" data-i18n="stopStyle">Stop</span> <span id="brain-stop" class="brain-meta-val">—</span></span>
+                    <span><span class="brain-meta-label" data-i18n="tpStyle">TP</span> <span id="brain-tp-style" class="brain-meta-val">—</span></span>
+                </div>
+                <ul class="brain-hints" id="brain-hints"></ul>
+            </div>
+
+            <!-- 4-COLUMN CARD ACTIONS -->
             <div class="card-actions">
-                <button id="btn-reanalyze" class="action-btn" type="button">Re-Analyze</button>
-                <button id="btn-lock" class="action-btn outline" type="button">Lock Signal</button>
-                <button id="btn-journal" class="action-btn outline" type="button">Add to Journal</button>
+                <button id="btn-reanalyze"   class="action-btn"         type="button" data-i18n="reanalyze">Re-Analyze</button>
+                <button id="btn-lock"        class="action-btn outline" type="button" data-i18n="lockSignal">Lock Signal</button>
+                <button id="btn-journal"     class="action-btn outline" type="button" data-i18n="addJournal">Add to Journal</button>
+                <button id="btn-edit-journal" class="action-btn outline" type="button" data-i18n="editJournal">Edit Journal</button>
             </div>
         </div>
     </div>
+
+    <!-- JOURNAL EDIT MODAL -->
+    <div id="journal-edit-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="jedit-title">
+        <div class="journal-edit-card" tabindex="-1">
+            <button id="jedit-close" class="close-btn" type="button" aria-label="Close">×</button>
+            <h2 id="jedit-title" data-i18n="editTrade">Edit Trade</h2>
+            <div class="jedit-form">
+                <label for="jedit-entry" data-i18n="entry">Entry</label>
+                <input id="jedit-entry" type="number" step="any">
+                <label for="jedit-sl" data-i18n="sl">Stop Loss</label>
+                <input id="jedit-sl" type="number" step="any">
+                <label for="jedit-tp" data-i18n="tp">Take Profit</label>
+                <input id="jedit-tp" type="number" step="any">
+                <label for="jedit-leverage" data-i18n="leverage">Leverage</label>
+                <input id="jedit-leverage" type="number" min="1" max="125">
+                <label for="jedit-margin" data-i18n="margin">Margin ($)</label>
+                <input id="jedit-margin" type="number" step="any" min="0">
+                <label for="jedit-notes" data-i18n="notes">Notes</label>
+                <textarea id="jedit-notes" rows="2"></textarea>
+            </div>
+            <!-- RR preview inside edit modal -->
+            <div class="jedit-rr-preview" id="jedit-rr-preview" aria-live="polite"></div>
+            <div class="jedit-actions">
+                <button id="jedit-save"   class="action-btn"         type="button" data-i18n="save">Save</button>
+                <button id="jedit-cancel" class="action-btn outline" type="button" data-i18n="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden accessible label utility -->
+    <style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
 
     <script src="api.js"></script>
     <script src="app.js"></script>
